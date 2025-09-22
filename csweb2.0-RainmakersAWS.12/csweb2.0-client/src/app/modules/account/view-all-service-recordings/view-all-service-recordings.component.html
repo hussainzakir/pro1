@@ -1,0 +1,46 @@
+<div class="maximize-button-group" >
+  <button appWindowbuttons (click)="maximize()" class="maximize-button"><span  class="fa fa-window-maximize"></span></button>  
+  <button appWindowbuttons (click)="restore()" class="restore-button"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+</div>
+<div class="modal-dialog" id="my-modal-dialog">
+
+<h1 mat-dialog-title>View All Recordings</h1>
+<div class="modal-dialog" id="my-modal-dialog">
+<div mat-dialog-content [hidden]="dataSource">
+  <table style="width: 100%;padding: 0px;" >
+    <tr>
+      <td>Account: {{company}} - {{account}} | Site: {{site}}</td>
+    </tr>
+  </table>
+  <table mat-table [dataSource]="dataSource" matSort matSortActive="serviceRecordingNumber" matSortDirection="desc" style="width: 100%;">
+  <ng-container matColumnDef="serviceRecordingNumber">
+     <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="table-header"> ID </th>
+     <td mat-cell *matCellDef="let element"><a class="repsrv-link" [routerLink]="" (click)="openMaintainDialog(element.serviceRecordingNumber, element.serviceRecordDate)"> {{element.serviceRecordingNumber}} </a></td>
+  </ng-container>
+  <ng-container matColumnDef="transactionDescription">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+      <td mat-cell *matCellDef="let element"> {{element.transactionDescription}} </td>
+  </ng-container>
+  <ng-container matColumnDef="scheduleCompletionDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.scheduleCompletionDate}} </td>
+  </ng-container>
+  <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<div *ngIf="!dataSource || dataSource?.data?.length === 0" style="text-align: center; margin-top: 10px;">
+    No results found.
+</div>
+<mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100,200]" showFirstLastButtons ></mat-paginator>
+</div>
+<td>*All Closed Service Recordings over a Twelve Month Period</td>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>
+</div>
+</div>

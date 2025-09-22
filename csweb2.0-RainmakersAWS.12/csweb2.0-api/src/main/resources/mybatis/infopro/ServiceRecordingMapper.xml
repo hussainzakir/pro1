@@ -1,0 +1,89 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.servicerecordings.dao.ServiceRecordingDao" >
+	
+	<select id="getAccountServiceRecordings" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{CALL CUQCS006_GET_SERVICE_RECORDINGS    
+                (#{key},               
+                  #{status},
+                  '1',
+				#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+				#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+				#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<select id="getServiceRecording" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{CALL CUQCS024_GET_SERVICE_RECORDING    
+                (#{key},               
+                  '1',
+				#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+				#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+				#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<insert id="getNextRecordingNumber" statementType="CALLABLE">
+		{CALL
+			GETSR(#{company},#{user},#{date}
+			,#{result.integerOutput,jdbcType=INTEGER,mode=OUT}
+			,#{result.errorMessage,jdbcType=CHAR,mode=OUT})}
+	</insert>
+	
+	<insert id="createF2Note" statementType="CALLABLE">
+		{CALL CUCUST.CUQDO051_CREATE_SERVICE_RECORDING
+		(#{request.json}
+		,#{request.sqlState,jdbcType=CHAR,mode=OUT}
+		,#{request.errorCode,jdbcType=CHAR,mode=OUT}
+		,#{request.errorMessage,jdbcType=CHAR,mode=OUT}
+		)
+		}
+	</insert>
+	<insert id="addServiceRecording" statementType="CALLABLE">
+		{CALL SETRQS(
+			#{request.status.code},
+			#{request.company},
+			#{request.requestType},
+			#{request.account},
+			#{request.site},
+			#{request.originatedBy},
+			#{request.reportedBy},
+			#{request.routeNumber},
+			#{request.truckNumber},
+			#{request.employeeNumber},
+			#{request.descriptionArray[0]},
+			#{request.descriptionArray[1]},
+			#{request.descriptionArray[2]},
+			#{request.descriptionArray[3]},
+			#{request.descriptionArray[4]},
+			#{request.descriptionArray[5]},
+			#{request.descriptionArray[6]},
+			#{request.descriptionArray[7]},
+			#{request.username},
+			#{request.priority},
+			#{request.systemGenerated},
+			#{request.escalationLevel},
+			#{request.routeTo},
+			#{request.bigDecimalOutput,jdbcType=DECIMAL,mode=OUT},
+			#{request.errorMessage,jdbcType=CHAR,mode=OUT}
+			)}
+	</insert>
+	<select id="getMpuDownFlag" statementType="CALLABLE">
+		CALL CUQCS030_IS_DIVISION_DOWN (
+			#{request.company},
+			#{request.serviceCode,jdbcType=CHAR,mode=IN},
+			#{request.downFlag,jdbcType=CHAR,mode=OUT},
+			#{request.errorMessage,jdbcType=CHAR,mode=OUT}
+		)
+	</select>
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+
+</mapper>
+

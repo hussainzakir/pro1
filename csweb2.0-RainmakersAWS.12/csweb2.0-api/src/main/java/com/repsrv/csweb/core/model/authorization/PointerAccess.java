@@ -1,0 +1,32 @@
+package com.repsrv.csweb.core.model.authorization;
+
+public enum PointerAccess {
+	TBI("BI","CUIPI135","TBI_ACCESS"),
+	MANAGE_EXCEPTIONS("BI","CSWBI302","MANAGE_EXCEPTIONS"),
+	EDI("BI","CUIPI251","EDI_ACCESS"),
+	EDI_AUTO_PAY("BI","CSWBI310","EDI_AUTOPAY_ACCESS"),
+	MASS_UPLOADS("BI","CSWBI303","MASS_UPLOADS_ACCESS"),
+	ROUTE_DISPATCH("BI","CSWBI304","ROUTE_DISPATCH_ACCESS"),
+	PRINT_FILE("BI","CSWBI305","PRINTFILE_ACCESS"),
+	PRICE_UPLOAD("BI","CSWBI306","PRICE_UPLOAD_ACCESS"),
+//	CONSOLIDATED("BI","CUIPI214B","CONSOLIDATED_ACCESS"),
+	AAE("BI","CSWBI311","AAE_ACCESS"),
+	AOB_MENU("BI","CSWBI313","AOB_MENU_ACCESS"),
+	AAI_MENU("BI","CSWBI312","AAI_MENU_ACCESS"),
+	AOB_UPLOAD("BI","AUIPI010","AOB_UPLOAD_ACCESS"),
+	ARC_UPLOAD("BI","AUIPI007","ARC_UPLOAD_ACCESS"),
+	AOM_UPLOAD("BI","AUIPI008","AOM_UPLOAD_ACCESS"),
+	ACI_UPLOAD("BI","AUIPI009","ACI_UPLOAD_ACCESS")
+
+;
+	
+	public final String systen, pointer, label;
+
+	private PointerAccess(String systen, String pointer, String label) {
+		this.systen = systen;
+		this.pointer = pointer;
+		this.label = label;
+	}
+
+    
+}

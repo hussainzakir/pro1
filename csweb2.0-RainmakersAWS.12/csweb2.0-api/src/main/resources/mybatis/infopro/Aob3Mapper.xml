@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.aob3.dao.Aob3Dao">
+	
+
+	<select id="aobProjectCreation"  statementType="CALLABLE" >
+		Call CUQOMAAI37_CREATE_PROJECTID(
+						#{request.json, jdbcType=CHAR, mode=IN},                                
+						 #{request.projectId, jdbcType=CHAR,mode=OUT},
+						 #{request.returnStatus,jdbcType=CHAR,mode=OUT},
+						 #{request.returnErrorMsg,jdbcType=CHAR,mode=OUT} 
+		)
+	</select>
+	
+	<select id="aobSaveProjectData"  statementType="CALLABLE" >
+		Call CUQOMAOB01_PARSE_AND_STAGE(
+						#{request, jdbcType=CLOB, mode=IN},                                
+						 #{result.errorCode,jdbcType=CHAR,mode=OUT},
+						 #{result.errorMessage,jdbcType=CHAR,mode=OUT} 
+		)
+	</select>
+
+	 <select id="aobRequestDriver" statementType="CALLABLE">
+		Call CUQOMAAI33_SBM_REQUEST_DRIVER(
+						#{request.json, jdbcType=CHAR, mode=IN},                                
+						#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+						#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT} 
+		)
+	 </select>
+
+	<select id="getUserImportHistory" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		CALL CUQACQ100_CSWEB_ACTIVITIES (
+		#{userId},
+		'1',
+		#{result.sqlState,jdbcType=CHAR,mode=OUT},
+        #{result.errorMessage,jdbcType=CHAR,mode=OUT})
+	</select>
+	
+	<select id="getErrorData" resultMap="clobToStringMap">
+		CALL CUQOMGETER_GET_ERROR_RESPONSE(
+			#{projectId, jdbcType=CHAR, mode=IN},
+			'',
+			#{request.errorCode,jdbcType=CHAR,mode=OUT},
+			#{request.errorMessage,jdbcType=CHAR,mode=OUT}
+			 ) 
+		</select>
+
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+</mapper>

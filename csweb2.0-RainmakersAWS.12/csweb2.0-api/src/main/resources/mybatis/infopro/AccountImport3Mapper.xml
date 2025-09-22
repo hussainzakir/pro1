@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.imports3.dao.AccountImport3Dao" >
+
+<select id="getProjectsList" statementType="CALLABLE"
+	resultType="java.lang.String" resultMap="clobToStringMap">
+   Call CUQOMAAI38_ACCOUNT_UPLOAD(
+						#{request.json, jdbcType=CHAR, mode=IN},                                
+						#{request.sqlState,jdbcType=CHAR,mode=OUT},
+        				#{request.errorMessage,jdbcType=CHAR,mode=OUT})
+</select>
+
+<select id="getProjectDetails" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{Call CUQOMAAI39_PROJECT_DETAILS(
+           	#{request.json,jdbcType=CHAR,mode=IN},
+           	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  			#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+</select>
+
+<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+</resultMap>
+
+</mapper>

@@ -1,0 +1,141 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="begin" style="padding-top: 50px;padding-left:30px;">
+   <button mat-raised-button  color="blue"  class="btn-w-md" routerLink="/imports" [queryParams]="{search: 1}">Back</button>                          
+</div>
+<div class="center"style="padding-top: 0px;" >
+    <h1>Project Details</h1>
+</div>
+<div *ngIf="projectDetails" style="width: 90%; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 0px;">
+    <div fxFlex="100">
+      <div fxLayout="row wrap" fxLayoutGap="20px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+          <mat-card class="mat-elevation-z8">
+            <mat-card-content style="width: 100%;">
+                <table class="cardTable">
+                  <tr>
+                    <td><strong>Project Name:</strong></td><td>{{projectDetails.projectName}}</td>
+                    <td><strong>No. of Accounts:</strong></td><td>{{projectDetails.noOfAccounts}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Start Date:</strong></td><td>{{projectDetails.startDate}}</td>
+                      <td><strong>No. of Bill-To's:</strong></td><td>{{projectDetails.noOfBillTos}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Status:</strong></td><td>{{projectDetails.projectStatus}}</td>
+                    <td><strong>No. of Sites:</strong></td><td>{{projectDetails.noOfSites}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Completion Date:</strong></td><td>{{projectDetails.completionDate}}</td>
+                    <td><strong>No. of Containers:</strong></td><td>{{projectDetails.noOfContainers}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong></strong></td><td></td>
+                    <td><strong>No. of Rates:</strong></td><td>{{projectDetails.noOfRates}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong></strong></td><td></td>
+                    <td><strong>No. of Routes:</strong></td><td>{{projectDetails.noOfRoutes}}</td>
+                  </tr>
+                </table>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="projectDetails" style="width: 90%; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 20px;">
+    <div fxFlex="100">
+      <div fxLayout="row wrap" fxLayoutGap="20px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+           <mat-card class="mat-elevation-z8">
+            <mat-card-content style="width: 100%;">
+                <table class="cardTable">
+                  <tr>
+                    <td><strong>Current Step:</strong></td><td>{{projectDetails.currentStep}}</td>
+                    <td><strong>Next Step:</strong></td><td>{{projectDetails.nextStep}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Status:</strong></td><td>{{projectDetails.currentStepStatus}}</td>
+                      <td><strong></strong></td><td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Error:</strong></td><td>{{projectDetails.error}}</td>
+                    <td><strong></strong></td><td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Last Attempt:</strong></td><td>{{projectDetails.lastAttempt}}</td>
+                    <td><strong></strong></td><td></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Last Validated</strong></td><td>{{projectDetails.lastValidated}}</td>
+                    <td><strong></strong></td><td></td>
+                  </tr>
+                </table>   
+           </mat-card-content>
+              <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+                <button mat-raised-button color="accent">Errors</button>
+              </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="projectDetails" class="activity-header">
+  <h1>Activity History</h1>
+  <button mat-icon-button class="orange-txt" style=" color: #FB8C00;" matTooltip="refresh data" (click)="getDetails(projectId)">
+    <mat-icon>autorenew</mat-icon>
+  </button>
+</div>
+<div *ngIf="projectDetails" style="width: 90%; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 30px;">
+    <div fxFlex="100">
+      <div fxLayout="row wrap" fxLayoutGap="20px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+            <mat-card class="mat-elevation-z8">
+            <mat-card-content [style.overflow]="'auto'">
+                <div style="width: 100%;">
+                  <ng-container *ngIf="dataForDetailsTable?.length; else noData">
+                      <table mat-table [dataSource]="dataForDetailsTable"  matSort style="width: 100%;" >
+                        <ng-container matColumnDef="step" >
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Step </th>
+                          <td mat-cell *matCellDef="let row">
+                        <ng-container>{{row.step}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="activity">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Activity </th>
+                          <td mat-cell *matCellDef="let row">
+                        <ng-container>{{row.activity}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                          <td mat-cell *matCellDef="let row">
+                        <ng-container>{{row.status}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="startTime">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Time</th>
+                          <td mat-cell *matCellDef="let row">
+                        <ng-container>{{row.startTime}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="endTime">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> End Time </th>
+                          <td mat-cell *matCellDef="let row">
+                        <ng-container>{{row.endTime}}</ng-container></td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                  </ng-container>
+                  <ng-template #noData>
+                    <div class="no-data" style="padding:16px; text-align:center;"> No data available </div>
+                  </ng-template>
+                </div>
+              </mat-card-content>
+         </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

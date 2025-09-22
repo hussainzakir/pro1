@@ -1,0 +1,105 @@
+<h1 mat-dialog-title>Add Service Recording</h1>
+<div mat-dialog-content>
+  <form [formGroup]="recordingForm">
+  <mat-form-field appearance="" >
+    <mat-label>Subject</mat-label>
+    <input matInput formControlName="subject">
+  </mat-form-field>
+  <mat-form-field appearance="" *ngIf="!isNationalAccount">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option value="OPEN">Open</mat-option>
+      <mat-option value="PENDING">Pending</mat-option>
+      <mat-option value="CLOSED">Closed</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Priority</mat-label>
+    <mat-select formControlName="priority">
+      <mat-option value="N">Normal</mat-option>
+      <mat-option value="M">Medium</mat-option>
+      <mat-option value="H">High</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Department</mat-label>
+    <mat-select formControlName="department" (selectionChange)="departmentChanged($event)">
+      <mat-option value="ALL">All</mat-option>
+      <mat-option value="AD">Admin/Accounts Receivables</mat-option>
+      <mat-option value="CALL">Unscheduled Call</mat-option>
+      <mat-option value="CC">Credit and Collections</mat-option>
+      <mat-option value="CS">Customer Service</mat-option>
+      <mat-option value="MA">Maintenance</mat-option>
+      <mat-option value="NA">National Accounts</mat-option>
+      <mat-option value="OP">Operations</mat-option>
+      <mat-option value="SA">Sales</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <!-- Call with DSC (CAll recording) fetch using -->
+    <mat-label>Recording Type</mat-label>
+    <mat-select formControlName="recordingType" (selectionChange)="recordingTypeChanged($event)">
+      <mat-option *ngFor="let tp of recordingTypes" [value]="tp.tableElement">
+        {{tp.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" *ngIf="isNationalAccount">
+    <mat-label>Assign To:</mat-label>
+    <input matInput formControlName="assignTo">
+  </mat-form-field>
+  <mat-form-field appearance="" *ngIf="showRouteTo">
+    <mat-label>Route To:</mat-label>
+    <mat-select formControlName="routeTo">
+      <mat-option value="NASSC.APDept@republicservices.com">APDept</mat-option>
+      <mat-option value="NASSC.Billing@republicservices.com">Billing</mat-option>
+      <mat-option value="NASSC.CMForms@republicservices.com">CMFORMS</mat-option>
+      <mat-option value="NASSCDispatch@republicservices.com">Dispatch</mat-option>
+      <mat-option value="NASSCBilling.familyDollar@republicservices.com">Family Dollar</mat-option>
+      <mat-option value="NASSC.NAPS@republicservices.com">NAPS</mat-option>
+      <mat-option value="NASSCPROC3rdPartyPrice@republicservices.com">NASSC PROC 3rd Party Price</mat-option>
+      <mat-option value="NASSC.Oakleaf@republicservices.com">Oakleaf</mat-option>
+      <mat-option value="NASSCSpecialty@republicservices.com">Specialty</mat-option>
+      <mat-option value="nassc.tmaccts@republicservices.com">Totally Managed</mat-option>
+      <mat-option value="nassc.verizon@republicservices.com">Verizon Billing</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Escalation</mat-label>
+    <mat-select formControlName="escalation">
+      <mat-option *ngFor="let et of escalationTypes" [value]="et.tableElement">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Description</mat-label>
+    <textarea formControlName="description" matInput maxlength="{{textareaMaxLength}}"></textarea>
+    <mat-hint class="hint-right">Chars {{recordingForm.get('description').value.length}}/{{textareaMaxLength}}</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Resolution</mat-label>
+    <textarea matInput formControlName="resolution" maxlength="{{textareaMaxLength}}"></textarea>
+    <mat-hint class="hint-right">Chars {{recordingForm.get('resolution').value.length}}/{{textareaMaxLength}}</mat-hint>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Employee" #select formControlName="employee">
+      <mat-select-filter *ngIf="select.focused" [placeholder]="'Search'" [displayMember]="'lastName'" [array]="employees" (filteredReturn)="filteredEmployees =$event"></mat-select-filter>
+      <mat-option *ngFor="let item of filteredEmployees" [value]="item">
+        {{item.lastName}}, {{item.firstName}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <label>Service to be completed *:</label>
+    <input matInput formControlName="completedDate" [matDatepicker]="picker" (focus)="picker.open()">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+</form>
+</div>
+<div mat-dialog-actions>
+
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" (click)="save()">Submit</button>
+</div>

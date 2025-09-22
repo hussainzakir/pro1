@@ -1,0 +1,22 @@
+<h2 mat-dialog-title *ngIf="this.uploadType == 'AOB' || this.uploadType == 'ARC' " >{{uploadType === 'AOB' ? 'Account On Boarding Upload Review' : 'Resi Contract Upload Preview'}}</h2>
+<h2 mat-dialog-title *ngIf="this.uploadType == 'AOM'" >Resi Open Market Upload Preview</h2>
+
+<p *ngIf="rowlimitService.rowlimit" style="color: red;">Note: the preview can only support the first 200 account records.</p>
+
+<mat-tab-group animationDuration="0ms">
+  <mat-tab *ngFor="let tab of book.sheetsPreview | keyvalue: asIsOrder; let index = index" class="tab-title">
+    <ng-template mat-tab-label >{{tab.key}}</ng-template>
+    <section class="example-container mat-elevation-z8" tabindex="0">
+    <table mat-table [dataSource]="tab.value">
+
+      <ng-container *ngFor="let disCol of (getColumns(tab.value[0])); let colIndex = index" matColumnDef="{{disCol}}">
+        <th mat-header-cell *matHeaderCellDef>{{disCol}}</th>
+        <td mat-cell *matCellDef="let element"><pre>{{element[disCol]}}</pre></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="(getColumns(tab.value[0])); sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: (getColumns(tab.value[0]))"></tr>
+    </table>
+    </section>
+  </mat-tab>
+</mat-tab-group>

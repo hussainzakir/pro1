@@ -1,0 +1,46 @@
+<h1 mat-dialog-title>Delete Container</h1>
+<div mat-dialog-content class="" cdkDrag>
+    <p>Are you sure you want to delete the following container:</p>
+    <table>
+      <tr>
+        <td style="width: 200px;"><strong>Account-Site-Container:</strong></td><td>{{accountDetail.account}}-{{site?.site}}-{{container.containerId}}</td>
+      </tr>
+      <tr>
+        <td><strong>Quantity:</strong></td><td>{{container.quantityOrder}}</td>
+      </tr>
+      <tr>
+        <td><strong>Contract Number:</strong></td><td>{{container.contractNumber}}</td>
+      </tr>
+      <tr>
+        <td><strong>Type:</strong></td><td>{{container.containerType}}</td>
+      </tr>
+      <tr>
+        <tr>
+          <td><strong>Size:</strong></td><td>{{container.containerSize}}</td>
+        </tr>
+        <tr>
+          <tr>
+            <td><strong>Account Type:</strong></td><td>{{container.accountTypeDescription}}</td>
+          </tr>
+          <tr>
+            <td><strong>On Call Flag:</strong></td><td>{{container.onCall}}</td>
+          </tr>
+          <tr>
+            <td><strong>ID Code:</strong></td><td>{{container.idCode}}</td>
+          </tr>
+          <tr>
+            <td><strong>Rev Distribution Code:</strong></td><td>{{container.revenueDistribution}}</td>
+          </tr>
+          <tr>
+            <td><strong>Shared:</strong></td><td>{{container.sharedContainerId}}</td>
+          </tr>
+          <tr>
+            <td><strong>Start Date:</strong></td><td>{{container.startDate | dateFormat}}</td>
+          </tr>
+      </table>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="save()">Submit</button>
+</div>

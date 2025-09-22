@@ -1,0 +1,13 @@
+view.id=get-templates
+view.class=com.repsrv.csweb.core.model.massupload.MuTemplate
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+id
+status
+description
+changedBy
+changedDate
+detailDesc
+system
+showTemplateLink

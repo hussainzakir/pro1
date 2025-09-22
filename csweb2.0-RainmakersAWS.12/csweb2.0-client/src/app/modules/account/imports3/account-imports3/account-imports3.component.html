@@ -1,0 +1,71 @@
+<div class="center"style="padding-top: 50px;" >
+  <h1>Auto Account Import 3.0</h1>
+  </div>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" >
+	<div fxFlex="100" class="center ">
+      <div fxFlex="60" fxFlexOffset="0" style="padding-top: 10px;" >
+        <mat-card class="mat-elevation-z8">
+         <mat-card-content style="text-align: center;">
+        <form [formGroup]="uploadForm">
+          <div fxLayout="row" fxLayoutGap="15px">
+            <div fxFlex="50">
+              <mat-form-field fxFlex="100">
+                <mat-label>{{this.fileName == 'AOB'? 'Project Name:' : 'Aquisition Name:'}} </mat-label>
+                <input #aqName formControlName="aqName" autocomplete="off"
+                matInput placeholder="Gallegos Sanitation" value="" maxlength="55">
+              </mat-form-field>
+            </div>
+            <div fxFlex="50">
+              <mat-form-field *ngIf="showChangeNumber" fxFlex="100">
+                <mat-label>Change Number:</mat-label>
+                <input #chgNumber formControlName="chgNumber" autocomplete="off"
+                matInput placeholder="CHG0012345" value="">
+              </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" style="margin-bottom: 0px; padding-bottom: 0px;">
+          <div fxFlex="50">
+            <mat-form-field fxFlex="100" style="">
+              <mat-label>Select upload type:</mat-label>
+              <mat-select #uploadType formControlName="uploadType"  [(value)]="selectedType">
+                <mat-option *ngFor="let uploadTypeT of uploadTypes" [value]="uploadTypeT.id">
+                {{uploadTypeT.description}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="50">
+          <mat-form-field fxFlex="100">
+            <mat-label>Select upload file:</mat-label>
+            <ngx-mat-file-input placeholder="Basic Input" #uploadFile  formControlName="uploadFile" (change)="selectFile($event)"></ngx-mat-file-input>
+
+            <mat-icon matSuffix style="color: orange;">folder</mat-icon>
+          </mat-form-field>
+          <mat-form-field *ngIf="fileName === 'AOM'" fxFlex="100" style="display: none;">
+            <input formControlName="projectId" matInput>
+          </mat-form-field>
+        </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="0px" style="margin-top: 0px;min-height: 25px;" >
+          <div fxFlex="50" style="font-size: 12px;" *ngIf="selectedType">
+            <a href="{{templateUrl}}/{{selectedType}}">download template</a>
+          </div>
+        </div>
+        </form>
+        </mat-card-content>
+        <mat-card-actions style="text-align: center;padding-top: 0px;">
+          <button mat-raised-button  color="orange"  class="btn-w-md" (click)="doUploadPhase1();"
+          [disabled]="!uploadForm.valid">Begin Upload</button>
+          <button mat-raised-button  color="white"  class="btn-w-md" (click)="resetTheForm();" >Reset</button>
+        </mat-card-actions>
+      </mat-card>
+      </div>
+	</div>
+</div>
+<div fxLayout="row"
+     *ngIf="showHistory && uploadForm.get('uploadType')!.value==='AOB'"
+     fxLayoutGap="10px">
+  <div fxFlex="100">
+    <app-aob3-projects (reuploadEvent)="reuploadEvent($event)" [currentFileTypeName]="uploadForm.get('uploadType')!.value"></app-aob3-projects>
+  </div>
+</div>
+

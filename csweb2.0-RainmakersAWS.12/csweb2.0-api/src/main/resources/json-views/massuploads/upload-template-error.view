@@ -1,0 +1,7 @@
+view.id=upload-template-error
+view.class=java.lang.Exception
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+message
+hasError

@@ -1,0 +1,14 @@
+.cardTable td{
+  padding: 5px 0px;
+}
+
+.cardTableSmall td{
+  padding: 3px 3px;
+}
+.notes-tabs{
+  width: 100%;
+}
+
+.btn-disabled{
+  display: inline-block;
+}

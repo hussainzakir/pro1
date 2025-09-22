@@ -1,0 +1,95 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.container.dao.ContainerDao" >
+	
+	<select id="getContainerDetail" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS012_Get_Container_Info(
+     #{company},                                
+     #{account},
+     #{site},
+     #{container},                           
+     '1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+     <select id="getIndustrialstatisticsServiceHistory" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+     {CALL CUQCS025_Get_Service_Stats(
+     #{company},                                
+     #{account},
+     #{site},
+     #{container},  
+     #{DateServed},                       
+     '1',
+     #{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}
+
+     </select>
+
+       <select id="getContainerServiceHistory" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+     {CALL CUCUST.CUQCS027_Get_Service_History(
+     #{company},                                
+     #{account},
+     #{site},
+     #{container},  
+     #{DateServed},                       
+     '1',
+     #{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}
+
+     </select>
+
+
+	<select id="getContainerRates" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS011_GET_CONTAINER_RATES(4,
+     #{company},                                
+     #{account},
+     #{site},
+     #{container},
+     #{urNumber},                           
+     '1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+
+	<select id="getHaulerDetail" statementType="CALLABLE" 
+        resultType="java.lang.String" resultMap="clobToStringMap">
+    {   
+     CALL CUQCS015_GET_HAULER_INFO_FOR_NA_CUSTOMERS(
+     #{company},                                
+     #{account},
+     #{site},                           
+     '1', 
+    #{result.errorMessage,jdbcType=CHAR,mode=OUT},
+    #{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+    #{result.sqlState,jdbcType=CHAR,mode=OUT})} 
+    </select>
+
+    <select id="getHcmtRates" statementType="CALLABLE"
+    resultType="java.lang.String" resultMap="clobToStringMap">
+    {
+     CALL CUQCS033_HAULER_COST_INFO(
+     #{request.json,jdbcType=CHAR,mode=IN},
+     '1',
+     #{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+     #{result.sqlState,jdbcType=CHAR,mode=OUT})} 
+     </select> 
+	
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+
+</mapper>

@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.obligations.dao.AccountObligationsDao" >
+	
+	<select id="getObligations" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	Call ARQCS002_Get_Obligation_History(
+                    #{company},                                
+ 					#{account},  
+                    #{type},           
+                    '1', 
+		#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+		#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+		#{result.sqlState,jdbcType=CHAR,mode=OUT})
+	</select>
+	
+	<select id="getReconciliations" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	Call ARQCS004_Get_Obligations_Reconciliations(
+                    #{company},                                
+ 					#{account},  
+                    #{type},           
+                    '1', 
+		#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+		#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+		#{result.sqlState,jdbcType=CHAR,mode=OUT})
+	</select>
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+	
+</mapper>
+

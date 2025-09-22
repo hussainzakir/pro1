@@ -1,0 +1,88 @@
+<h1 mat-dialog-title>Update Container Rate Details</h1>
+<div mat-dialog-content class="fields-container" cdkScrollable>
+  <div>
+    <tr>
+      <td style="width: 140px;"><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+    </tr>
+    <tr>
+      <td><strong>Account:</strong></td><td>{{rate?.company}} - {{rate?.customerAccount}}</td>
+    </tr>
+    <tr>
+       <td><strong>Site:</strong></td><td>{{rate?.site}}</td>
+    </tr>
+    <tr>
+      <td><strong>Group:</strong></td><td>{{rate?.containerGroup}}</td>
+    </tr>
+</div>
+  <ng-template [ngIf]="errorsList && errorsList.length > 0">
+  <strong>Errors:</strong>
+  <br/>
+  <ul>
+    <li *ngFor="let error of errorsList">
+      {{error.error}}
+    </li>
+  </ul>
+<br/>
+</ng-template>
+  <form [formGroup]="updateForm">
+    <div class="container-form-fields">
+      <mat-form-field appearance="" class="fill">
+        <mat-label>Effective Date</mat-label>
+        <input matInput formControlName="rateEffectiveDate">
+      </mat-form-field>
+      <mat-form-field appearance="" class="fill">
+        <mat-label>Close Date</mat-label>
+        <input matInput formControlName="closeDate">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Charge Code" #select1 formControlName="chargeCode">
+          <mat-select-filter *ngIf="select1.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="chargeCodeValues" (filteredReturn)="filteredChargeCodeValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredChargeCodeValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="" >
+        <mat-label>Charge Rate</mat-label>
+        <input matInput formControlName="chargeRate" value ="{{rate.chargeRate}}">
+        <mat-error *ngIf="updateForm.get('chargeRate').hasError('pattern')">Only 9 num before '.' and 2 after
+        </mat-error>
+        <mat-error *ngIf="updateForm.get('chargeRate').hasError('maxlength')">Rate can only have 12 chars
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="WM Type" #select2 formControlName="wasteMaterialType">
+          <mat-select-filter *ngIf="select2.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="wasteMaterialTypeValues" (filteredReturn)="filteredWasteMaterialTypeValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredWasteMaterialTypeValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="" class="fill">
+        <mat-label>Unit of Measure</mat-label>
+        <input matInput formControlName="unitOfMeasure"value ="{{rate.unitOfMeasure}}">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Charge Type" #select3 formControlName="chargeType">
+          <mat-select-filter *ngIf="select3.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="chargeTypeValues" (filteredReturn)="filteredChargeTypeValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredChargeTypeValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Charge Method" #select4 formControlName="chargeMethod">
+          <mat-select-filter *ngIf="select4.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="chargeMethodValues" (filteredReturn)=" filteredChargeMethodValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredChargeMethodValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+</div>
+</form>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="rateSubmitButton.disabled=true; save();" #rateSubmitButton>Submit</button>
+</div>

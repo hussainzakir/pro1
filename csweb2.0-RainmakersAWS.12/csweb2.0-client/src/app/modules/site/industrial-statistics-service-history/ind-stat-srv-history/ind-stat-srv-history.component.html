@@ -1,0 +1,118 @@
+<div class="maximize-button-group" >
+  <button appWindowbuttons (click)="maximize()" class="maximize-button"><span  class="fa fa-window-maximize"></span></button>  
+  <button appWindowbuttons (click)="restore()" class="restore-button"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+</div>
+ <div class="modal-dialog" id="my-modal-dialogInd">
+         <div fxLayout="row" fxLayoutGap="0px" fxLayoutAlign="start" style="padding-top: 0px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="5px grid" fxLayoutAlign="start start">
+            <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="40%">
+              <table style="width: 100%;padding: 0px;">
+                <tr>
+                  <td>Account: {{account}} | Site: {{site}}</td>
+                </tr>
+                <tr>
+                  <td>Container group : {{containerGroup}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 10px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="20px grid">
+            <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="40%">
+              <mat-card>
+                <mat-card-title>
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                    Industrial Statistics Service History
+                    <hr style="width: 70%; text-align: left; margin: 0px;">
+                </mat-card-title>
+                <mat-card-content class="card-content">
+                 <table mat-table [dataSource]="dataSource" matSort matSortActive="dateServiced" matSortDirection="desc" style="width: 100%;" *ngIf="dataSource">
+                    <ng-container matColumnDef="dateServiced">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Date</th>
+                      <td mat-cell *matCellDef="let history">{{ formateDate(history.dateServiced) }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fromAcctNumber">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>From Account </th>
+                      <td mat-cell *matCellDef="let history"  style="padding-left: 8px ;">{{ history.fromAcctNumber }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="travelTime">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Travel Time</th>
+                      <td mat-cell *matCellDef="let history">{{ history.travelTime }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="travelDistance">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Travel Distance</th>
+                      <td mat-cell *matCellDef="let history">{{ history.travelDistance }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="startTime">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Time</th>
+                      <td mat-cell *matCellDef="let history">{{ history.startTime }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="endTime">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>End Time</th>
+                      <td mat-cell *matCellDef="let history">{{ history.endTime }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serviceTime">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Time</th>
+                      <td mat-cell *matCellDef="let history">{{ history.serviceTime }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serviceDistance">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Distance</th>
+                      <td mat-cell *matCellDef="let history">{{ history.serviceDistance }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serviceCode">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Code</th>
+                      <td mat-cell *matCellDef="let history">{{ history.serviceCode }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="disposalCode">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Disposal Code</th>
+                      <td mat-cell *matCellDef="let history">{{ history.disposalCode }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="landfillTime">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Disposal Time</th>
+                      <td mat-cell *matCellDef="let history">{{ history.landfillTime }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="weight">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Weight</th>
+                      <td mat-cell *matCellDef="let history">{{ history.weight }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="weightUm">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Unit of Measure</th>
+                      <td mat-cell *matCellDef="let history"  style="padding-left: 8px ;">{{ history.weightUm }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="routeNumber">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Route Number</th>
+                      <td mat-cell *matCellDef="let history">{{ history.routeNumber }}</td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button mat-dialog-close>Close</button>
+    </div>
+  </div>
+
+    

@@ -1,0 +1,26 @@
+table {
+    width: 100%;
+  }
+
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+  .mat-column-template{
+  flex: 0 0 10%;
+  }
+
+  .pagedTable {
+    width: 100%;
+  }
+
+  .mat-header-cell {
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .repsrv-btn{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+

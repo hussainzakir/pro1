@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="callSettersOnNulls" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	<typeAliases>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.handlers.DateTypeHandler" alias="as400DateHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.handlers.YesNoBooleanHandler" alias="yesNoHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.handlers.OneZeroBooleanHandler" alias="oneZeroBooleanHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.custom.handlers.CsWebEnumHandler" alias="cswebEnumHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.custom.handlers.JsonTypeHandler" alias="jsonHandler"/>
+	</typeAliases>
+	<typeHandlers>
+		<package name="com.repsrv.csweb.core.mybatis.type.handlers"/>
+	</typeHandlers>
+  	<mappers>
+  	  <mapper resource="mybatis/infopro/AccountImportMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AuthorizationMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/EmployeeMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/StandardizedCodesMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AccountSiteContainerMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/MassUploadsMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/SearchMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AccountMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AccountChargesMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AccountPaymentMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AccountObligationMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/ServiceRecordingMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/AccountObligationInvoiceDetailMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/PriceIncreaseMapper.xml"/>
+  	  <mapper resource="mybatis/infopro/ObligationsSearchMapper.xml"/>
+      <mapper resource="mybatis/infopro/AutoAccountImportErrorFileMapper.xml"/>
+      <mapper resource="mybatis/infopro/AuditMapper.xml"/>
+      <mapper resource="mybatis/infopro/AutomatedAccountEntryMapper.xml"/>
+	  <mapper resource="mybatis/infopro/AccountOnBoardingMapper.xml"/>
+	  <mapper resource="mybatis/infopro/OpenMarketMapper.xml"/>	
+	  <mapper resource="mybatis/infopro/AccountImport3Mapper.xml"/>	
+	  <mapper resource="mybatis/infopro/Aob3Mapper.xml"/>	
+	</mappers>
+</configuration>

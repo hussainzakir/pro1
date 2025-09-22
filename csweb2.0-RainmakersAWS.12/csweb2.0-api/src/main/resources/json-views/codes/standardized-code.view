@@ -1,0 +1,8 @@
+view.id=standardized-code
+view.class=com.repsrv.csweb.core.model.codes.StandardizedCode
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+tableName
+tableElement
+description

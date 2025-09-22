@@ -1,0 +1,83 @@
+<div class="center header-pad-top" >
+	<h1>Submit/Download Template</h1>
+</div>
+<form *ngIf="uploadForm" [formGroup]="uploadForm">
+<mat-horizontal-stepper [linear]="isLinear" #stepper formArrayName="formArray" class="mat-elevation-z8">
+  <mat-step formGroupName="0" [stepControl]="formArray?.get([0])">
+
+      <ng-template matStepLabel>Select a template</ng-template>
+      <div fxLayout="row" class="stepper">
+				<div fxFlex="70">
+          <mat-form-field fxFlex="100">
+            <mat-label>Select upload type:</mat-label>
+            <mat-select #template formControlName="template" [errorStateMatcher]="matcher" (selectionChange)="templateChanged($event)">
+              <mat-option *ngFor="let template of templates" [value]="template">
+              {{template.description}}</mat-option>
+            </mat-select>
+            <mat-hint *ngIf="templateSelected" style="width: 100%;text-align: center;font-size: 120%">
+              <a [routerLink]="" (click)="doDownloadTemplate()" style="text-decoration: none;color: blue;">Download Template</a>
+              <span class="left-pad-med" style="padding-left: 30px;"><em>Last changed {{templateSelected.changedDate | as400DateToString}}</em></span>
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div>
+        <button mat-button matStepperNext mat-raised-button  color="orange">Next</button>
+      </div>
+  </mat-step>
+  <mat-step formGroupName="1" [stepControl]="formArray?.get([1])" label="Change Number & File">
+    <div fxLayout="row" fxLayoutGap="50px" class="stepper">
+      <div *ngIf="changeReq == 'Y'" fxFlexOffset="0" fxFlex="50">
+        <mat-form-field fxFlex="100">
+          <mat-label>Change Number</mat-label>
+          <input  matInput  formControlName="changeNumber"[(ngModel)]="changeNumber" placeholder="Ex: CHG50000172" maxlength="10" required>
+        </mat-form-field>
+      </div>
+      <div fxFlexOffset="0" fxFlex="100">
+        <mat-form-field fxFlex="100">
+          <mat-label>Mass Upload file:</mat-label>
+          <ngx-mat-file-input  placeholder="Basic Input" class="selectedFileId" formControlName="uploadFile" (change)="selectFile($event)" ></ngx-mat-file-input>
+          <mat-icon matSuffix style="color: orange;">folder</mat-icon>
+        </mat-form-field>
+    </div>
+    </div>
+      <div>
+        <button mat-button matStepperPrevious mat-raised-button color="grey">Back</button>
+        &nbsp;
+        <button *ngIf="changeReq == 'Y'" #submitButton mat-button [disabled]="uploadForm.get('formArray').get([1]).get('changeNumber').invalid ||uploadForm.get('formArray').get([1]).get('changeNumber').value === ' '" (click)="doSubmitTemplate();" mat-raised-button color="orange">Upload File</button>
+        <button *ngIf="changeReq !== 'Y'"#submitButton mat-button (click)="doSubmitTemplate();" mat-raised-button color="orange">Upload File</button>
+      </div>
+      <div style="min-height: 30px; margin-top: 10px;">
+      <div *ngIf="currentFile && progress>0" class="progress" >
+    <div *ngIf="currentFile" class="progress">
+            <mat-progress-bar mode="determinate" value="{{ progress }}"></mat-progress-bar>
+            </div>
+        {{ progress }}%
+    </div>
+  </div>
+  </mat-step>
+  <mat-step [fxFlexAlign.gt-xs]>
+    <ng-template matStepLabel >Upload Status</ng-template>
+    <div fxLayout="row" fxLayoutGap="10px" class="stepper" >
+			<div *ngIf="uploadSuccess" fxFlexOffset="0" fxFlex="100" style="text-align: center;">
+        Your upload is now complete!  The Mass Upload History table will be refreshed automatically.
+      </div>
+      <div *ngIf="!uploadSuccess && uploadResponse" fxFlexOffset="0" fxFlex="100" style="text-align: left;">
+        <i class="fas fa-exclamation-circle error-color" style="font-size: 130%;"></i>&nbsp;&nbsp;<strong>Error: {{uploadResponse.errorMessage}}</strong>
+        <ul *ngIf="uploadResponse.errors" class="error-color">
+          <li *ngFor="let err of uploadResponse.errors; index as i; first as isFirst">
+          <span *ngIf="err.rowNumber > -1">Row {{err.rowNumber}} - </span>
+          <span>{{err.columnErroMsg}}</span>
+          </li>
+      </ul>
+      </div>
+    </div>
+
+    <div>
+      <button mat-raised-button color="accent" *ngIf="uploadSuccess" (click)="stepper.reset(); cleanSelect();">Upload Another</button>
+      <button mat-raised-button color="accent" *ngIf="!uploadSuccess" (click)="stepper.previous(); currentFile=null;uploadSuccess=false;uploadResponse=null;progress=0;">Try Again</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
+</form>

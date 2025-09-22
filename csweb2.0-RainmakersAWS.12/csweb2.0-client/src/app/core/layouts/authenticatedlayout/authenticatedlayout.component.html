@@ -1,0 +1,37 @@
+
+<div class="example-container no-bars"  [class.example-is-mobile]="mobileQuery.matches" >
+  <mat-toolbar color="header" class="example-toolbar flexSpaceBetween">
+    <span>
+      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+      <img src="{{'assets/img/rs-logo.png' | assetpipe}}" class="logo">
+    </span>
+  <span class="header-title">CSWeb 2.0</span>
+  <span><button mat-button (click)="onLogout()">Logout</button></span>
+
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container n-bars"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" opened="true"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <ng-material-multilevel-menu [configuration]="config" [items]="appitems" (selectedItem)="selectedItem($event)">
+    </ng-material-multilevel-menu>
+    </mat-sidenav>
+
+    <mat-sidenav-content style="padding-left: 10px; " class="no-bars">
+     <div style="padding-bottom: 0.1rem; min-height: calc(100vh - 100px) !important; position: relative;" >
+      <main >
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+    <footer class="footer">
+      <small class=" mb-3 text-muted">&copy; 2025 Republic Services |
+        Version 2025.10
+        </small>
+    </footer>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+
+
+</div>

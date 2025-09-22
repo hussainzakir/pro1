@@ -1,0 +1,30 @@
+#my-modal-dialogInd{
+    max-height: 550px;
+  }
+  .rate-table th, .rate-table td {
+    padding: 0.5rem;
+    text-align: center;
+  }
+  .maximize-button-group {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      button {
+        border: none;
+        box-shadow: none;
+        background: transparent;
+      }
+  }
+  table{
+    border-collapse: collapse;
+  }
+  .table th, .table td {
+    padding: 0.5rem;
+    text-align: center;
+}
+.grey-row {
+  background-color: #f0f0f0;
+}
+.white-row {
+  background-color: #ffffff;
+}

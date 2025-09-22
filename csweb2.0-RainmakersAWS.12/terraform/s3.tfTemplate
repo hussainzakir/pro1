@@ -1,0 +1,6 @@
+resource "aws_s3_bucket" "test-aws-bucket" {
+  bucket = "repsrv-${var.app-name}-${var.env}"
+  tags = {
+    app = var.app-name
+  }
+}

@@ -1,0 +1,88 @@
+<div *ngIf="isOpen">
+<h1 mat-dialog-title>Create Container Rate</h1>
+<div mat-dialog-content class="fields-container">
+  <table style="width: 100%;">
+    <tr>
+      <td style="width: 140px;"><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+    </tr>
+    <tr>
+      <td><strong>Account:</strong></td><td>{{accountDetail?.company}} - {{accountDetail?.account}}</td>
+    </tr>
+    <tr>
+       <td><strong>Site:</strong></td><td>{{site?.site}}</td>
+    </tr>
+    <tr>
+      <td><strong>Group:</strong></td><td>{{container?.containerId}}</td>
+    </tr>
+  </table>
+  <br/>
+  <form [formGroup]="updateForm">
+    <div class="container-form-fields">
+      <mat-form-field appearance="" class="fill">
+        <mat-label>Effective Date</mat-label>
+        <input matInput formControlName="rateEffectiveDate" placeholder="Ex. 02/03/2024">
+        <mat-error *ngIf="updateForm.get('rateEffectiveDate').hasError('pattern')">Date can only have nums and '/'
+        </mat-error>
+        <mat-error *ngIf="updateForm.get('rateEffectiveDate').hasError('maxlength')">Date can only have 10 chars
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="" class="fill">
+        <mat-label>Close Date</mat-label>
+        <input matInput formControlName="closeDate" placeholder="Ex. 02/03/2024">
+        <mat-error *ngIf="updateForm.get('closeDate').hasError('pattern')">Date can only have nums and '/'
+        </mat-error>
+        <mat-error *ngIf="updateForm.get('closeDate').hasError('maxlength')">Date can only have 10 chars
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Charge Code" #select1 formControlName="chargeCode">
+          <mat-select-filter *ngIf="select1.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="chargeCodeValues" (filteredReturn)="filteredChargeCodeValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredChargeCodeValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="" >
+        <mat-label>Charge Rate</mat-label>
+        <input matInput formControlName="chargeRate" placeholder="Ex. 10.50">
+        <mat-error *ngIf="updateForm.get('chargeRate').hasError('pattern')">Only 9 num before '.' and 2 after
+        </mat-error>
+        <mat-error *ngIf="updateForm.get('chargeRate').hasError('maxlength')">Rate can only have 12 chars
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="WM Type" #select2 formControlName="wasteMaterialType">
+          <mat-select-filter *ngIf="select2.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="wasteMaterialTypeValues" (filteredReturn)="filteredWasteMaterialTypeValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredWasteMaterialTypeValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="" class="fill">
+        <mat-label>Unit of Measure</mat-label>
+        <input matInput formControlName="unitOfMeasure">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Charge Type" #select3 formControlName="chargeType">
+          <mat-select-filter *ngIf="select3.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="chargeTypeValues" (filteredReturn)="filteredChargeTypeValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredChargeTypeValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Charge Method" #select4 formControlName="chargeMethod">
+          <mat-select-filter *ngIf="select4.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="chargeMethodValues" (filteredReturn)=" filteredChargeMethodValues =$event"></mat-select-filter>
+          <mat-option *ngFor="let et of filteredChargeMethodValues" [value]="et.value">
+            {{et.description}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+</div>
+</form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="isOpen = false">Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="save();">Submit</button>
+</div>
+</div>

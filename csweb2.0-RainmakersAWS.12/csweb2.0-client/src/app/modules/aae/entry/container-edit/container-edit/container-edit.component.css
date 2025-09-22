@@ -1,0 +1,83 @@
+.mat-form-field{ width: 48%; padding: 10px; }
+
+.fill{ width: 98%; padding: 5px; }
+
+.hint-right{
+  width: 50%;
+  text-align: right;
+}
+
+.success-snackbar{
+  background-color: green;
+  color: white;
+}
+
+.error-snackbar{
+  background-color: red;
+  color: white;
+}
+
+.error-banner{
+  background-color: #00adef;
+  color: #fff;
+  padding: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.mat-icon {
+  vertical-align: middle;
+  padding-right: 15px;
+}
+
+li {
+  display: list-item;
+  float: left;
+  list-style-type: none;
+  width: 380px;
+  padding: 5px;
+  list-style: circle;
+  color: red;
+}
+
+.fields-container mat-form-field {
+  margin-left: 8px;
+}
+
+.fields-container mat-form-field {
+  width: 195px;
+}
+
+.fields-container form {
+  margin-bottom: 20px;
+}
+
+.fields-container form > * {
+  margin: 12px 0;
+}
+
+.example-container .mat-radio-button {
+  margin: 0 12px;
+}
+
+.mat-dialog-content{
+  max-height: 100vh;
+}
+
+::ng-deep .mat-select-value {
+  font-size: 12px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 20px;
+  row-gap: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+

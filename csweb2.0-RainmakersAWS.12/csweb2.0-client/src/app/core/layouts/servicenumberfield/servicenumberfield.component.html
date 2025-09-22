@@ -1,0 +1,17 @@
+<div role="group" class="app-servicenumberfield-container" [formGroup]="myForm" (focusin)="onFocusIn($event)"
+       (focusout)="onFocusOut($event)">
+       <input class="app-servicenumberfield-element" formControlName="division" size="3" maxLength="4"
+              aria-label="Area code" (input)="_handleInput(myForm.controls.division, serviceAccount);skipToAccount(myForm.controls.division, serviceAccount)" #area>
+       <span class="app-servicenumberfield-spacer">&ndash;</span>
+       <input class="app-servicenumberfield-element" formControlName="serviceAccount" size="3"
+              aria-label="serviceAccount code" (input)="_handleInput(myForm.controls.serviceAccount, site)"
+              (keyup.backspace)="autoFocusPrev(myForm.controls.serviceAccount, area)" #serviceAccount>
+       <span class="app-servicenumberfield-spacer">&ndash;</span>
+       <input class="app-servicenumberfield-element" formControlName="site" size="3"
+              aria-label="site number" (input)="_handleInput(myForm.controls.site)"
+              (keyup.backspace)="autoFocusPrev(myForm.controls.site, serviceAccount)" #site>
+       <span class="app-servicenumberfield-spacer">&ndash;</span>
+       <input class="app-servicenumberfield-element" formControlName="grp" size="3"
+              aria-label="grp number" (input)="_handleInput(myForm.controls.grp)"
+              (keyup.backspace)="autoFocusPrev(myForm.controls.grp, site)" #site>
+</div>

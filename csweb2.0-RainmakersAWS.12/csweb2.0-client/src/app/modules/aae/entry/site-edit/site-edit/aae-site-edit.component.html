@@ -1,0 +1,230 @@
+<h1 mat-dialog-title>Update Site Details</h1>
+
+<div mat-dialog-content class="fields-container" cdkScrollable>
+  <table>
+    <tr>
+      <td style="width: 140px;"><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+    </tr>
+    <tr>
+      <td><strong>Account:</strong></td><td>{{accountDetail.company}} - {{accountDetail?.account}}</td>
+    </tr>
+    <tr>
+      <td><strong>Site:</strong></td><td>{{site.site}}</td>
+    </tr>
+    <tr>
+      <td><strong>Original Start Date:</strong></td><td>{{site?.originalStartDate | dateFormat}}</td>
+    </tr>
+    <tr *ngIf="errorsList && errorsList.length > 0">
+      <td colspan="2"><strong>Errors:</strong></td>
+    </tr>
+    <tr *ngIf="errorsList && errorsList.length > 0">
+      <td colspan="2">
+        <ul>
+          <li *ngFor="let error of errorsList">
+            {{error.error}}
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+  <form [formGroup]="updateForm">
+    <div class="container-form-fields">
+    <mat-form-field appearance="">
+      <mat-label>Site Name</mat-label>
+      <input matInput formControlName="siteName" value ="{{site.siteName}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Address Number</mat-label>
+      <input matInput formControlName="addressNumber" value ="{{site.addressNumber}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Pre Dir</mat-label>
+      <input matInput formControlName="preDirectional" value ="{{site.preDirectional}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Address Name</mat-label>
+      <input matInput formControlName="addressName" value ="{{site.addressName}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Type</mat-label>
+      <input matInput formControlName="streetType" value ="{{site.streetType}}">
+      <mat-error *ngIf="updateForm.get('streetType').hasError('maxlength')">Type can only have 4 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Post Dir</mat-label>
+      <input matInput formControlName="streetDirection" value ="{{site.streetDirection}}">
+      <mat-error *ngIf="updateForm.get('streetDirection').hasError('maxlength')">Dir can only have 4 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Suite</mat-label>
+      <input matInput formControlName="addressSuite" value ="{{site.addressSuite}}">
+      <mat-error *ngIf="updateForm.get('addressSuite').hasError('maxlength')">Suite can only have 5 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>City</mat-label>
+      <input matInput formControlName="city" value ="{{site.city}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>State</mat-label>
+      <input matInput formControlName="state" value ="{{site.stateProvince}}">
+      <mat-error *ngIf="updateForm.get('state').hasError('maxlength')">State can only have 3 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Zip Code</mat-label>
+      <input matInput formControlName="zipCode" value ="{{site.postalCode}}">
+      <mat-error *ngIf="updateForm.get('zipCode').hasError('maxlength')">Zip can only have 12 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Telephone</mat-label>
+      <input matInput formControlName="phoneNumber">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Telephone Ext</mat-label>
+      <input matInput formControlName="phoneExtension" value ="{{site.phoneExtension}}">
+      <mat-error *ngIf="updateForm.get('phoneExtension').hasError('pattern')">Ext can only have nums
+      </mat-error>
+      <mat-error *ngIf="updateForm.get('phoneExtension').hasError('maxlength')">Ext can only have 4 nums
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Fax</mat-label>
+      <input matInput formControlName="faxNumber">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Contract #</mat-label>
+      <input matInput formControlName="contractNumber" value ="{{site.contractNumber}}">
+      <mat-error *ngIf="updateForm.get('contractNumber').hasError('maxlength')"># can only have 10 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Effective Date</mat-label>
+      <input matInput formControlName="effectiveDate">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Term</mat-label>
+      <input matInput formControlName="csaTerm" value ="{{site.term}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Expiry Date</mat-label>
+      <input matInput formControlName="expiryDate">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Review Date</mat-label>
+      <input matInput formControlName="reviewDate">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Contract Status" #contractStatusSelect formControlName="contractStatus">
+        <mat-select-filter *ngIf="contractStatusSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="contractStatusValues" (filteredReturn)="filteredContractStatusValues =$event"></mat-select-filter>
+        <mat-option *ngFor="let et of filteredContractStatusValues" [value]="et.value">
+          {{et.description}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Close Date</mat-label>
+      <input matInput formControlName="closeDate">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Purchase Order #</mat-label>
+      <input matInput formControlName="purchaseOrder" value ="{{site.purchaseOrder}}">
+      <mat-error *ngIf="updateForm.get('purchaseOrder').hasError('maxlength')">Order # can only have 15 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Authorized By</mat-label>
+      <input matInput formControlName="authorizedBy" value ="{{site.authorizedBy}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Authorized By Title</mat-label>
+      <input matInput formControlName="authorizedByTitle" value ="{{site.authorizedByTitle}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Service Contact</mat-label>
+      <input matInput formControlName="serviceContact" value ="{{site.serviceContact}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Contact Title</mat-label>
+      <input matInput formControlName="serviceContactTitle" value ="{{site.contactTitle}}">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select aria-readonly="true" placeholder="NAICS" #naicsSelect formControlName="naics" (selectionChange)="onNaicsSelectionChange($event)" (openedChange)="onDropdownOpenedNaics($event)" (blur)="onNaicsBlur()">
+        <mat-select-filter *ngIf="naicsSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="naicsValues" (filteredReturn)="onFilterNaics($event)"></mat-select-filter>
+        <ng-container *ngIf="filteredNaicsValues?.length > 0; else noDataNaics">
+          <cdk-virtual-scroll-viewport #naicsViewport itemSize="48" class="select-viewport" (scrolledIndexChange)="onScrollNaics($event)">
+            <mat-option *cdkVirtualFor="let et of filteredNaicsValues" [value]="et.value" >
+                {{ et.description }}
+            </mat-option>
+          </cdk-virtual-scroll-viewport>
+          </ng-container>
+          <ng-template #noDataNaics>
+            <mat-option disabled>
+              No data
+            </mat-option>
+          </ng-template>
+      </mat-select>
+    </mat-form-field> 
+    <mat-form-field>
+      <mat-select aria-readonly="true" placeholder="Sales Rep" #salesRepSelect formControlName="salesRep" (selectionChange)="onSalesRepSelectionChange($event)" (openedChange)="onDropdownOpenedSalesRep($event)" (blur)="onSalesRepBlur()">
+        <mat-select-filter *ngIf="salesRepSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="salesRepValues" (filteredReturn)="onFilterSalesRep($event)"></mat-select-filter>
+        <ng-container *ngIf="filteredSalesRepValues?.length > 0; else noDataSalesRep">
+          <cdk-virtual-scroll-viewport #salesRepViewport itemSize="48" class="select-viewport" (scrolledIndexChange)="onScrollSalesRep($event)">
+            <mat-option *cdkVirtualFor="let et of filteredSalesRepValues" [value]="et.value" >
+                {{ et.description }}
+            </mat-option>
+          </cdk-virtual-scroll-viewport>
+          </ng-container>
+          <ng-template #noDataSalesRep>
+            <mat-option disabled>
+              No data
+            </mat-option>
+          </ng-template>
+      </mat-select>
+    </mat-form-field> 
+    <mat-form-field>
+    <mat-select aria-readonly="true" placeholder="Territory" #territoryCodeSelect formControlName="territoryCode" (selectionChange)="onTerritorySelectionChange($event)" (openedChange)="onDropdownOpenedTerritory($event)" (blur)="onTerritoryBlur()">
+      <mat-select-filter *ngIf="territoryCodeSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="territoryValues" (filteredReturn)="onFilterTerritory($event)"></mat-select-filter>
+      <ng-container *ngIf="filteredTerritoryValues?.length > 0; else noDataTerritoryCode">
+        <cdk-virtual-scroll-viewport #territoryViewport itemSize="48" class="select-viewport" (scrolledIndexChange)="onScrollTerritory($event)">
+          <mat-option *cdkVirtualFor="let et of filteredTerritoryValues" [value]="et.value" >
+              {{ et.description }}
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+        </ng-container>
+        <ng-template #noDataTerritoryCode>
+          <mat-option disabled>
+            No data
+          </mat-option>
+        </ng-template>
+      </mat-select>
+    </mat-form-field> 
+    <mat-form-field appearance="">
+      <mat-label>Sales Rep Name</mat-label>
+      <input matInput formControlName="salesRepName" value ="{{site.salesRepName}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Tax Exempt</mat-label>
+      <input matInput formControlName="taxExempt" value ="{{site.taxExempt}}">
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Shared Containers</mat-label>
+      <input matInput formControlName="sharedContainers" value ="{{site.sharedContainers}}">
+      <mat-error *ngIf="updateForm.get('sharedContainers').hasError('maxlength')">Shared can only have 3 chars
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="">
+      <mat-label>Last Update</mat-label>
+      <input matInput formControlName="lastUpdatedDate">
+    </mat-form-field>
+  </div>
+</form>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="siteSubmitButton.disabled=true; save();" #siteSubmitButton>Submit</button>
+</div>

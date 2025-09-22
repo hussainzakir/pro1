@@ -1,0 +1,188 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center">
+    <div fxFlex="100" class="center ">
+        <div fxFlex="90" fxFlexOffset="0" style="padding-top: 10px;">
+            <mat-card class="mat-elevation-z8">
+                <mat-card-content style="text-align: center;">
+                    <div class="pagedTable " style="width: 90%; margin: 0 auto;">
+                        <h1>Audit Filter Options</h1>
+                        <form [formGroup]="form" autocomplete="off" (keyup)="handleKey($event)">
+                            <div fxLayout="row" fxLayoutGap="5px">
+                                <div fxFlexOffset="0" fxFlex="30">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>CBS #</mat-label>
+                                        <input matInput formControlName="cbs" placeholder="Ex. 987654"
+                                            autocomplete="off">
+                                        <mat-error *ngIf="form.get('cbs').hasError('pattern')">CBS can only have
+                                            numbers
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlexOffset="0" fxFlex="30">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>From Date</mat-label>
+                                        <input matInput [matDatepicker]="fromdatepicker" [max]="today"
+                                            (focus)="fromdatepicker.open()" formControlName="fromDate"
+                                            placeholder="mm/dd/yyyy" autocomplete="off">
+                                        <mat-datepicker-toggle matSuffix [for]="fromdatepicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #fromdatepicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlexOffset="0" fxFlex="30">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>To Date</mat-label>
+                                        <input matInput [matDatepicker]="todatepicker" [max]="today"
+                                            (focus)="todatepicker.open()" formControlName="toDate"
+                                            placeholder="dd/mm/yyyy" autocomplete="off">
+                                        <mat-datepicker-toggle matSuffix [for]="todatepicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #todatepicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="5px">
+                                <div fxFlexOffset="0" fxFlex="30" [formGroup]="myForm">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>Service Account #</mat-label>
+                                        <app-servicenumberfield formControlName="san" required></app-servicenumberfield>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlexOffset="0" fxFlex="10">
+                                    <mat-label style="position:relative;top:10%;">Audit Records</mat-label>
+                                </div>
+                                <div fxFlexOffset="0" fxFlex="10">
+                                    <mat-checkbox formControlName="allRecords"
+                                        (change)="toggleOtherCheckboxes($event.checked)"
+                                        class="checkbox-item">All</mat-checkbox>
+                                    <mat-checkbox formControlName="rateRecords" [disabled]="otherRecordsDisabled"
+                                        class="checkbox-item" style="position: relative;left: 12%;">Rates</mat-checkbox>
+                                </div>
+                                <div fxFlexOffset="0" fxFlex="10">
+                                    <mat-checkbox formControlName="accountRecords" [disabled]="otherRecordsDisabled"
+                                        class="checkbox-item">Accounts</mat-checkbox>
+                                    <mat-checkbox formControlName="serviceRecords" [disabled]="otherRecordsDisabled"
+                                        class="checkbox-item">Services</mat-checkbox>
+                                </div>
+                                <div fxFlexOffset="0" fxFlex="10">
+                                    <mat-checkbox formControlName="containerRecords" [disabled]="otherRecordsDisabled"
+                                        class="checkbox-item"
+                                        style="position: relative;left: 6%;">Container</mat-checkbox>
+                                    <mat-checkbox formControlName="siteRecords" [disabled]="otherRecordsDisabled"
+                                        class="checkbox-item" style="position: relative;left: -13%;">Site</mat-checkbox>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="5px" *ngIf="showMessage">
+                                <div fxFlexOffset="0" style="color:red;text-align: left;position: relative;
+                                left: 4%">
+                                    Error: Invalid search criteria.<br />
+                                    Please provide a valid individual search field or a valid combined
+                                    search<br /><br />
+                                    1. A Valid Date Range is required along with any other input<br />
+                                    2. Any other Input Refers to cbs or Service Account Number or any checkbox
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="5px">
+                                <div fxFlexOffset="0" fxFlex="100" fxLayoutAlign="center center">
+                                    <button mat-raised-button color="orange" class="repsrv-btn" [loading]=loading
+                                        (click)="searchData()">Search</button>
+                                    <button mat-raised-button color="orange" class="repsrv-btn"
+                                        (click)="clearData()">Clear</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px">
+    <div fxFlexOffset="0" fxFlex="100">
+        <div *ngIf="(dataSource.data.length < 1) && searchExecuted" fxLayout="row" fxLayoutGap="5px grid"
+            style="padding-top: 70px;">
+            <div fxFlex="100" fxFlex.xs="100%" fxFlex.sm="40%" fxLayoutAlign="center center" style="color: red;">
+                <strong>No results found.</strong>
+            </div>
+        </div>
+        <div [formGroup]="form" class="pagedTable " style="width: 90%; margin: 0 auto;" (keyup)="handleKey($event)"
+            [hidden]="dataSource.data.length < 1">
+            <p>&nbsp;</p>
+            <p *ngIf="exportEnabled">The Table Only Shows Three years of Audit Results From The ToDate. Click <span
+                    class="export-link" (click)="exportData()">Here</span> to Export The Entire Data for your Search
+                Criteria</p>
+            <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                <ng-container matColumnDef="edit">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [ngStyle]="{'text-align': 'center'}"
+                        [ngClass]="table-header"></th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'left'}">
+                        <span *ngIf="element.site && element.site.trim() !== '' && element.site !== 'null'" title="Click to view" style="font-size: 35px;" (click)="saveFormData()"
+                            routerLink="/account/{{element.company}}/{{element.serviceAccount}}/{{element.site}}">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pen" viewBox="0 0 16 16">
+                                <path
+                                    d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                            </svg>
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cbs">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [ngStyle]="{'text-align': 'center'}"
+                        [ngClass]="table-header"> CBS </th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'left'}"> {{element.cbs}} </td>
+                </ng-container>
+                <ng-container matColumnDef="serviceAccountNumber">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Account </th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'left'}">{{element.company}}
+                        {{element.serviceAccount}} </td>
+                </ng-container>
+                <ng-container matColumnDef="serviceName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-header"> Service Name </th>
+                    <td mat-cell *matCellDef="let element" class="align-data">
+                        {{element.serviceName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="locId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-header"> Loc Id </th>
+                    <td mat-cell *matCellDef="let element" class="align-data"> {{element.locId}} </td>
+                </ng-container>
+                <ng-container matColumnDef="site">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-header"> Site </th>
+                    <td mat-cell *matCellDef="let element" class="tableSpacing" class="align-data">
+                        {{element.site}} </td>
+                </ng-container>
+                <ng-container matColumnDef="gValue">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="tableSpacing"> G </th>
+                    <td mat-cell *matCellDef="let element" class="tableSpacing" [ngStyle]="{'text-align': 'left'}">
+                        {{element.gValue}} </td>
+                </ng-container>
+                <ng-container matColumnDef="field">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Field </th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'left'}"> {{element.field}} </td>
+                </ng-container>
+                <ng-container matColumnDef="oldValue">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-header"> Old Value </th>
+                    <td mat-cell *matCellDef="let element" class="align-data"> {{element.oldValue}} </td>
+                </ng-container>
+                <ng-container matColumnDef="newValue">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-header"> New Value </th>
+                    <td mat-cell *matCellDef="let element" class="align-data"> {{element.newValue}} </td>
+                </ng-container>
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'left'}"> {{element.date}} </td>
+                </ng-container>
+                <ng-container matColumnDef="time">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Time </th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'center'}"> {{element.time}} </td>
+                </ng-container>
+                <ng-container matColumnDef="userId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> User Id </th>
+                    <td mat-cell *matCellDef="let element" [ngStyle]="{'text-align': 'left'}"> {{element.userId}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator pageSize="pageSize" [length]="totalData" showFirstLastButtons
+                (page)="handlePageEvent($event)" class="mat-elevation-z8" #paginator></mat-paginator>
+        </div>
+    </div>
+</div>

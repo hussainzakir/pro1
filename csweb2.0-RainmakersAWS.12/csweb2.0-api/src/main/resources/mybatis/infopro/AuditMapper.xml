@@ -1,0 +1,41 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.audit.dao.AuditDao">
+	<select id="getAuditResults" statementType="CALLABLE"
+		parameterType="com.repsrv.csweb.core.model.audit.AuditRequest"
+		resultMap="auditResults" useCache="false">
+		{call AUDITHISTORYSEARCH(
+		#{request.cbs},
+		#{request.division},
+		#{request.accountNumber},
+		#{request.site},
+		#{request.group},
+		#{request.fromDate},
+		#{request.toDate},
+		#{request.fileFilter},
+		#{request.startIndex},
+		#{request.endIndex},
+		#{request.sort},
+		#{request.totalRows,jdbcType=DECIMAL,mode=INOUT}
+		)}
+	</select>
+	<resultMap
+		type="com.repsrv.csweb.core.model.audit.AuditResults"
+		id="auditResults">
+		<result column="NAACCT" property="cbs" />
+		<result column="AHACCT" property="serviceAccount" />
+		<result column="CUNAME" property="serviceName" />
+		<result column="LOCATID" property="locId" />
+		<result column="AHSITE" property="site" />
+		<result column="AHCTGR" property="gValue" />
+		<result column="AHFLD" property="field" />
+		<result column="AHOLDV" property="oldValue" />
+		<result column="AHNEWV" property="newValue" />
+		<result column="AHUDAT" property="date" />
+		<result column="AHUTIM" property="time" />
+		<result column="AHUSER" property="userId" />
+		<result column="AHCOMP" property="company" />
+	</resultMap>
+</mapper>

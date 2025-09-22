@@ -1,0 +1,15 @@
+view.id=get-template-columns
+view.class=com.repsrv.csweb.core.model.massupload.ColumnDefinition
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+id
+status
+name
+description
+columnType
+length
+decimalPlaces
+required
+tableFieldName
+defaultValue

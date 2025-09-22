@@ -1,0 +1,15 @@
+view.id=account-payment
+view.class=com.repsrv.csweb.core.model.account.AccountPayment
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+cashReceivedDate
+checkNumber
+receiptAmount
+unappliedAmount
+lockboxNumber
+obligationId
+description
+receiptReferenceNumber
+bankAccountNumber
+batchNumber

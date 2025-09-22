@@ -1,0 +1,360 @@
+<h1 mat-dialog-title>Update Site Info</h1>
+<div mat-dialog-content class="two-col-container">
+  <form [formGroup]="updateForm">
+  <mat-form-field appearance="" class="fill">
+    <mat-label>Site Name</mat-label>
+    <input matInput formControlName="siteName" value ="{{theSite.siteName}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Street #</mat-label>
+    <input matInput formControlName="siteAddressNumber" value ="{{theSite.streetNumber}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Pre Dir</mat-label>
+    <mat-select matInput formControlName="" value ="">
+      <mat-option value=""> EAST</mat-option>
+      <mat-option value=""> NORTH</mat-option>
+      <mat-option value=""> NORTH-EAST</mat-option>
+      <mat-option value=""> NORTH-WEST</mat-option>
+      <mat-option value=""> SOUTH</mat-option>
+      <mat-option value=""> SOUTH-EAST</mat-option>
+      <mat-option value=""> SOUTH-WEST</mat-option>
+      <mat-option value=""> WEST</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Street</mat-label>
+    <input matInput formControlName="siteAddressName" value ="{{theSite.addressName}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Type</mat-label>
+    <mat-select matInput formControlName="streetType" value ="{{theSite.streetType}}">
+      <mat-option value="ACCESS"> ACCESS</mat-option>
+      <mat-option value="ALLEY"> ALLEY</mat-option>
+      <mat-option value="ANNEX"> ANNEX</mat-option>
+      <mat-option value="ARCADE"> ARCADE</mat-option>
+      <mat-option value="AVE"> AVENUE</mat-option>
+      <mat-option value="BAY"> BAY</mat-option>
+      <mat-option value="BEACH"> BEACH</mat-option>
+      <mat-option value="BURG"> BURG</mat-option>
+      <mat-option value="BURGS"> BURGS</mat-option>
+      <mat-option value="BLUFF"> BLUFF</mat-option>
+      <mat-option value="BLUFFS"> BLUFFS</mat-option>
+      <mat-option value="BLVD"> BOULEVARD</mat-option>
+      <mat-option value="BEND"> BEND</mat-option>
+      <mat-option value="BRANCH"> BRANCH</mat-option>
+      <mat-option value="BRIDGE"> BRIDGE</mat-option>
+      <mat-option value="BROOK"> BROOK</mat-option>
+      <mat-option value="BROOKS"> BROOKS</mat-option>
+      <mat-option value="BOTTOM"> BOTTOM</mat-option>
+      <mat-option value="BYPASS"> BYPASS</mat-option>
+      <mat-option value="BAYOO"> BAYOO</mat-option>
+      <mat-option value="CIRCLE"> CIRCLE</mat-option>
+      <mat-option value="CIRCLES"> CIRCLES</mat-option>
+      <mat-option value="CLOSE"> CLOSE</mat-option>
+      <mat-option value="CLUB"> CLUB</mat-option>
+      <mat-option value="CLIFF"> CLIFF</mat-option>
+      <mat-option value="CLIFFS"> CLIFFS</mat-option>
+      <mat-option value="COMMON"> COMMON</mat-option>
+      <mat-option value="CENTER"> CENTER</mat-option>
+      <mat-option value="CORNER"> CORNER</mat-option>
+      <mat-option value="CORNERS"> CORNERS</mat-option>
+      <mat-option value="CAMP"> CAMP</mat-option>
+      <mat-option value="CAPE"> CAPE</mat-option>
+      <mat-option value="CRESCENT"> CRESCENT</mat-option>
+      <mat-option value="CREEK"> CREEK</mat-option>
+      <mat-option value="COURSE"> COURSE</mat-option>
+      <mat-option value="CREST"> CREST</mat-option>
+      <mat-option value="COURT"> COURT</mat-option>
+      <mat-option value="CAUSEWAY"> CAUSEWAY</mat-option>
+      <mat-option value="CENTER"> CENTER</mat-option>
+      <mat-option value="CENTERS"> CENTERS</mat-option>
+      <mat-option value="COURTS"> COURTS</mat-option>
+      <mat-option value="CURVE"> CURVE</mat-option>
+      <mat-option value="COVE"> COVE</mat-option>
+      <mat-option value="COVES"> COVES</mat-option>
+      <mat-option value="CANYON"> CANYON</mat-option>
+      <mat-option value="DALE"> DALE</mat-option>
+      <mat-option value="DAME"> DAME</mat-option>
+      <mat-option value="DR"> DRIVE</mat-option>
+      <mat-option value="DRIVES"> DRIVES</mat-option>
+      <mat-option value="DIVIDE"> DIVIDE</mat-option>
+      <mat-option value="ESTATE"> ESTATE</mat-option>
+      <mat-option value="ESTATES"> ESTATES</mat-option>
+      <mat-option value="EXPRESSWAY"> EXPRESSWAY</mat-option>
+      <mat-option value="EXTENSION"> EXTENSION</mat-option>
+      <mat-option value="EXTENSIONS"> EXTENSIONS</mat-option>
+      <mat-option value="FALL"> FALL</mat-option>
+      <mat-option value="FIELD"> FIELD</mat-option>
+      <mat-option value="FIELDS"> FIELDS</mat-option>
+      <mat-option value="FALLS"> FALLS</mat-option>
+      <mat-option value="FLAT"> FLAT</mat-option>
+      <mat-option value="FLATS"> FLATS</mat-option>
+      <mat-option value="FORD"> FORD</mat-option>
+      <mat-option value="FORDS"> FORDS</mat-option>
+      <mat-option value="FORGE"> FORGE</mat-option>
+      <mat-option value="FORGES"> FORGES</mat-option>
+      <mat-option value="FORK"> FORK</mat-option>
+      <mat-option value="FORKS"> FORKS</mat-option>
+      <mat-option value="FOREST"> FOREST</mat-option>
+      <mat-option value="FERRY"> FERRY</mat-option>
+      <mat-option value="FORT"> FORT</mat-option>
+      <mat-option value="FREEWAY"> FREEWAY</mat-option>
+      <mat-option value="GATE"> GATE</mat-option>
+      <mat-option value="GARDEN"> GARDEN</mat-option>
+      <mat-option value="GARDENS"> GARDENS</mat-option>
+      <mat-option value="GLEN"> GLEN</mat-option>
+      <mat-option value="GLENS"> GLENS</mat-option>
+      <mat-option value="GREEN"> GREEN</mat-option>
+      <mat-option value="GREENS"> GREENS</mat-option>
+      <mat-option value="GROVE"> GROVE</mat-option>
+      <mat-option value="GROVES"> GROVES</mat-option>
+      <mat-option value="GATEWAY"> GATEWAY</mat-option>
+      <mat-option value="HARBOR"> HARBOR</mat-option>
+      <mat-option value="HARBORS"> HARBORS</mat-option>
+      <mat-option value="HEIGHTS"> HEIGHTS</mat-option>
+      <mat-option value="HILL"> HILL</mat-option>
+      <mat-option value="HILLS"> HILLS</mat-option>
+      <mat-option value="HOLLOW"> HOLLOW</mat-option>
+      <mat-option value="HEATH"> HEATH</mat-option>
+      <mat-option value="HAVEN"> HAVEN</mat-option>
+      <mat-option value="HWY"> HIGHWAY</mat-option>
+      <mat-option value="INLET"> INLET</mat-option>
+      <mat-option value="ISLAND"> ISLAND</mat-option>
+      <mat-option value="ISLANDS"> ISLANDS</mat-option>
+      <mat-option value="ISLE"> ISLE</mat-option>
+      <mat-option value="JUNCTION"> JUNCTION</mat-option>
+      <mat-option value="JUNCTIONS"> JUNCTIONS</mat-option>
+      <mat-option value="KNOLL"> KNOLL</mat-option>
+      <mat-option value="KNOLLS"> KNOLLS</mat-option>
+      <mat-option value="KEY"> KEY</mat-option>
+      <mat-option value="KEYS"> KEYS</mat-option>
+      <mat-option value="LAND"> LAND</mat-option>
+      <mat-option value="LOCK"> LOCK</mat-option>
+      <mat-option value="LOCKS"> LOCKS</mat-option>
+      <mat-option value="LODGE"> LODGE</mat-option>
+      <mat-option value="LOAF"> LOAF</mat-option>
+      <mat-option value="LIGHT"> LIGHT</mat-option>
+      <mat-option value="LIGHTS"> LIGHTS</mat-option>
+      <mat-option value="LINE"> LINE</mat-option>
+      <mat-option value="LINK"> LINK</mat-option>
+      <mat-option value="LAKE"> LAKE</mat-option>
+      <mat-option value="LAKES"> LAKES</mat-option>
+      <mat-option value="LANDING"> LANDING</mat-option>
+      <mat-option value="LOOP"> LOOP</mat-option>
+      <mat-option value="MALL"> MALL</mat-option>
+      <mat-option value="MEADOW"> MEADOW</mat-option>
+      <mat-option value="MEADOWS"> MEADOWS</mat-option>
+      <mat-option value="MEWS"> MEWS</mat-option>
+      <mat-option value="MILL"> MILL</mat-option>
+      <mat-option value="MILLS"> MILLS</mat-option>
+      <mat-option value="MANOR"> MANOR</mat-option>
+      <mat-option value="MANORS"> MANORS</mat-option>
+      <mat-option value="MISSION"> MISSION</mat-option>
+      <mat-option value="MOUNT"> MOUNT</mat-option>
+      <mat-option value="MOUNTAIN"> MOUNTAIN</mat-option>
+      <mat-option value="MOUNTAINS"> MOUNTAINS</mat-option>
+      <mat-option value="MOTORWAY"> MOTORWAY</mat-option>
+      <mat-option value="NECK"> NECK</mat-option>
+      <mat-option value="OVERPASS"> OVERPASS</mat-option>
+      <mat-option value="ORCHARD"> ORCHARD</mat-option>
+      <mat-option value="OVAL"> OVAL</mat-option>
+      <mat-option value="PARK"> PARK</mat-option>
+      <mat-option value="PASS"> PASS</mat-option>
+      <mat-option value="PATH"> PATH</mat-option>
+      <mat-option value="PIKE"> PIKE</mat-option>
+      <mat-option value="PARKWAY"> PARKWAY</mat-option>
+      <mat-option value="PLACE"> PLACE</mat-option>
+      <mat-option value="PLAIN"> PLAIN</mat-option>
+      <mat-option value="PLAINS"> PLAINS</mat-option>
+      <mat-option value="PLAZA"> PLAZA</mat-option>
+      <mat-option value="PINE"> PINE</mat-option>
+      <mat-option value="PINES"> PINES</mat-option>
+      <mat-option value="PRAIRIE"> PRAIRIE</mat-option>
+      <mat-option value="PORT"> PORT</mat-option>
+      <mat-option value="PORTS"> PORTS</mat-option>
+      <mat-option value="PASSAGE"> PASSAGE</mat-option>
+      <mat-option value="POINT"> POINT</mat-option>
+      <mat-option value="POINTS"> POINTS</mat-option>
+      <mat-option value="RADIAL"> RADIAL</mat-option>
+      <mat-option value="RAMP"> RAMP</mat-option>
+      <mat-option value="RD"> ROAD</mat-option>
+      <mat-option value="ROADS"> ROADS</mat-option>
+      <mat-option value="RIDGE"> RIDGE</mat-option>
+      <mat-option value="RIDGES"> RIDGES</mat-option>
+      <mat-option value="RIVER"> RIVER</mat-option>
+      <mat-option value="RANCH"> RANCH</mat-option>
+      <mat-option value="ROW"> ROW</mat-option>
+      <mat-option value="RAPID"> RAPID</mat-option>
+      <mat-option value="RAPIDS"> RAPIDS</mat-option>
+      <mat-option value="RISE"> RISE</mat-option>
+      <mat-option value="REST"> REST</mat-option>
+      <mat-option value="RTE"> ROUTE</mat-option>
+      <mat-option value="RUE"> RUE</mat-option>
+      <mat-option value="RUN"> RUN</mat-option>
+      <mat-option value="SHOAL"> SHOAL</mat-option>
+      <mat-option value="SHOALS"> SHOALS</mat-option>
+      <mat-option value="SHORE"> SHORE</mat-option>
+      <mat-option value="SHORES"> SHORES</mat-option>
+      <mat-option value="SKYWAY"> SKYWAY</mat-option>
+      <mat-option value="SUMMIT"> SUMMIT</mat-option>
+      <mat-option value="SPRING"> SPRING</mat-option>
+      <mat-option value="SPRINGS"> SPRINGS</mat-option>
+      <mat-option value="SPUR"> SPUR</mat-option>
+      <mat-option value="SQUARE"> SQUARE</mat-option>
+      <mat-option value="SQUARES"> SQUARES</mat-option>
+      <mat-option value="ST"> STREET</mat-option>
+      <mat-option value="STREETS"> STREETS</mat-option>
+      <mat-option value="STATION"> STATION</mat-option>
+      <mat-option value="STRAVANUE"> STRAVANUE</mat-option>
+      <mat-option value="STREAM"> STREAM</mat-option>
+      <mat-option value="TERRACE"> TERRACE</mat-option>
+      <mat-option value="TURNPIKE"> TURNPIKE</mat-option>
+      <mat-option value="TRAIL"> TRAIL</mat-option>
+      <mat-option value="TRACK"> TRACK</mat-option>
+      <mat-option value="TRACE"> TRACE</mat-option>
+      <mat-option value="TRAFFICWAY"> TRAFFICWAY</mat-option>
+      <mat-option value="THROUGHWAY"> THROUGHWAY</mat-option>
+      <mat-option value="TUNNEL"> TUNNEL</mat-option>
+      <mat-option value="UNION"> UNION</mat-option>
+      <mat-option value="UNIONS"> UNIONS</mat-option>
+      <mat-option value="UNDERPASS"> UNDERPASS</mat-option>
+      <mat-option value="VIADUCT"> VIADUCT</mat-option>
+      <mat-option value="VIEW"> VIEW</mat-option>
+      <mat-option value="VISTA"> VISTA</mat-option>
+      <mat-option value="VILLE"> VILLE</mat-option>
+      <mat-option value="VILLAGE"> VILLAGE</mat-option>
+      <mat-option value="VILLAGES"> VILLAGES</mat-option>
+      <mat-option value="VALLEY"> VALLEY</mat-option>
+      <mat-option value="VALLEYS"> VALLEYS</mat-option>
+      <mat-option value="VIEWS"> VIEWS</mat-option>
+      <mat-option value="VIEWS"> VIEWS</mat-option>
+      <mat-option value="WALK"> WALK</mat-option>
+      <mat-option value="WALL"> WALL</mat-option>
+      <mat-option value="WAY"> WAY</mat-option>
+      <mat-option value="WAYS"> WAYS</mat-option>
+      <mat-option value="WELL"> WELL</mat-option>
+      <mat-option value="WELLS"> WELLS</mat-option>
+      <mat-option value="CROSSING"> CROSSING</mat-option>
+      <mat-option value="CROSSROAD"> CROSSROAD</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Dir</mat-label>
+      <mat-select matInput formControlName="streetDirection" value ="{{theSite.streetDirection}}">
+      <mat-option value="E"> EAST</mat-option>
+      <mat-option value="N"> NORTH</mat-option>
+      <mat-option value="NE"> NORTH-EAST</mat-option>
+      <mat-option value="NW"> NORTH-WEST</mat-option>
+      <mat-option value="S"> SOUTH</mat-option>
+      <mat-option value="SE"> SOUTH-EAST</mat-option>
+      <mat-option value="SW"> SOUTH-WEST</mat-option>
+      <mat-option value="W"> WEST</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Address Line 2</mat-label>
+    <input matInput formControlName="siteAddress2" value ="{{theSite.siteAddress2}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Suite</mat-label>
+    <input matInput formControlName="siteSuiteNumber" value ="{{theSite.addressSuite}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>City</mat-label>
+    <input matInput formControlName="siteCity" value ="{{theSite.city}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>State</mat-label>
+    <mat-select matInput formControlName="siteState" value ="{{theSite.stateProvince}}">
+    <mat-option value="AL"> ALABAMA</mat-option>
+    <mat-option value="AK"> ALASKA</mat-option>
+    <mat-option value="AB"> ALBERTA</mat-option>
+    <mat-option value="AZ"> ARIZONA</mat-option>
+    <mat-option value="AR"> ARKANSAS</mat-option>
+    <mat-option value="BC"> BRITISH COLUMBIA</mat-option>
+    <mat-option value="CA"> CALIFORNIA</mat-option>
+    <mat-option value="CO"> COLORADO</mat-option>
+    <mat-option value="CT"> CONNECTICUT</mat-option>
+    <mat-option value="DE"> DELAWARE</mat-option>
+    <mat-option value="DC"> DISTRICT OF COLUMBIA</mat-option>
+    <mat-option value="FL"> FLORIDA</mat-option>
+    <mat-option value="GA"> GEORGIA</mat-option>
+    <mat-option value="GU"> GUAM</mat-option>
+    <mat-option value="HI"> HAWAII</mat-option>
+    <mat-option value="ID"> IDAHO</mat-option>
+    <mat-option value="IL"> ILLINOIS</mat-option>
+    <mat-option value="IN"> INDIANA</mat-option>
+    <mat-option value="IA"> IOWA</mat-option>
+    <mat-option value="KS"> KANSAS</mat-option>
+    <mat-option value="KY"> KENTUCKY</mat-option>
+    <mat-option value="LA"> LOUISIANA</mat-option>
+    <mat-option value="ME"> MAINE</mat-option>
+    <mat-option value="MD"> MARYLAND</mat-option>
+    <mat-option value="MA"> MASSACHUSETTS</mat-option>
+    <mat-option value="MI"> MICHIGAN</mat-option>
+    <mat-option value="MN"> MINNESOTA</mat-option>
+    <mat-option value="MS"> MISSISSIPPI</mat-option>
+    <mat-option value="MO"> MISSOURI</mat-option>
+    <mat-option value="MB"> MONITOBA</mat-option>
+    <mat-option value="MT"> MONTANA</mat-option>
+    <mat-option value="NE"> NEBRASKA</mat-option>
+    <mat-option value="NV"> NEVADA</mat-option>
+    <mat-option value="NB"> NEW BRUNSWICK</mat-option>
+    <mat-option value="NH"> NEW HAMPSHIRE</mat-option>
+    <mat-option value="NJ"> NEW JERSEY</mat-option>
+    <mat-option value="NM"> NEW MEXICO</mat-option>
+    <mat-option value="NY"> NEW YORK</mat-option>
+    <mat-option value="NF"> NEWFOUNDLAND</mat-option>
+    <mat-option value="NC"> NORTH CAROLINA</mat-option>
+    <mat-option value="ND"> NORTH DAKOTA</mat-option>
+    <mat-option value="NT"> NORTHWEST TERRITORIES</mat-option>
+    <mat-option value="NS"> NOVA SCOTIA</mat-option>
+    <mat-option value="OH"> OHIO</mat-option>
+    <mat-option value="OK"> OKLAHOMA</mat-option>
+    <mat-option value="ON"> ONTARIO</mat-option>
+    <mat-option value="OR"> OREGON</mat-option>
+    <mat-option value="PA"> PENNSYLVANIA</mat-option>
+    <mat-option value="PE"> PRINCE EDWARD ISLAND</mat-option>
+    <mat-option value="PR"> PUERTO RICO</mat-option>
+    <mat-option value="QC"> QUEBEC</mat-option>
+    <mat-option value="RI"> RHODE ISLAND</mat-option>
+    <mat-option value="SK"> SASKATCHEWAN</mat-option>
+    <mat-option value="SC"> SOUTH CAROLINA</mat-option>
+    <mat-option value="SD"> SOUTH DAKOTA</mat-option>
+    <mat-option value="TN"> TENNESSEE</mat-option>
+    <mat-option value="TX"> TEXAS</mat-option>
+    <mat-option value="UT"> UTAH</mat-option>
+    <mat-option value="VT"> VERMONT</mat-option>
+    <mat-option value="VA"> VIRGINIA</mat-option>
+    <mat-option value="WA"> WASHINGTON</mat-option>
+    <mat-option value="WV"> WEST VIRGINIA</mat-option>
+    <mat-option value="WI"> WISCONSIN</mat-option>
+    <mat-option value="WY"> WYOMING</mat-option>
+    <mat-option value="YT"> YUKON TERRITORY</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Zipcode</mat-label>
+    <input matInput formControlName="sitePostalCode" value ="{{theSite.postalCode}}">
+    <mat-error *ngIf="updateForm.get('sitePostalCode').hasError('pattern')">Zip code can only have numbers and '-'
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('sitePostalCode').hasError('maxlength')">Zip code can only have 10 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone</mat-label>
+    <input matInput formControlName="" value ="{{theSite.phoneNumber}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Fax</mat-label>
+    <input matInput formControlName="" value ="{{accountDetail.fax}}" readonly>
+  </mat-form-field>
+</form>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="!updateForm.valid" (click)="save()" [loading]=loading>Submit</button>
+</div>
+

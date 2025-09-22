@@ -1,0 +1,66 @@
+
+.mat-column-totalAmount {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+.mat-column-cashApplied {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+.mat-column-openAmount {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+.mat-column-bankAccount {
+  text-align: left;
+  justify-content: flex-start;
+  }
+
+.mat-column-anticipationAmount {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+.mat-column-discountAmount {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+.mat-column-tolleranceAmount {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+.mat-column-writeOffAmount {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+
+.mat-column-chargeBackAmount {
+    text-align: right;
+  justify-content: flex-end;
+  }
+*/
+.mat-column-debtCreditMemoApplied {
+  text-align: right;
+  justify-content: flex-end;
+  }
+
+  .maximize-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .maximize-button-group .button1 {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+  }
+
+  .align-component{
+    padding-left: 18px;
+  }

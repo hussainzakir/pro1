@@ -1,0 +1,22 @@
+
+.app-servicenumberfield-container {
+  display: flex;
+}
+
+.app-servicenumberfield-element {
+  border: none;
+  background: none;
+  padding: 0;
+  outline: none;
+  font: inherit;
+  text-align: left;
+}
+
+.app-servicenumberfield-spacer {
+  opacity: 0;
+  transition: opacity 200ms;
+}
+
+:host.example-floating .app-servicenumberfield-spacer {
+  opacity: 1;
+}

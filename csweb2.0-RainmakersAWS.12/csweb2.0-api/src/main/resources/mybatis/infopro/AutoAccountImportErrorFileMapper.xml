@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.imports.dao.AaiErrorFileDao" >
+	
+	<select id="getTableRows" resultMap="clobToStringMap">
+	CALL CUQACQ103_CSWEB_RETRIEVE_PROCESS(
+		#{payload, jdbcType=VARCHAR, mode=IN},
+		'1',
+		#{request.errorCode,jdbcType=CHAR,mode=OUT},
+ 		#{request.errorMessage,jdbcType=CHAR,mode=OUT}
+ 		) 
+	</select>
+	
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="DATA" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+</mapper>
+
+

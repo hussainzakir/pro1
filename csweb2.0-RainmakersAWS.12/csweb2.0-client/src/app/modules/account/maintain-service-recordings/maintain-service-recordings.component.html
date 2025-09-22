@@ -1,0 +1,95 @@
+<div *ngIf="hideMaximumButtonGroup"  class="maximize-button-group" >
+  <button appWindowbuttons (click)="maximize()" class="maximize-button"><span  class="fa fa-window-maximize"></span></button>  
+  <button appWindowbuttons (click)="restore()" class="restore-button"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+</div>
+<div class="modal-dialog" id="my-modal-dialog">
+
+<h1 mat-dialog-title>Recording / Maintain</h1>
+<div class="modal-dialog" id="my-modal-dialog">
+<div mat-dialog-content>
+  <table style="width: 100%;padding: 0px;" >
+    <tr>
+      <td>Account: {{company}} - {{account}} | Site: {{site}} </td>
+    </tr>
+    <br>
+  </table>
+  <form [formGroup]="maintainForm">
+  <mat-form-field appearance="" >
+    <mat-label>Recording No</mat-label>
+    <input matInput value="{{recordingDetail.serviceRecordNumber}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Subject</mat-label>
+    <input matInput value="{{recordingDetail.reportedByName}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Status</mat-label>
+    <input matInput value="{{recordingDetail.status}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Priority</mat-label>
+    <mat-select matInput value="{{recordingDetail.recordingPriority}}"[disabled]="disableSelect.value" >
+      <mat-option value="N" disabled>Normal</mat-option>
+      <mat-option value="M" disabled>Medium</mat-option>
+      <mat-option value="H" disabled>High</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div fxLayout="row">
+  <mat-form-field appearance="" >
+    <mat-label>Recording Type</mat-label>
+    <input matInput value="{{recordingDetail.transactionCode}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Description</mat-label>
+    <input matInput value="{{recordingDetail.transactionDescription}}" readonly>
+  </mat-form-field>
+  </div>
+  <mat-form-field appearance="" >
+    <mat-label>Assign To</mat-label>
+    <input matInput value="{{recordingDetail.assignedToUser}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Escalation</mat-label>
+    <input matInput value="{{recordingDetail.satelliteLocation}}" readonly>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Description</mat-label>
+    <textarea matInput value="{{recordingDetail.serviceRecordNote}}" readonly></textarea>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Resolution</mat-label>
+    <textarea matInput value="{{recordingDetail.serviceResolutionNote}}" readonly></textarea>
+  </mat-form-field>
+  <div fxLayout="row">
+  <mat-form-field appearance="" >
+    <mat-label>Employee First Name</mat-label>
+    <input matInput value="{{recordingDetail.firstName}}"readonly >
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Employee Last Name</mat-label>
+    <input matInput value="{{recordingDetail.lastName}}"readonly >
+    </mat-form-field>
+    </div>
+  <mat-form-field appearance="" >
+  <mat-label>Service to be completed</mat-label>
+  <input matInput value="{{recordingDetail.scheduledCompletionDate}}" readonly>
+  </mat-form-field>
+  </form>
+  <table style="width: 100%;padding: 0px;" >
+    <tr>
+      <td style="text-align: center;font-weight: bold;font-size: 90%;">Original Recording Type: {{recordingDetail.originalServiceCode}}</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;font-weight: bold;font-size: 90%;">Created on: {{recordingDetail.eventDate}}  {{recordingDetail.eventTime}} | Recorded by: {{recordingDetail.originalUser}} </td>
+    </tr>
+    <tr>
+      <td style="text-align: center;font-weight: bold;font-size: 90%;">Last update: {{recordingDetail.lastUpdateDate}} {{recordingDetail.lastUpdateTime}} | Updated by: {{recordingDetail.lastUpdateUser}} </td>
+    </tr>
+  </table>
+</div>
+<div mat-dialog-actions>
+
+  <button mat-button mat-dialog-close>Close</button>
+<!--  <button mat-raised-button color="orange" class="btn-w-md" (click)="save()">Submit</button> -->
+</div>

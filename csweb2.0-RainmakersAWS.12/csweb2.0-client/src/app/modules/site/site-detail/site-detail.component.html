@@ -1,0 +1,120 @@
+<div class="maximize-button-group" >
+  <button  (click)="maximize()" class="maximize-button"><span  class="fa fa-window-maximize"></span></button>  
+  <button  (click)="restore()" class="restore-button"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+</div>
+<div class="modal-dialog" id="my-modal-dialog">
+
+<h1 mat-dialog-title  style="margin: 0 0 5px">Site Detail</h1>
+<div class="modal-dialog" id="my-modal-dialog">
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 10px;">
+<div fxFlex="100">
+  <div fxLayout="row wrap" fxLayoutGap="20px grid">
+    <div fxFlex="40%" fxFlex.xs="100%" fxFlex.sm="40%" >
+      <mat-card class="">
+              <mat-card-title >
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Site Info
+                  <button style="float: right;" class="orange-btn" (click)="openSiteEdit()" mat-button >Edit</button>
+                  <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+              </mat-card-title>
+          <mat-card-content class="card-content">
+              <table style="width: 80%;padding-top: 10px;" >
+                <tbody>
+                  <tr>
+                      <td>&nbsp;</td>
+                      <td>
+                        <label><strong>{{accountDetail.company }} - {{accountDetail.account}} - {{siteId}}</strong></label>
+                      </td>
+                  </tr>
+                  <tr><td>Site Name</td><td>{{theSite.siteName}}</td></tr>
+                  <tr>
+                      <td style="vertical-align: top;">Address:</td>
+                      <td>
+                        <span *ngIf="theSite.addressNumberName">{{theSite.addressNumberName}}</span><br *ngIf="theSite.addressNumberName" />
+                        <span *ngIf="theSite.siteAddress2">{{theSite.siteAddress2}}</span><br *ngIf="theSite.siteAddress2" />
+                        {{theSite.city}},{{theSite.stateProvince}} {{theSite.postalCode}}
+                      </td>
+                  </tr>
+                  <tr><td>Telephone:</td><td>{{theSite.phoneNumber.slice(0,3)  + theSite.phoneNumber.slice(3,6)  + theSite.phoneNumber.slice(6,9) +'-'+ theSite.phoneNumber.slice(9,13)}}</td></tr>
+                  <tr><td>Telephone Ext:</td><td>{{theSite.phoneExtension}}</td></tr>
+                  <tr><td>Fax:</td><td>{{formatFax(accountDetail.fax)}}</td></tr>
+                </tbody>
+              </table>
+          </mat-card-content>
+      </mat-card>
+  </div>
+  <div fxFlex="60%" fxFlex.xs="100%" fxFlex.sm="50%" >
+    <mat-card class="">
+            <mat-card-title >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Contact
+            <!-- This is 'commented' out per Shankar March31, 2022-->
+            <!--    <button style="float: right;" class="orange-btn" (click)="openSiteEditContact()" mat-button >Edit</button> -->
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+        <mat-card-content class="card-content">
+          <table style="width: 100%;padding-top: 10px; border-collapse: collapse;" >
+            <tr><td>Bus Email1: </td><td>{{accountDetail.accountSiteContact?.businessEmail1}}</td></tr>
+            <tr><td>Home Email1:</td><td>{{accountDetail.accountSiteContact?.homeEmail1}}</td></tr>
+            <tr><td>Bus Email2: </td><td>{{accountDetail.accountSiteContact?.businessEmail2}}</td></tr>
+            <tr><td>Home Email2:</td><td>{{accountDetail.accountSiteContact?.homeEmail2}}</td></tr>
+          </table>
+        </mat-card-content>
+    </mat-card>
+</div>
+</div>
+</div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 10px;">
+  <div fxFlex="100">
+    <div fxLayout="row wrap" fxLayoutGap="20px grid">
+      <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="40%" >
+        <mat-card class="">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Detail Info
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content" style="height: 280px;">
+                <table style="width: 80%;padding-top: 5px;" >
+                  <tbody>
+                    <tr>
+                      <td>Contract #</td><td>{{theSite.contractNumber}}</td><td>Shared Containers</td><td>{{theSite.sharedContainers}}</td>
+                    </tr>
+                    <tr>
+                      <td>Term</td><td>{{theSite.term}} {{theSite.termDescription}}</td><td>Territory</td><td>{{theSite.territoryCode}} - {{theSite.territoryCodeDesc}}</td>
+                    </tr>
+                    <tr>
+                      <td>C.P.I.</td><td>{{theSite.cpiIndicator}}</td><td>Tax Code</td><td>{{theSite.taxCode}} - {{theSite.taxCodeDesc}}</td>
+                    </tr>
+                    <tr>
+                      <td>Contract Status</td><td>{{theSite.contractStatus}} - {{theSite.contractStatusDesc}}</td><td>Tax Exempt #</td><td>{{theSite.taxExempt}}</td>
+                    </tr>
+                    <tr>
+                      <td>Purchase Order #</td><td>{{theSite.purchaseOrder}}</td><td>Effective Date</td><td>{{theSite.effectiveDate}}</td>
+                    </tr>
+                    <tr>
+                      <td>Authorized by</td><td>{{theSite.authorizedBy}} | Title: {{theSite.authorizedByTitle}}</td><td>Expiry Date</td><td>{{theSite.expiryDate | singleDigitFormat}}</td>
+                    </tr>
+                    <tr>
+                      <td>Service Contact</td><td>{{theSite.serviceContact}} | Title: {{theSite.contactTitle}}</td><td>Review Date</td><td> {{theSite.reviewDate | singleDigitFormat}}</td>
+                    </tr>
+                    <tr>
+                      <td>S.I.C.</td><td>{{theSite.sicCode}} - {{theSite.sicCodeDesc}}</td><td>Close Date</td><td>{{ theSite.closeDate | singleDigitFormat }}</td>
+                    </tr>
+                    <tr>
+                      <td>Sales Rep</td><td>{{theSite.salesRep}} - {{theSite.salesRepName}}</td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr> 
+                <tr><td colspan="6" style="text-align: center;font-weight: bold;font-size: 90%;">Last Updated: {{theSite.lastUpdated}} | Original Start Date: {{theSite.originalStartDate}}</td></tr>
+                  </tbody>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    </div>
+    </div>
+    </div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>
+</div>
+</div>

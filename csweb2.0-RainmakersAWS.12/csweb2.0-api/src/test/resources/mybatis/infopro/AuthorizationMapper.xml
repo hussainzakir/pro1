@@ -1,0 +1,48 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.authorization.dao.AuthorizationDao" >
+	
+	<select id="getUserAuthorizations" resultMap="userAuthMap">
+		{CALL CUQSC000_INF_MENU_OPTIONS(  
+     #{username},     
+      ?,                         
+      ?) }
+	</select>
+  
+  
+	<select id="getUserDivisions" resultMap="userDivisionsMap" statementType="CALLABLE">
+	CALL GETDIVUA(
+	#{username,jdbcType=CHAR,mode=INOUT},
+	#{company,jdbcType=CHAR,mode=INOUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlCode,jdbcType=INTEGER,mode=OUT})
+	</select>
+	
+	<select id="checkAccess" statementType="CALLABLE">
+	{CALL GETMSIUA(
+	#{system,jdbcType=VARCHAR,mode=INOUT},
+	#{username,jdbcType=VARCHAR,mode=INOUT},
+	#{pointer,jdbcType=VARCHAR,mode=INOUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT},
+	#{result.accessFlag,jdbcType=INTEGER,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR, mode=OUT},
+	#{result.sqlState,jdbcType=INTEGER, mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=INTEGER, mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlCode,jdbcType=INTEGER,mode=OUT}
+	)}
+	</select>
+	
+	<resultMap type="com.repsrv.csweb.core.model.UserAuthorization" id="userAuthMap">
+		<result column="MENUITEM" property="menuOption"/>
+	</resultMap>
+
+	<resultMap type="com.repsrv.csweb.core.model.authorization.UserDivision" id="userDivisionsMap">
+		<result column="USGRP" property="userGroup"/>
+		<result column="CGCO" property="division"/>
+	</resultMap>
+</mapper>

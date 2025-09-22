@@ -1,0 +1,625 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="begin" style="padding-top: 50px;padding-left:30px;">
+  <button mat-raised-button  color="blue"  class="btn-w-md"
+                               routerLink="/aae" [queryParams]="{search: 1}">Back</button>
+</div>
+<div class="center"style="padding-top: 0px;" >
+    <h1>Order/Quote Details</h1>
+</div>
+<div style="width:950px; margin: 0 auto;">
+  <table class="header-table">
+    <tr><td>Quote: </td><td> {{quoteMetadata?.quoteNumber}}</td></tr>
+    <tr><td>Status: </td><td> {{quoteMetadata?.statusCode}}</td></tr>
+    <tr><td>Type: </td><td> {{quoteMetadata?.quoteType}}</td></tr>
+    <tr><td>Format: </td><td> {{quoteMetadata?.formatType}}</td></tr>
+    <tr><td>Assignee: </td><td> 
+      <ng-container *ngIf="quoteMetadata?.assignedTo=='UNASSIGNED';  then assignable; else plain">
+      </ng-container>
+      <ng-template #assignable>
+        <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="matMenu"
+          [matMenuTriggerData]="{quote: quoteMetadata?.quoteNumber}">{{quoteMetadata?.assignedTo || 'Unassigned' }}</a>
+        <mat-menu #matMenu="matMenu">
+          <ng-template matMenuContent let-quote="quote" >
+            <button mat-menu-item (click)="assignQuote(quote)">Assign to me</button>
+          </ng-template>
+        </mat-menu>
+    </ng-template>
+    <ng-template #plain>
+      <ng-container *ngIf="canUnassign(quoteMetadata?.assignedTo); else noAction">
+      <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="matMenuUnassign"
+      [matMenuTriggerData]="{quote: quoteMetadata?.quoteNumber}">{{quoteMetadata?.assignedTo || 'UNASSIGNED' }}</a>
+      <mat-menu #matMenuUnassign="matMenu">
+        <ng-template matMenuContent let-quote="quote" >
+          <button mat-menu-item (click)="unassignQuote(quote)">
+          Unassign from quote</button>
+        </ng-template>
+      </mat-menu>
+    </ng-container>
+    </ng-template>
+    <ng-template #noAction>
+      {{quoteMetadata?.assignedTo}}
+    </ng-template>
+   </td></tr>
+    <tr><td>Last Val: </td><td style="white-space: nowrap;"> {{quoteMetadata?.lastValidatedTimestamp | as400DateToString}}</td></tr>
+    <tr *ngFor="let site of getUniqueSites()"><td>URL: </td><td style="white-space: nowrap;"> 
+      <a class="repsrv-link" href="https://republicmap.repsrv.com/republicmap/home.aspx?address={{getEncodedAddress(site.siteStagingId)}}" target="_blank">SITEMAP</a>
+      </td></tr>
+  </table>
+  <div fxFlexOffset="45" fxFlex="100" fxLayoutAlign="center center">
+    <table>
+      <tr><td style="width: 100%;">
+        <button mat-raised-button  color="accent"  class="btn-w-md" [disabled]="quoteMetadata?.allowUpdate != 'Y'" (click)="openQuoteValidate()">Validate</button>
+    <button mat-raised-button  color="orange"  style="margin-left: 1em" class="btn-w-md" [disabled]="quoteMetadata?.allowFinalize != 'Y'" (click)="finalizeButton.disabled=true; openFinalValidation()" #finalizeButton>Finalize</button>
+
+      </td></tr>
+      <tr><td>
+        <span style="color:red;font-style: italic;">{{quoteMetadata?.reason ? quoteMetadata?.reason : ''}}</span>
+      </td></tr>
+    </table>
+    </div>
+ </div>
+<div style="width:950px; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+    <div fxFlex="100">
+      <div fxLayout="row wrap" fxLayoutGap="20px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+            <mat-accordion>
+            <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+            <mat-panel-title style="width: 100%;">
+            <mat-card-title style="width: 100%;" >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                Error Messages
+                <span color="primary" style="float:right;font-size: .7em;color: orange;">
+                  {{ dataForErrorTable?.length }} errors
+                </span>
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+            </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card-content [style.overflow]="'auto'">
+                <div >
+                    <table mat-table [dataSource]="dataForErrorTable" matSort style="width: 100%;" >
+                      <ng-container matColumnDef="loadingErrorResults" >
+                        <td mat-footer-row *matFooterCellDef [colSpan]="displayedErrorColumns.length"
+                        style="text-align: center;color: orange;">
+                        <app-ghost-table></app-ghost-table>
+                      </td>
+                      </ng-container>
+                      <tr mat-footer-row
+                      [hidden]="!isLoadingErrorResults"
+                      *matFooterRowDef="['loadingErrorResults']">
+                      </tr>
+                      <ng-container matColumnDef="nodata" >
+                        <td mat-footer-row *matFooterCellDef [colSpan]="displayedErrorColumns.length"
+                        style="text-align: center;color: orange;">No Errors</td>
+                      </ng-container>
+                      <tr mat-footer-row
+                        [hidden]="dataForErrorTable.length>0 || isLoadingErrorResults"
+                        *matFooterRowDef="['nodata']">
+                      </tr>
+                      <ng-container matColumnDef="entity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Entity </th>
+                        <td mat-cell *matCellDef="let errorResponse">{{errorResponse.entity}}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="identifier">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Identifier </th>
+                        <td mat-cell *matCellDef="let error">{{error.identifier}}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="errorDescription">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Error Description </th>
+                        <td mat-cell *matCellDef="let error">{{error.error}}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp; </th>
+                        <td mat-cell *matCellDef="let error">
+                          <button mat-button (click)="doFixPopup(error)" color="warn">fix error</button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedErrorColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedErrorColumns;" [hidden]="isLoadingErrorResults"></tr>
+                    </table>
+                </div>
+            </mat-card-content>
+            </mat-expansion-panel>
+            </mat-accordion>
+         </div>
+      </div>
+   </div>
+ </div>
+</div>
+<div style="width: 90%; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+    <div fxFlex="100">
+      <div fxLayout="row wrap" fxLayoutGap="20px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+            <mat-accordion>
+            <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+            <mat-panel-title style="width: 100%;">
+            <mat-card-title style="width: 100%;" >
+              <button *ngIf="isQuoteTypeAccountEditable()" style="float: right;" class="orange-btn" (click)="openEditAccount(); $event.stopPropagation()" mat-button >Update</button>
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>Account Information
+                  <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+            </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card-content style="width: 100%;">
+                <!-- <mat-tab-group>
+                  <mat-tab label="Account Infomation"> -->
+                    <!-- <button style="float: right;" class="orange-btn" (click)="openEditAccount()" mat-button >Update</button> -->
+
+                <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                <table class="cardTable" [hidden]="isLoadingQuoteData">
+                  <tr>
+                    <td><strong>Account:</strong></td><td>{{accountDetail.company}} - {{accountDetail.account}}</td>
+                    <td><strong>Account Name:</strong></td><td>{{accountDetail.customerName}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Address:</strong></td><td>{{accountDetail.addressLine1}} {{accountDetail.addressLine2}}</td>
+                      <td><strong>Unit/Suite:</strong></td><td>{{accountDetail.addressLine3}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>City:</strong></td><td>{{accountDetail.city}}</td>
+                    <td><strong>State:</strong></td><td>{{accountDetail.state}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>ZipCode:</strong></td><td>{{accountDetail.postalCode}}</td>
+                    <td><strong>Phone:</strong></td><td>{{formatTelephone(accountDetail.telephone)}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Email:</strong></td><td>{{accountDetail.accountContactEmail}}</td>
+                    <td><strong>Invoice Group Code:</strong></td><td>{{accountDetail.invoiceGroupCode}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Customer Category</strong></td><td>{{accountDetail.customerCategory}}</td>
+                    <td><strong>SI Eligible:</strong></td><td>{{accountDetail.siEligible}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Charge Late Fee:</strong></td><td>{{accountDetail.chargeLateFee}}</td>
+                    <td><strong>Charge Late Policy</strong></td><td>{{accountDetail.lateFeePolicy}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Charge Admin Fee:</strong></td><td>{{accountDetail.chargeAdministrativeFee}}</td>
+                      <td><strong>Charge Serv Int Fee:</strong></td><td>{{accountDetail.chargeServiceIntFee}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Charge Fuel Fee:</strong></td><td>{{accountDetail.chargeFuelFee}}</td>
+                      <td><strong>Charge Envr Fee:</strong></td><td>{{accountDetail.chargeEnvironmentalFee}}</td>
+                  </tr>
+                  <tr>
+                      <td><strong>Print Method Desc:</strong></td><td>{{accountDetail.printMethodDescription}}</td>
+                      <td><strong>Charge Fees on Admin:</strong></td><td>{{accountDetail.erfFrfFlag}}</td>
+                  </tr>
+                </table>
+            </mat-card-content>
+            </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div style="width: 90%; margin: 0 auto;">
+    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+      <div fxFlex="100">
+        <div fxLayout="row wrap" fxLayoutGap="20px grid">
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+              <mat-accordion>
+              <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                  (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+              <mat-panel-title style="width: 100%;">
+              <mat-card-title style="width: 100%;">
+              <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+              Site Information
+              <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+              </mat-card-title>
+              </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-card-content [style.overflow]="'auto'">
+                <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                  <!-- <mat-tab-group [hidden]="isLoadingQuoteData">
+                    <mat-tab label="Site Infomation"> -->
+                <div style="width: 100%;">
+                      <table mat-table [dataSource]="dataSource" matSort style="width: 100%;padding-top: 10px;" >
+                          <ng-container matColumnDef="site">
+                            <th mat-header-cell *matHeaderCellDef> Account-Site </th>
+                            <td mat-cell *matCellDef="let site of accountDetail.sites"> <a class="repsrv-link" [routerLink]="" (click)="openEditSite(site.siteStagingId)"> {{accountDetail.account}}-{{site.site  || '???'}}</a></td>
+                          </ng-container>
+                          <ng-container matColumnDef="siteName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Name </th>
+                            <td mat-cell *matCellDef="let site of accountDetail.sites"> {{site.siteName}}</td>
+                          </ng-container>
+                          <ng-container matColumnDef="address">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Site Address </th>
+                            <td mat-cell *matCellDef="let site of accountDetail.sites">{{site.addressNumber}} {{site.preDirectional}} {{site.addressName}}
+                              {{site.streetType}} {{site.streetDirection}} {{site.addressSuite}} {{site.city}} {{site.stateProvince}} {{site.postalCode}}</td>
+                          </ng-container>
+                          <ng-container matColumnDef="effectiveDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Effective Date </th>
+                            <td mat-cell *matCellDef="let site of accountDetail.sites">{{site.effectiveDate | dateFormat}}</td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedSiteColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedSiteColumns;"></tr>
+                      </table>
+                    </div>
+                </mat-card-content>
+                </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+    <div style="width: 90%; margin: 0 auto;" >
+      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="20px grid">
+            <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+                <mat-accordion>
+                <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                  (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                <mat-panel-title style="width: 100%;">
+                <mat-card-title style="width: 100%;">
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                Container Information
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+                </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-card-content [style.overflow]="'auto'">
+                  <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                  <div style="width: 100%;" [hidden]="isLoadingQuoteData">
+                    <table mat-table [dataSource]="dataForContainerTable"  matSort style="width: 100%;" >
+                      <ng-container matColumnDef="container" >
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Account-Site-Container </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container><a class="repsrv-link" [routerLink]="" (click)="openEditContainer(container.containerStagingId)">{{accountDetail.account}}-{{container.site}}-{{container.containerId}}</a></ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.quantityOrder}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="contractNumber">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Number </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.contractNumber}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.containerType}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="size">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Size </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.containerSize}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="accountTypeDesc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Type </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.accountTypeDescription}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="onCallFlag">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> On Call Flag </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.onCall}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="idCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Code </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.idCode}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="revDistCode">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Rev Distribution Code </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.revenueDistribution}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="shared">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Shared </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.sharedContainerId}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="startDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+                        <td mat-cell *matCellDef="let container">
+                      <ng-container>{{container.originalStartDate | dateFormat}}</ng-container></td>
+                      </ng-container>
+                      <ng-container matColumnDef="delete" *ngIf="dataForContainerTable.length > 1; else otherContainer">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
+                          <td mat-cell *matCellDef="let container"><a class="repsrv-link" (click)="openDeleteContainer(container.containerStagingId)"><mat-icon>delete_outline</mat-icon></a></td>
+                      </ng-container>
+                      <ng-template #otherContainer>
+                        <ng-container matColumnDef="delete">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
+                          <td mat-cell *matCellDef="let container">
+                              <button mat-icon-button [matMenuTriggerFor]="menu">
+                                  <mat-icon>delete_outline</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                                  <button mat-menu-item class="bold-text" disabled>Cannot delete when only 1 container</button>
+                              </mat-menu>
+                          </td>
+                      </ng-container>
+                      </ng-template>
+                        <tr mat-header-row *matHeaderRowDef="displayedContainerColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedContainerColumns;"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+                </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div style="width: 90%; margin: 0 auto;">
+        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+          <div fxFlex="100">
+            <div fxLayout="row wrap" fxLayoutGap="20px grid">
+              <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+                  <mat-accordion>
+                  <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                  (closed)="panelOpenState = false">
+                  <mat-expansion-panel-header>
+                  <mat-panel-title style="width: 100%;">
+                  <mat-card-title style="width: 100%;">
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                  <button style="float: right;" class="orange-btn" (click)="$event.stopPropagation()" mat-button [matMenuTriggerFor]="menu">Create</button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item *ngFor="let container of dataForContainerTable" class="repsrv-link link-button" [routerLink]="" (click)="openCreateRate(container.containerId); $event.stopPropagation();">
+                      {{accountDetail.account}}-{{container.site}}-{{container.containerId}}
+                    </button>
+                  </mat-menu>
+                  <button *ngIf="shouldDisplayButton()" class="orange-btn contract-info-button" (click)="openNewWindow($event, element)" mat-button >Contract Info</button>
+                  Container Rate Information
+                  <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                  </mat-card-title>
+                  </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-card-content [style.overflow]="'auto'">
+                    <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                    <div style="width: 100%;" [hidden]="isLoadingQuoteData">
+                      <table mat-table [dataSource]="dataForContainerRateTable" matSort style="width: 100%;" >
+                        <ng-container matColumnDef="site">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Account-Site-Container </th>
+                          <td mat-cell *matCellDef="let rate">
+                            <a class="repsrv-link" [routerLink]="" (click)="openEditRate(rate.rateStagingId)"> {{rate.customerAccount}}-{{rate.site || '???'}}-{{rate.containerGroup}}</a>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="chargeCode">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Charge Code </th>
+                          <td mat-cell *matCellDef="let rate"> {{rate.chargeCode}}</td>
+                        </ng-container>
+                        <ng-container *ngIf="quoteMetadata.formatType == 'NON RESI'" matColumnDef="wmType">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> WM Type </th>
+                          <td mat-cell *matCellDef="let rate"> {{rate.wasteMaterialType}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="chargeType">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Charge Type </th>
+                          <td mat-cell *matCellDef="let rate"> {{rate.chargeType}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="chargeMethod">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Charge Method </th>
+                          <td mat-cell *matCellDef="let rate"> {{rate.chargeMethod}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="effectiveDate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Effective Date </th>
+                          <td mat-cell *matCellDef="let rate"> {{rate.effectiveDate | dateFormat}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="amount">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                          <td mat-cell *matCellDef="let rate"> {{rate.chargeRate}}</td>
+                        </ng-container>
+                        <!-- <ng-container matColumnDef="delete">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
+                          <td mat-cell *matCellDef="let rate"><a class="repsrv-link" (click)="openDeleteRate(rate.rateStagingId)"><mat-icon>delete_outline</mat-icon></a></td>
+                        </ng-container> -->
+                        <tr mat-header-row *matHeaderRowDef="quoteMetadata.formatType == 'NON RESI' ? displayedNonResiRateColumns : displayedRateColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: quoteMetadata.formatType == 'NON RESI' ? displayedNonResiRateColumns : displayedRateColumns;"></tr>
+                      </table>
+                    </div>
+                  </mat-card-content>
+                  </mat-expansion-panel>
+                  </mat-accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div style="width: 90%; margin: 0 auto;">
+          <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+            <div fxFlex="100">
+              <div fxLayout="row wrap" fxLayoutGap="20px grid">
+                <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+                    <mat-accordion>
+                    <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                    (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header>
+                    <mat-panel-title style="width: 100%;">
+                    <mat-card-title style="width: 100%;">
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                    Route Information
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                    </mat-card-title>
+                    </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card-content [style.overflow]="'auto'">
+                      <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                      <div style="width: 100%;" [hidden]="isLoadingQuoteData">
+                        <table mat-table [dataSource]="dataForContainerTable"  matSort style="width: 100%;" >
+                          <ng-container matColumnDef="container" >
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Account-Site-Container </th>
+                            <td mat-cell *matCellDef="let container">
+                          <ng-container><a class="repsrv-link" [routerLink]="" (click)="openEditRoute(container.containerStagingId)">{{accountDetail.account}}-{{container.site}}-{{container.containerId}}</a></ng-container></td>
+                          </ng-container>
+                          <ng-container matColumnDef="poNumber">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> PO Number </th>
+                            <td mat-cell *matCellDef="let container">
+                          <ng-container>{{container.routePOnumber}}</ng-container></td>
+                          </ng-container>
+                          <ng-container matColumnDef="quantity">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+                            <td mat-cell *matCellDef="let container">
+                          <ng-container>{{container.routeQuantity}}</ng-container></td>
+                          </ng-container>
+                          <ng-container matColumnDef="planDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan Date </th>
+                            <td mat-cell *matCellDef="let container">
+                          <ng-container>{{container.routeUrPlanDate | dateFormat}}</ng-container></td>
+                          </ng-container>
+                          <ng-container matColumnDef="serviceCode">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Code </th>
+                            <td mat-cell *matCellDef="let container">
+                          <ng-container>{{container.routeServiceCode}}</ng-container></td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedRouteColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedRouteColumns;"></tr>
+                        </table>
+                        </div>
+                    </mat-card-content>
+                    </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div style="width: 90%; margin: 0 auto;">
+        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+          <div fxFlex="100">
+            <div fxLayout="row wrap" fxLayoutGap="20px grid">
+              <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+                  <mat-accordion>
+                  <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                  (closed)="panelOpenState = false">
+                  <mat-expansion-panel-header>
+                  <mat-panel-title style="width: 100%;">
+                  <mat-card-title style="width: 100%;" >
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                  Sales Transaction
+                  <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                  </mat-card-title>
+                  </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-card-content [style.overflow]="'auto'">
+                    <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                    <div style="width: 100%;" [hidden]="isLoadingQuoteData">
+                      <table mat-table [dataSource]="dataForContainerTable"  matSort style="width: 100%;" >
+                        <ng-container matColumnDef="container" >
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Account-Site-Container </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container><a class="repsrv-link" [routerLink]="" (click)="openEditSalesTrans(container.containerStagingId)">{{accountDetail.account}}-{{container.site}}-{{container.containerId}}</a></ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="transCode">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Transaction/Reason Code </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.sdtransactionCode}} / {{container.sdReasonCode}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="reasonCode">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Transaction/Reason Desc </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.sdTransReasonDescription}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="leadSource">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Source Desc</th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.sdLeadSourceDescription}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="signingRep">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Signing Rep </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.sdSigningRep}}</ng-container></td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedSaleTransColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedSaleTransColumns;"></tr>
+                      </table>
+                    </div>
+                  </mat-card-content>
+                  </mat-expansion-panel>
+                  </mat-accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!--     <div *ngIf="quoteMetadata.quoteType.toLowerCase() == 'service change-container sched/qty'" class="card">
+      <div style="width: 90%; margin: 0 auto;">
+        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+          <div fxFlex="100">
+            <div fxLayout="row wrap" fxLayoutGap="20px grid">
+              <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+                  <mat-accordion>
+                  <mat-expansion-panel [expanded]="true" class="mat-elevation-z8" style="padding-top: 20px; padding-bottom: 20px;" (opened)="panelOpenState = true"
+                  (closed)="panelOpenState = false">
+                  <mat-expansion-panel-header>
+                  <mat-panel-title style="width: 100%;">
+                  <mat-card-title style="width: 100%;" >
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                  Future Service Request
+                  <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                  </mat-card-title>
+                  </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-card-content [style.overflow]="'auto'">
+                    <app-ghost-table [hidden]="!isLoadingQuoteData"></app-ghost-table>
+                    <div style="width: 100%;" [hidden]="isLoadingQuoteData">
+                      <table mat-table [dataSource]="dataForContainerTable"  matSort style="width: 100%;" >
+                        <ng-container matColumnDef="container" >
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Account-Site-Container </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{accountDetail.account}}-{{container.site}}-{{container.containerId}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="effectiveDate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Effective Date  </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.fsrEffectiveDate | dateFormat}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="qtyOnOrder">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Qty on Order  </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.fsrQtyOnOrder}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="liftCycle">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Lift/Cycle </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.fsrTotalLifts}}/{{container.fsrTimeFrame}} {{container.fsrTimeFrameRef}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="onCall">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> On Call  </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.fsrOnCall}}</ng-container></td>
+                        </ng-container>
+                        <ng-container matColumnDef="estLiftField">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Est Lift Field  </th>
+                          <td mat-cell *matCellDef="let container">
+                        <ng-container>{{container.fsrMinLifts}}</ng-container></td>
+                        </ng-container>              
+                        <tr mat-header-row *matHeaderRowDef="displayedFsrColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedFsrColumns;"></tr>
+                      </table>
+                    </div>
+                  </mat-card-content>
+                  </mat-expansion-panel>
+                  </mat-accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+     
+
+
+
+
+
+
+
+

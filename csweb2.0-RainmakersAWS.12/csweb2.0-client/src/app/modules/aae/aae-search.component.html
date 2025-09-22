@@ -1,0 +1,338 @@
+<div class="center"style="padding-top: 50px;" >
+  <h1>AAE - Search</h1>
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" >
+    <div fxFlex="100" class="center ">
+        <div fxFlex="60" fxFlexOffset="0" style="padding-top: 10px;" >
+          <mat-card class="mat-elevation-z8">
+           <mat-card-content style="text-align: center;">
+          <form [formGroup]="searchForm" (keyup.enter)="doInitialSearch()">
+            <div fxLayout="row" fxLayoutGap="15px">
+              <div fxFlex="33">
+                <mat-form-field fxFlex="100">
+                  <mat-label>Oracle Division:</mat-label>
+                  <input autofocus formControlName="oracleDivision" autocomplete="off"
+                  matInput  value="" maxlength="55">
+                </mat-form-field>
+              </div>
+              <div fxFlex="33">
+                <mat-form-field fxFlex="100">
+                  <mat-label>Company:</mat-label>
+                  <input formControlName="company" autocomplete="off"
+                  matInput  value="" maxlength="5">
+                </mat-form-field>
+              </div>
+              <div fxFlex="34">
+                <mat-form-field  fxFlex="100">
+                  <mat-label>Account #:</mat-label>
+                  <input formControlName="customerAccount" autocomplete="off"
+                  matInput  value="">
+                </mat-form-field>
+              </div>
+          </div>
+            <div fxLayout="row" fxLayoutGap="15px">
+              <div fxFlex="33">
+                <mat-form-field  fxFlex="100">
+                  <mat-label>Quote Id:</mat-label>
+                  <input formControlName="quoteID" autocomplete="off"
+                  matInput  value="">
+                </mat-form-field>
+              </div>
+              <div fxFlex="34">
+                <mat-form-field  fxFlex="100">
+                  <mat-label>Sales Rep Id:</mat-label>
+                  <input formControlName="salesRep" autocomplete="off"
+                  matInput  value="">
+                </mat-form-field>
+              </div>
+              <div fxFlex="33">
+                <mat-form-field fxFlex="100">
+                  <mat-label>Status:</mat-label>
+                  <mat-select formControlName="statusCode" autocomplete="off"
+                  matInput>
+                    <mat-option value=""></mat-option>
+                    <mat-option value="RVW">Review</mat-option>
+                    <mat-option value="PRI">Priority</mat-option>
+                    <mat-option value="HLD">Hold</mat-option>
+                    <mat-option value="DEL">Delete</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+          </div>
+          <div fxLayout="row" fxLayoutGap="15px">        
+            <div fxFlex="33">
+              <mat-form-field  fxFlex="100">
+                <mat-label>Effective Date From:</mat-label>
+                <input matInput [matDatepicker]="effDateFromPicker"
+                        (focus)="effDateFromPicker.open()" formControlName="effectiveFrom" placeholder="mm/dd/yyyy"
+                        autocomplete="off">
+                    <mat-datepicker-toggle matSuffix [for]="effDateFromPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #effDateFromPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div fxFlex="34">
+              <mat-form-field  fxFlex="100">
+                <mat-label>Effective Date To:</mat-label>
+                <input matInput [matDatepicker]="effDateToPicker"
+                        (focus)="effDateToPicker.open()" formControlName="effectiveTo" placeholder="mm/dd/yyyy"
+                        autocomplete="off" >
+                    <mat-datepicker-toggle matSuffix [for]="effDateToPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #effDateToPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          <div fxFlex="33">
+            <mat-form-field fxFlex="100">
+              <mat-label>Quote Type:</mat-label>
+              <mat-select formControlName="quoteType" autocomplete="off"
+              matInput>
+              <mat-option value=""></mat-option>
+                <mat-option value="Change of Owner">Change of Owner</mat-option>
+                <mat-option value="Close container group">Close container group</mat-option>
+                <mat-optgroup label="New">
+                  <mat-option value="New/New">New</mat-option>
+                  <mat-option value="New Site">New Site</mat-option>
+                  <mat-option value="New Container">New Container</mat-option>
+                  <mat-option value="New from Competitor">New from Competitor</mat-option>
+                 </mat-optgroup>
+                <mat-option value="Price adjustment">Price adjustment</mat-option>
+                <mat-option value="Reinstatement">Reinstatement</mat-option>
+                <mat-optgroup label="Service">
+                  <mat-option value="Service Change-Container Sched/Qty">Change-Container Sched/Qty</mat-option>
+                  <mat-option value="Service Change-Container Type/Size">Change-Container Type/Size</mat-option>
+                </mat-optgroup>
+                <mat-option value="Transfer of Service">Transfer of Service</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px">
+          <div fxFlex="33">
+            <mat-form-field  fxFlex="100">
+              <mat-label>Create Date:</mat-label>
+              <input matInput [matDatepicker]="createDatePicker"
+                      (focus)="createDatePicker.open()" formControlName="createDate" placeholder="mm/dd/yyyy"
+                      autocomplete="off" >
+                  <mat-datepicker-toggle matSuffix [for]="createDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #createDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div fxFlex="34">
+            <mat-form-field  fxFlex="100">
+              <mat-label>Assignee:</mat-label>
+              <input formControlName="assignee" autocomplete="off"
+              matInput  value="">
+            </mat-form-field>
+          </div>
+          <div fxFlex="33">
+            <mat-form-field  fxFlex="100">
+              <mat-label>Format Type:</mat-label>
+              <mat-select formControlName="formatType" autocomplete="off"
+                matInput>
+                  <mat-option value=""></mat-option>
+                  <mat-option value="R">Resi</mat-option>
+                  <mat-option value="C">Non Resi</mat-option>
+                </mat-select>
+              </mat-form-field>
+          </div>
+        
+      </div>
+        <div fxLayout="row" fxLayoutGap="15px">
+          <div fxFlex="33">
+              <mat-checkbox  formControlName="includeOnHold"> Include On Hold </mat-checkbox>
+          </div>
+          <div fxFlex="33">
+              <mat-checkbox formControlName="includeDeleted"> Include Deleted </mat-checkbox>
+          </div>
+      </div>
+      </form>
+          </mat-card-content>
+          <mat-card-actions class="button-container" style="padding-top: 0px;">
+            <div class="center-buttons">
+              <button mat-raised-button color="orange" class="btn-w-md" (click)="doSearch();">Search</button>
+              <button mat-raised-button color="white" class="btn-w-md" (click)="resetTheForm();">Reset</button>
+            </div>
+            <button mat-raised-button  color="accent" class="btn-w-md right-button" (click)="openErrorReport()">Reports</button>
+          </mat-card-actions>
+        </mat-card>
+        </div>
+    </div>
+  </div>
+
+  <ng-template [ngIf]="false">
+  <div fxLayout="row" fxLayoutGap="15px">
+    <div fxFlex="50" style="padding-left: 85px; padding-top: 25px;margin-bottom: -40px;">
+      <mat-slide-toggle color="warning" [(ngModel)]="isConsolidatedAae" (change)="onConsolidatedAaeToggle($event)">Consolidated AAE</mat-slide-toggle>
+    </div>
+  </div>
+  </ng-template>
+  <div fxLayout="row" fxLayoutGap="10px" style="padding-top: 5px;">
+    <div fxFlexOffset="0" fxFlex="100">
+      <div class="pagedTable " style="width: 90%; margin: 0 auto;padding-top: 10px;">
+        <div class="loading-shade" *ngIf="isLoadingResults">
+          <mat-spinner></mat-spinner>
+          </div>
+        <table mat-table  [dataSource]="data" matSort class="mat-elevation-z8" matSortActive="submittedDate" matSortDirection="desc" style="width: 100%;padding-top: 10px;">
+
+          <ng-container matColumnDef="loading" >
+            <td mat-footer-row *matFooterCellDef [colSpan]="displayedColumns.length"
+            style="text-align: center;color: orange;">
+            <app-ghost-table></app-ghost-table>
+          </td>
+          </ng-container>
+          <tr mat-footer-row
+          [hidden]="!isLoadingResults"
+          *matFooterRowDef="['loading']">
+          </tr>
+          <ng-container matColumnDef="nodata" >
+            <td mat-footer-row *matFooterCellDef [colSpan]="displayedColumns.length"
+            style="text-align: center;color: orange;">Nothing queued right now</td>
+          </ng-container>
+          <tr mat-footer-row
+            [hidden]="data.length>0 || isLoadingResults"
+            *matFooterRowDef="['nodata']">
+          </tr>
+
+          <ng-container matColumnDef="oracleDivision">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Division </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.oracleDivision}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="companyNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Company </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.companyNumber}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="accountNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acct Number </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.accountNumber}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="quoteID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quote Id</th>
+            <td mat-cell *matCellDef="let element">
+              <a class="repsrv-link" routerLink="/aae/quote/{{element.quoteID}}/div/{{element.companyNumber}}"> {{element.quoteID}}</a>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="quoteType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Quote Type </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.quoteType}}
+            </td>
+          </ng-container>
+         <ng-container matColumnDef="accountName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Name </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.accountName}}
+          </td>
+        </ng-container>
+
+          <ng-container matColumnDef="siteAddress">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Site Address</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.siteAddress}}
+            </td>
+          </ng-container>
+
+        <ng-container matColumnDef="statusCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container [ngSwitch]="element.statusCode">
+                <ng-template [ngSwitchCase]="'PRI'">
+                  <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="priorityMenu"
+                    [matMenuTriggerData]="{statusCode: element.statusCode, projectId: element.projectID, quote: element.quoteID}">Priority</a>
+                  <mat-menu #priorityMenu="matMenu">
+                    <ng-template matMenuContent let-statusCode="statusCode" let-projectId="projectId" let-quote="quote">
+                      <button mat-menu-item (click)="addNote('HLD', projectId, quote)">Hold</button>
+                      <button mat-menu-item (click)="addNote('DEL', projectId, quote)">Delete</button>
+                    </ng-template>
+                  </mat-menu>
+                </ng-template>
+                <ng-template [ngSwitchCase]="'RVW'">
+                  <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="priorityMenu"
+                    [matMenuTriggerData]="{statusCode: element.statusCode, projectId: element.projectID, quote: element.quoteID}">Review</a>
+                  <mat-menu #priorityMenu="matMenu">
+                    <ng-template matMenuContent let-statusCode="statusCode" let-projectId="projectId" let-quote="quote">
+                      <button mat-menu-item (click)="addNote('HLD', projectId, quote)">Hold</button>
+                      <button mat-menu-item (click)="addNote('DEL', projectId, quote)">Delete</button>
+                    </ng-template>
+                  </mat-menu>
+                </ng-template>
+              <ng-template [ngSwitchCase]="'HLD'">
+                <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="holdMenu"
+                  [matMenuTriggerData]="{statusCode: element.statusCode, projectId: element.projectID, quote: element.quoteID}">Hold</a>
+                <mat-menu #holdMenu="matMenu">
+                  <ng-template matMenuContent let-statusCode="statusCode" let-projectId="projectId" let-quote="quote">
+                    <button mat-menu-item (click)="addNote('RLS', projectId, quote)">Release</button>
+                  </ng-template>
+                </mat-menu>
+              </ng-template>
+              <ng-template [ngSwitchCase]="'DEL'">
+                <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="delMenu"
+                  [matMenuTriggerData]="{statusCode: element.statusCode, projectId: element.projectID, quote: element.quoteID}">Delete</a>
+                <mat-menu #delMenu="matMenu">
+                  <ng-template matMenuContent let-statusCode="statusCode" let-projectId="projectId" let-quote="quote">
+                    <button mat-menu-item (click)="addNote('UND', projectId, quote)">Undelete</button>
+                  </ng-template>
+                </mat-menu>
+              </ng-template>
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="notes">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Notes</th>
+            <td mat-cell *matCellDef="let element">
+             <button *ngIf=" element.notesFound === 'Y' " (click)="viewQuoteNotes(element.quoteID);" class="notesButton"><mat-icon [ngStyle]="{'color': 'gray', 'opacity':0.5}">note</mat-icon></button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assignee">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Assignee </th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container *ngIf="element.assignedTo=='UNASSIGNED';  then assignable; else plain">
+              </ng-container>
+              <ng-template #assignable>
+                <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="matMenu"
+                  [matMenuTriggerData]="{quote: element.quoteID}">{{element.assignedTo || 'Unassigned' }}</a>
+                <mat-menu #matMenu="matMenu">
+                  <ng-template matMenuContent let-quote="quote" >
+                    <button mat-menu-item (click)="assignQuote(quote)">Assign to me</button>
+                  </ng-template>
+                </mat-menu>
+            </ng-template>
+            <ng-template #plain>
+              <ng-container *ngIf="canUnassign(element.assignedTo); else noAction">
+              <a class="repsrv-link" href="javascript:void(0);" [matMenuTriggerFor]="matMenuUnassign"
+              [matMenuTriggerData]="{quote: element.quoteID}">{{element.assignedTo || 'UNASSIGNED' }}</a>
+              <mat-menu #matMenuUnassign="matMenu">
+                <ng-template matMenuContent let-quote="quote" >
+                  <button mat-menu-item (click)="unassignQuote(quote)">
+                  Unassign from quote</button>
+                </ng-template>
+              </mat-menu>
+            </ng-container>
+            </ng-template>
+            <ng-template #noAction>
+              {{element.assignedTo}}
+            </ng-template>
+              </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Create Date</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.createDate}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [hidden]="isLoadingResults"></tr>
+        </table>
+        <mat-paginator  [pageSizeOptions]="[10, 25, 50, 100]" [length]="totalPagedResults" pageSize="10"
+        showFirstLastButtons (page)="onChangePage($event)" class="mat-elevation-z8"></mat-paginator>
+        </div>
+
+    </div>
+  </div>

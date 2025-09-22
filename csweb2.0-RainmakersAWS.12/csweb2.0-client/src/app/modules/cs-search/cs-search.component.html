@@ -1,0 +1,302 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center">
+  <div fxFlex="100" class="center ">
+    <div fxFlex="90" fxFlexOffset="0" style="padding-top: 10px;">
+      <mat-card class="mat-elevation-z8">
+        <mat-card-content style="text-align: center;">
+          <div class="pagedTable " style="width: 90%; margin: 0 auto;">
+            <h1>Customer Account Lookup </h1>
+            <form [formGroup]="form" autocomplete="off" (keyup)="handleKey($event)">
+              <div fxLayout="row" fxLayoutGap="5px">
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Division</mat-label>
+                    <mat-select formControlName="division">
+                      <mat-option value="all">All</mat-option>
+                      <mat-option value="625">625</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-checkbox formControlName="includeClosedSites">Include Closed Sites:</mat-checkbox>
+                </div>
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-checkbox formControlName="nationalAccountsOnly">National Accounts Only:</mat-checkbox>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Location Id</mat-label>
+                    <input matInput formControlName="locationId" placeholder="Ex. 1234567" autocomplete="off">
+                    <mat-error *ngIf="form.get('locationId').hasError('pattern')">Location id can only have numbers and
+                      letters</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Account #</mat-label>
+                    <input matInput formControlName="accountNumber" placeholder="Ex. 987654" autocomplete="off">
+                    <mat-error *ngIf="form.get('accountNumber').hasError('maxlength')">Account number can only have
+                      maximum 7
+                      numbers
+                    </mat-error>
+                    <mat-error *ngIf="form.get('accountNumber').hasError('pattern')">Account number can only have
+                      numbers
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Account/Site Name</mat-label>
+                    <input matInput formControlName="siteName" placeholder="Ex. Best Buy 105" autocomplete="off">
+                    <mat-error *ngIf="form.get('siteName').hasError('pattern')">Site name can only have numbers and
+                      alphabets</mat-error>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Site #</mat-label>
+                    <input matInput formControlName="siteNumber" placeholder="Ex. 00001" autocomplete="off">
+                    <mat-error *ngIf="form.get('siteNumber').hasError('pattern')">
+                      Site number can only have numbers
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Street Address</mat-label>
+                    <input matInput formControlName="streetAddress" placeholder="Ex. 123 W Oak" autocomplete="off">
+                  </mat-form-field>
+                </div>
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="city" placeholder="Ex. Scottsdale" autocomplete="off">
+                    <mat-error *ngIf="form.get('city').hasError('pattern')">City can only have alphabets</mat-error>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>State</mat-label>
+                    <mat-select formControlName="state">
+                      <mat-option> </mat-option>
+                      <mat-option value="AL"> ALABAMA</mat-option>
+                      <mat-option value="AK"> ALASKA</mat-option>
+                      <mat-option value="AB"> ALBERTA</mat-option>
+                      <mat-option value="AZ"> ARIZONA</mat-option>
+                      <mat-option value="AR"> ARKANSAS</mat-option>
+                      <mat-option value="BC"> BRITISH COLUMBIA</mat-option>
+                      <mat-option value="CA"> CALIFORNIA</mat-option>
+                      <mat-option value="CO"> COLORADO</mat-option>
+                      <mat-option value="CT"> CONNECTICUT</mat-option>
+                      <mat-option value="DE"> DELAWARE</mat-option>
+                      <mat-option value="DC"> DISTRICT OF COLUMBIA</mat-option>
+                      <mat-option value="FL"> FLORIDA</mat-option>
+                      <mat-option value="GA"> GEORGIA</mat-option>
+                      <mat-option value="GU"> GUAM</mat-option>
+                      <mat-option value="HI"> HAWAII</mat-option>
+                      <mat-option value="ID"> IDAHO</mat-option>
+                      <mat-option value="IL"> ILLINOIS</mat-option>
+                      <mat-option value="IN"> INDIANA</mat-option>
+                      <mat-option value="IA"> IOWA</mat-option>
+                      <mat-option value="KS"> KANSAS</mat-option>
+                      <mat-option value="KY"> KENTUCKY</mat-option>
+                      <mat-option value="LA"> LOUISIANA</mat-option>
+                      <mat-option value="ME"> MAINE</mat-option>
+                      <mat-option value="MD"> MARYLAND</mat-option>
+                      <mat-option value="MA"> MASSACHUSETTS</mat-option>
+                      <mat-option value="MI"> MICHIGAN</mat-option>
+                      <mat-option value="MN"> MINNESOTA</mat-option>
+                      <mat-option value="MS"> MISSISSIPPI</mat-option>
+                      <mat-option value="MO"> MISSOURI</mat-option>
+                      <mat-option value="MB"> MONITOBA</mat-option>
+                      <mat-option value="MT"> MONTANA</mat-option>
+                      <mat-option value="NE"> NEBRASKA</mat-option>
+                      <mat-option value="NV"> NEVADA</mat-option>
+                      <mat-option value="NB"> NEW BRUNSWICK</mat-option>
+                      <mat-option value="NH"> NEW HAMPSHIRE</mat-option>
+                      <mat-option value="NJ"> NEW JERSEY</mat-option>
+                      <mat-option value="NM"> NEW MEXICO</mat-option>
+                      <mat-option value="NY"> NEW YORK</mat-option>
+                      <mat-option value="NF"> NEWFOUNDLAND</mat-option>
+                      <mat-option value="NC"> NORTH CAROLINA</mat-option>
+                      <mat-option value="ND"> NORTH DAKOTA</mat-option>
+                      <mat-option value="NT"> NORTHWEST TERRITORIES</mat-option>
+                      <mat-option value="NS"> NOVA SCOTIA</mat-option>
+                      <mat-option value="OH"> OHIO</mat-option>
+                      <mat-option value="OK"> OKLAHOMA</mat-option>
+                      <mat-option value="ON"> ONTARIO</mat-option>
+                      <mat-option value="OR"> >OREGON</mat-option>
+                      <mat-option value="PA"> PENNSYLVANIA</mat-option>
+                      <mat-option value="PE"> PRINCE EDWARD ISLAND</mat-option>
+                      <mat-option value="PR"> PUERTO RICO</mat-option>
+                      <mat-option value="QC"> QUEBEC</mat-option>
+                      <mat-option value="RI"> RHODE ISLAND</mat-option>
+                      <mat-option value="SK"> SASKATCHEWAN</mat-option>
+                      <mat-option value="SC"> SOUTH CAROLINA</mat-option>
+                      <mat-option value="SD"> SOUTH DAKOTA</mat-option>
+                      <mat-option value="TN"> TENNESSEE</mat-option>
+                      <mat-option value="TX"> TEXAS</mat-option>
+                      <mat-option value="UT"> UTAH</mat-option>
+                      <mat-option value="VT"> VERMONT</mat-option>
+                      <mat-option value="VA"> VIRGINIA</mat-option>
+                      <mat-option value="WA"> WASHINGTON</mat-option>
+                      <mat-option value="WV"> WEST VIRGINIA</mat-option>
+                      <mat-option value="WI"> WISCONSIN</mat-option>
+                      <mat-option value="WY"> WYOMING</mat-option>
+                      <mat-option value="YT"> YUKON TERRITORY</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Zip Code</mat-label>
+                    <input matInput formControlName="zipCode" placeholder="Ex. 85016" autocomplete="off">
+                    <mat-error *ngIf="form.get('zipCode').hasError('pattern')">Zip code can only have numbers
+                    </mat-error>
+                    <mat-error *ngIf="form.get('zipCode').hasError('maxlength')">Zip code can only have 5 numbers
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlexOffset="0" fxFlex="30">
+                  <mat-form-field class="full-width">
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" placeholder="Ex. 602-997-9891" autocomplete="off">
+                    <mat-error *ngIf="form.get('phone').hasError('pattern')">Phone can only have numbers</mat-error>
+                    <mat-error *ngIf="form.get('phone').hasError('maxlength')">Phone can only have 10
+                      numbers</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <div fxFlexOffset="0" fxFlex="30">
+                  <!-- <mat-form-field class="full-width">
+          <mat-label>Email Address</mat-label>
+          <input matInput formControlName="accountEmail" placeholder="Ex. JSmith@BestBuy.com" autocomplete="off">
+        </mat-form-field> -->
+                </div>
+                <div fxFlexOffset="0" fxFlex="30">
+                  <!-- <mat-form-field class="full-width">
+          <mat-label>Open Obligation Amt</mat-label>
+          <input matInput formControlName="openObligationBalance" placeholder="Ex. 590.72" autocomplete="off">
+          <mat-error *ngIf="form.get('openObligationBalance').hasError('pattern')">Open Obligation Amount can only have numbers and a decimal</mat-error>
+        </mat-form-field> -->
+                </div>
+                <div fxFlexOffset="0" fxFlex="30">
+                  <!-- <mat-form-field class="full-width">
+          <mat-label>Purchase Order #</mat-label>
+          <input matInput formControlName="purchaseOrderNum" placeholder="Ex. 0125456" autocomplete="off">
+          <mat-error *ngIf="form.get('purchaseOrderNum').hasError('pattern')">Purchase Order # can only have numbers</mat-error>
+        </mat-form-field> -->
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px" *ngIf="showMessage">
+                <div fxFlexOffset="0" style="color:red;text-align: left;position: relative;
+                left: 4%">
+                  Error: Invalid search criteria.<br />
+                  Please provide a valid individual search field or a valid combined search<br /><br />
+
+                  1) A Site# requires a search field combination such as site#, city and state<br />
+                  2) Street address requires a search combination such as street address, city and state<br />
+                  3) State requires a search combination such as state, street address and city<br />
+                  4) City requires a search combination such as city, street address and state<br />
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <div fxFlexOffset="0" fxFlex="100" fxLayoutAlign="center center">
+                  <button mat-raised-button color="orange" class="repsrv-btn" (click)="searchData(true)">Search</button>
+                  <!-- <button mat-raised-button color="orange" class="repsrv-btn" (click)="recoverData()">Recovery</button> -->
+                  <button mat-raised-button color="orange" class="repsrv-btn" (click)="clearData()">Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px">
+  <div fxFlexOffset="0" fxFlex="100">
+    <div *ngIf="(dataSource.data.length < 1) && searchExecuted" fxLayout="row" fxLayoutGap="5px grid"
+      style="padding-top: 70px;">
+      <div fxFlex="100" fxFlex.xs="100%" fxFlex.sm="40%" fxLayoutAlign="center center" style="color: red;">
+        <strong>No results found.</strong>
+      </div>
+    </div>
+    <div [formGroup]="form" class="pagedTable " style="width: 90%; margin: 0 auto;" (keyup)="handleKey($event)"
+      *ngIf="dataSource.data.length > 0">
+      <table style="width: 100%;padding-top: 30px;">
+        <tr style="width:25%; text-align: right;">
+          <td>
+            <h1>&nbsp;</h1>
+          </td>
+          <td style="width: 50%;text-align: right;">
+            <mat-form-field [style.width.%]="100">
+              <mat-label>Filter</mat-label>
+              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="table-header"> Company </th>
+          <td mat-cell *matCellDef="let element"> {{element.company}} </td>
+        </ng-container>
+        <ng-container matColumnDef="locationId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Location Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.locationId}} </td>
+        </ng-container>
+        <ng-container matColumnDef="accountNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Account No </th>
+          <td mat-cell *matCellDef="let element"> {{element.accountNumber}} </td>
+        </ng-container>
+        <ng-container matColumnDef="account">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Account </th>
+          <td mat-cell *matCellDef="let element">
+            <a class="repsrv-link"
+              routerLink="/account/{{element.company}}/{{element.accountNumber}}/{{element.siteNumber}}">{{element.account}}</a>
+            <br />
+            {{element.accountAddressNumber}} {{element.accountAddressName}}
+            <br />
+            {{element.accountCity}}, {{element.accountState}} {{element.accountZipCode}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="siteNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Site No </th>
+          <td mat-cell *matCellDef="let element"> {{element.siteNumber}} <span
+              style="color:red">{{element.siteStatusDescription}}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="site">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Site </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.site}}
+            <span *ngIf="element.siteAddress"><br />{{element.siteAddress}}</span>
+            <br />
+            {{element.siteCity}}, {{element.siteState}} {{element.siteZipCode}}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSize]="100" [pageSizeOptions]="[25, 50, 100,200]" showFirstLastButtons
+        class="mat-elevation-z8"></mat-paginator>
+    </div>
+  </div>
+</div>

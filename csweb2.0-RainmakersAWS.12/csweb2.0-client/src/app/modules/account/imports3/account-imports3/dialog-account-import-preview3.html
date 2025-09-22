@@ -1,0 +1,147 @@
+<div class="maximize-button-group" *ngIf="progress > 99 && showMaximumButtons">
+  <button appWindowbuttons (click)="maximize()" class="maximize-button"><span  class="fa fa-window-maximize"></span></button>  
+  <button appWindowbuttons (click)="restore()" class="restore-button"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+
+</div>
+<div class="modal-dialog" id="my-modal-dialog">
+  <h2 mat-dialog-title *ngIf="progress > 99">Auto Account Import Review</h2>
+<h2 mat-dialog-title *ngIf="progress < 100">Account Import</h2>
+<div class="modal-dialog" id="my-modal-dialog">
+
+<mat-dialog-content class="mat-typography" id="uploadReview">
+  <div align=center *ngIf="progress < 100" style="width: 300px;">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    {{file_action}} file...
+  </div>
+
+  <div align=center *ngIf="uploadResult && ((uploadResult.validationErrorsCount>0) || (uploadResult.mappingErrorsCount>0))"
+    style="width: 100%;max-height: 450px; overflow-y: auto;">
+    <h2>Prevalidation Summary</h2>
+    <p style="color: red;">Errors were found when loading your file</p>
+<br/>
+<mat-tab-group >
+  <mat-tab label="Validation Errors ({{uploadResult.validationErrorsCount}})" >
+    <div class="mat-elevation-z4" style="padding-top: 10px;">
+      <p>These errors violate the basic data constraints in InfoPro.  Correct the errors and resubmit.</p>
+      <mat-accordion class="example-headers-align"
+      *ngFor="let sheet of uploadResult.validationErrors | keyvalue: asIsOrder; let i = index; let last = last">
+        <mat-expansion-panel  hideToggle=false>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{sheet.key}}
+            </mat-panel-title>
+            <mat-panel-description fxLayoutAlign="end">
+            {{sheet.value.length}}  row errors
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div style="max-height: 275px; overflow: auto;">
+            <table mat-table  [dataSource]="sheet.value" class="mat-elevation-z8" style="width: 100%;">
+              <ng-container matColumnDef="row">
+                <th mat-header-cell *matHeaderCellDef> Row # </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.row + 1}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="errors">
+                <th mat-header-cell *matHeaderCellDef> Errors </th>
+                <td mat-cell *matCellDef="let element">
+                  <ul style="list-style: circle;">
+                  <li *ngFor="let err of element.errors">{{err}}</li>
+                  </ul>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </mat-tab>
+  <mat-tab label="Mapping Errors ({{uploadResult.mappingErrorsCount}})" *ngIf="uploadResult.mappingErrorsCount>0">
+    <div class="mat-elevation-z4" style="padding-top: 10px;" *ngIf ="uploadResult.validationErrors">
+      <p>These errors mean there is orpahned data within the spreadsheet.
+        An orphaned record means there is no corresponing parent record mapped (ie. a container row does not have a corresponding site).
+        Please remove the orphaned rows or correct their parent mapping.
+      </p>
+      <mat-accordion class="example-headers-align"
+      *ngFor="let sheet of uploadResult.unmappedRows | keyvalue: asIsOrder; let i = index; let last = last">
+        <mat-expansion-panel  hideToggle=false >
+          <mat-expansion-panel-header >
+            <mat-panel-title>
+              {{sheet.key}}
+            </mat-panel-title>
+            <mat-panel-description fxLayoutAlign="end">
+            {{sheet.value.length}}  errors
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div style="max-height: 275px; overflow: auto;">
+          <table mat-table  [dataSource]="sheet.value"  class="mat-elevation-z8" style="width: 100%;">
+            <ng-container matColumnDef="row">
+              <th mat-header-cell *matHeaderCellDef> Row # </th>
+              <td mat-cell *matCellDef="let element">
+                {{element.row + 1}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="errors">
+              <th mat-header-cell *matHeaderCellDef > Errors </th>
+              <td mat-cell *matCellDef="let element">
+                <ul style="list-style: circle;">
+                <li *ngFor="let err of element.errors">{{err}}</li>
+                </ul>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+</div>
+<div align=center *ngIf="uploadResult && uploadResult.validationErrorsCount<1 && uploadResult.mappingErrorsCount<1 && !confirmSubmit" style="width: 100%;">
+  <app-preview-sheets3 [book]=uploadResult [uploadType]=data.uploadType *ngIf="previewView == 'tabs'"></app-preview-sheets3>
+  <app-preview-live3 [data]=uploadResult [uploadType]=data.uploadType *ngIf="previewView == 'livePreview'"></app-preview-live3>
+
+</div>
+<div align=center *ngIf="confirmSubmit" style="width: 100%;">
+  <app-submit-confirm3 [uploadResult]=uploadResult (filterCheckBoxValueChanged)="setConfirmedToY($event)"></app-submit-confirm3>
+  <div *ngIf="yError" style="color: red;">{{yError}}</div>
+  <div *ngIf="ySuccess" >
+    <p style="color: green">Upload submitted for level 2 validation successfully!</p>
+    <p>Level 2 validation is underway - you will receive an email with results when complete.</p>
+      <p *ngIf="uploadType == 'ARC' ">If Successful, Log into InfoPro to begin the Upload to Y.</p>
+  </div>
+  <div *ngIf="!yError && !ySuccess && yWorking">
+    <mat-progress-spinner
+      #tooltip="matTooltip"
+          matTooltip="Processing Y data" mode="indeterminate" diameter="20" coloe="accent"></mat-progress-spinner> Uploading to Level 2 in Progress
+  </div>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex;justify-content: space-between;">
+  <div>
+  <button style="float: left;" mat-raised-button color="accent"  *ngIf="uploadResult
+    && uploadResult.validationErrorsCount==0 && !confirmSubmit && data.uploadType.trim() === 'ARC'"
+    (click)="togglePreviewView()">{{previewView == 'tabs' ? 'Live View' : 'Tab View'}}</button>
+  </div>
+  <div>
+  <button mat-raised-button  [mat-dialog-close]="'cancel'" class="repsrv-btn" *ngIf="!ySuccess">Cancel</button>
+  <button mat-raised-button [mat-dialog-close]="'resubmit'" color="orange" class="repsrv-btn"
+   *ngIf="uploadResult && ((uploadResult.validationErrorsCount>0) || (uploadResult.mappingErrorsCount>0) || (yError))">Resubmit</button>
+  <button *ngIf="uploadResult
+    && uploadResult.validationErrorsCount==0 && uploadResult.mappingErrorsCount==0 && !confirmSubmit" mat-raised-button
+    color="orange" class="repsrv-btn" (click)="confirmSubmitToggle()">Continue</button>
+    <button *ngIf="confirmSubmit && !yError && !ySuccess" mat-raised-button
+    color="blue"  (click)="previewView= (data.uploadType === 'ARC' ? 'livePreview' : 'tabs'); confirmSubmitToggle();">Previous</button>
+    <button *ngIf="confirmSubmit && !yError && !ySuccess"  mat-raised-button
+    color="orange"  (click)="initCopyToY3(); isWorking=true;" [disabled]="isWorking || !confirmed">Submit </button>
+    <button *ngIf="ySuccess" mat-raised-button  [mat-dialog-close]="'close'" class="repsrv-btn" >Close</button>
+
+  </div>
+</mat-dialog-actions>
+</div>
+</div>

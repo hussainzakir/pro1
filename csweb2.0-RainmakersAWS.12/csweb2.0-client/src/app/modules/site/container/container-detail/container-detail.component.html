@@ -1,0 +1,112 @@
+<div> Return to <a (click)="goBack()" class="repsrv-link">Account Summary</a></div><br>
+<h1 mat-dialog-title  style="margin: 0 0 5px">Container Detail</h1>
+<div class="modal-dialog" id="my-modal-dialog">
+<div fxLayout="row" fxLayoutGap="0px" fxLayoutAlign="start" style="padding-top: 0px;">
+<div fxFlex="100" >
+  <div fxLayout="row wrap" fxLayoutGap="5px grid" fxLayoutAlign="center center" >
+    <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="40%" >
+      <table style="width: 100%;padding: 0px;" >
+        <tr>
+          <td>Account: {{company}} - {{account}} | Site: {{site}}</td>
+          <td>Municipal Franchise Contract: {{containerDetail.muniFranchiseContract}}</td>
+        </tr>
+        <tr>
+          <td>Account Type: {{containerDetail.accountType.detail}}</td>
+          <td>Original Start Date: {{containerDetail.originalStartDate}}</td>
+        </tr>
+        <tr>
+          <td>Contract Group #: {{containerDetail.contractGroupNumber}}</td>
+          <td>Last Service Change Date: {{containerDetail.lastServiceChangeDate}}</td>
+        </tr>
+        <tr>
+          <td>ID Code : {{containerDetail.franchiseFlag}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding: 7px 11px 25px 1px;">
+<div fxFlex="100">
+  <div fxLayout="row wrap" fxLayoutGap="20px grid">
+    <div fxFlex="40%" fxFlex.xs="100%" fxFlex.sm="40%" >
+      <mat-card class="">
+              <mat-card-title >
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Container
+                  <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+              </mat-card-title>
+          <mat-card-content class="card-content">
+              <table style="width: 80%;padding-top: 10px;" >
+                <tbody>
+                  <tr> <td>Container Group</td><td>{{container | number:'3.0'}}</td></tr>
+                  <tr> <td>Container Type/Size/Desc</td><td>{{containerDetail.container.containerType}} / {{containerDetail.container.containerSize | number:'1.2-2'}}</td></tr>
+                  <tr> <td>Compactor</td><td>{{containerDetail.container.compactor}}</td></tr>
+                  <tr> <td>Customer Owned</td><td>{{containerDetail.container.customerOwned}}</td></tr>
+                  <tr> <td>On Call</td><td>{{containerDetail.container.onCall}}</td></tr>
+                  <tr> <td>Quantity Ordered</td><td>{{containerDetail.container.quantityOrdered}}</td></tr>
+                  <tr> <td>Quantity on Site</td><td>{{containerDetail.container.quantityOnSite}}</td></tr>
+                </tbody>
+              </table>
+          </mat-card-content>
+      </mat-card>
+  </div>
+  <div fxFlex="60%" fxFlex.xs="100%" fxFlex.sm="50%" >
+    <mat-card class="">
+            <mat-card-title >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Service Info
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+        <mat-card-content class="card-content">
+          <table style="width: 100%;padding-top: 10px; border-collapse: collapse;" >
+            <tr><td colspan="1">Disposal Code/Price Code/Description</td><td colspan="7">{{serviceInfo.disposalCode}}/{{serviceInfo.priceCode}} {{serviceInfo.priceCodeDesc}}</td></tr>
+            <tr><td colspan="1">Grid Number/Description</td><td colspan="7">{{serviceInfo.gridNumber}} {{serviceInfo.gridMajorDay}} / {{serviceInfo.gridMinorDay}}</td></tr>
+            <tr class="border_bottom">
+              <td colspan="1" class="no_border">&nbsp;</td><td>MO</td><td>TU</td><td>WE</td><td>TH</td><td>FR</td><td>SA</td><td>SU</td>
+            </tr>
+            <tr>
+              <td colspan="1">Required Days</td><td>{{serviceInfo.requiredMon}}</td><td>{{serviceInfo.requiredTues}}</td><td>{{serviceInfo.requiredWed}}</td><td>{{serviceInfo.requiredThurs}}</td><td>{{serviceInfo.requiredFri}}</td><td>{{serviceInfo.requiredSat}}</td><td>{{serviceInfo.requiredSun}}</td>
+            </tr>
+            <tr>
+              <td colspan="1">Service Days</td><td>{{serviceInfo.liftDayMon}}</td><td>{{serviceInfo.liftDayTues}}</td><td>{{serviceInfo.liftDayWed}}</td><td>{{serviceInfo.liftDayThurs}}</td><td>{{serviceInfo.liftDayFri}}</td><td>{{serviceInfo.liftDaySat}}</td><td>{{serviceInfo.liftDaySun}}</td>
+            </tr>
+            <tr>
+              <td colspan="1">Routes</td><td>{{serviceInfo.routeMon}}</td><td>{{serviceInfo.routeTues}}</td><td>{{serviceInfo.routeWed}}</td><td>{{serviceInfo.routeThurs}}</td><td>{{serviceInfo.routeFri}}</td><td>{{serviceInfo.routeSat}}</td><td>{{serviceInfo.routeSun}}</td>
+            </tr>
+            <tr><td colspan="1">Estimated Lifts per Period</td><td colspan="7">{{serviceInfo.minNumberOfLifts}}</td></tr>
+            <tr><td colspan="1">Lifts per Cycle</td><td colspan="7">{{serviceInfo.totalLifts}} / {{serviceInfo.periodLength}} {{serviceInfo.periodUnit}}</td></tr>
+            <tr><td colspan="1">Special Handling</td><td colspan="7">{{serviceInfo.specialHandlingCode}} - {{serviceInfo.specialHandlingCodeDesc}}</td></tr>
+            <tr><td colspan="1">Weight Limit</td><td colspan="7">{{serviceInfo.weightLimit | number:'1.2-2'}} Tons</td></tr>
+            <tr><td><a [routerLink]="" (click)="openContainerservicehistory()" class="repsrv-link">Container service history</a> </td></tr>
+            <tr><td><a [routerLink]="" (click)="openIndustrialstsservicehistory()" class="repsrv-link">Industrial statistics service history</a> </td></tr>
+          </table>
+        </mat-card-content>
+    </mat-card>
+</div>
+</div>
+</div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding: 7px 11px 25px 1px;">
+  <div fxFlex="100">
+    <div fxLayout="row wrap" fxLayoutGap="20px grid">
+      <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="40%" >
+        <mat-card class="">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Rate Info
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content" style="height: 140px;">
+                <table style="width: 80%;padding-top: 5px;" >
+                  <tbody>
+                    <tr> <td>Receipt Required</td><td>{{rateInfo.receiptRequired}} {{rateInfo.receiptRequiredFlagDesc}} </td><td>Recurring Charge Frequency</td><td>{{rateInfo.recurringChargeFreq}} {{rateInfo.recurringChargeFrequencyDesc}}</td></tr>
+                    <tr> <td>P.O. Required</td><td>{{rateInfo.poRequired}}</td><td>Months in Advance Recurring</td><td>{{rateInfo.monthsInAdvRecurring}}</td></tr>
+                    <tr> <td>Bill To Date</td><td>{{rateInfo.billToDate}}</td><td>Remote Monitor</td><td>{{rateInfo.remoteMonitor}}</td></tr>
+                    <tr> <td>Close Date</td><td>{{rateInfo.closeDate}}</td><td>Disposal Rate Restriction</td><td>{{rateInfo.disposalRateRestriction}}</td></tr>
+                    <tr> <td>Revenue Distribution</td><td>{{rateInfo.revDistributionCode}} - {{rateInfo.revenueDistributionCodeDesc}}</td><td>Operational Rate Restriction</td><td>{{rateInfo.operationalRateRestriction}}</td></tr>
+                  </tbody>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    </div>
+    </div>
+    </div>

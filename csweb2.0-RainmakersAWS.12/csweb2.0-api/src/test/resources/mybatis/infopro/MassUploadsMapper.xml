@@ -1,0 +1,113 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.massuploads.dao.MassUploadsDao" >
+	
+	<select id="getTemplates" statementType="CALLABLE" resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS005_GET_MASSUPLOAD_TEMPLATES(
+     #{username},                                
+     #{system},                           
+     '1',                       
+    #{result.changeRequired,jdbcType=CHAR,mode=OUT}, 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<select id="getHistory" statementType="CALLABLE" resultMap="historyMap">
+		{call GETQUEUERECORDS(
+		#{username},
+		#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+		#{result.sqlCode,jdbcType=INTEGER,mode=OUT})}
+	</select>
+	
+	<select id="getTemplateColumns" statementType="CALLABLE" resultMap="templateColumnMap">
+		{call GETMUTEMPDEF(
+		#{templateId},
+		#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+		#{result.sqlCode,jdbcType=INTEGER,mode=OUT})}
+                                  
+	</select>
+	
+	<select id="getTemplateRS" statementType="CALLABLE" resultMap="templatesMap">
+		{call GETTEMPLATE(
+		#{templateId},
+		#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+		#{result.sqlCode,jdbcType=INTEGER,mode=OUT})}
+	</select>
+	
+	<select id="getTemplate" statementType="CALLABLE" resultType="java.lang.String" resultMap="clobToStringMap" >
+		{call CUQCS002_GET_MASS_UPLOAD_TEMPLATES_METADATA(
+         #{templateId},
+         1,
+         #{result.sqlState,jdbcType=CHAR,mode=OUT},
+         #{result.sqlState,jdbcType=CHAR,mode=OUT},
+         #{result.sqlState,jdbcType=CHAR,mode=OUT})}   
+	</select>
+	
+	<insert id="saveUpload">
+		{call CUQCS010_SAVE_AND_PROCESS_UPLOAD(
+         #{templateId},
+         #{uploadJson},
+         1,
+         #{result.sqlState,jdbcType=CHAR,mode=OUT},
+         #{result.sqlState,jdbcType=CHAR,mode=OUT},
+         #{result.sqlState,jdbcType=CHAR,mode=OUT})}
+	</insert>
+	
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+	
+	<resultMap type="java.lang.String" id="tempClobToStringMap" >
+		<result column="JSON_MSUTMPAT" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+	
+	<resultMap type="com.repsrv.csweb.core.model.massupload.ColumnDefinition" id="templateColumnMap">
+		<result javaType="integer" property="id" column="MSUTDEFID" />
+		<result javaType="string" property="status" column="STATUS_CODE"/>
+		<result javaType="string" property="name" column="COLUMN_NAME"/>
+		<result javaType="string" property="description" column="COLUMN_DESCRIPTION"/>
+		<result javaType="com.repsrv.csweb.core.model.massupload.ColumnType" property="columnType" column="COLUMN_DATA_TYPE" typeHandler="cswebEnumHandler"/>
+		<result javaType="integer" property="length" column="COLUMN_LENGHT"/>
+		<result javaType="integer" property="decimalPlaces" column="COLUMN_DECIMALS"/>
+		<!-- <result javaType="boolean" property="required" column="COLUMN_REQUIRED" typeHandler="oneZeroBooleanHandler"/>
+		 -->
+		<result javaType="string" property="tableFieldName" column="TABLE_FIELD_NAME"/>
+		<result javaType="string" property="defaultValue" column="DEFAULT_VALUE"/>
+	</resultMap>
+	
+	<resultMap type="com.repsrv.csweb.core.model.massupload.MuHistory" id="historyMap">
+		<result column="TOTAL_ERROR" property="errorCount"/>
+		<result column="SYSTEM_TO_RUN" property="system"/>
+		<result column="PATH_FOR_ERROR_XLS" property="filename"/>
+		<result column="CHANGED_DATE" property="lastUpdated"/>
+		<result column="STATUS_OF_JOB" property="status"/>
+		<result column="ADDED_DATE" property="submitted"/>
+		<result column="S_ENVIRONMENT" property="environment"/>
+		<result column="MSUTQUEID" property="logId"/>
+		<result column="TABLE_2_UPDATE" property="tableToUpdate"/>
+		<result column="TOTAL_CHANGED" property="totalChanged"/>
+		<result column="TOTAL_CLOSED" property="totalClosed"/>
+		<result column="TOTAL_RECORDS" property="totalRecords"/>
+		<result column="TOTAL_ADDED" property="totalAdded"/>
+		<result column="TEMPLATE_DESCRIPTION" property="templateName"/>
+		<result column="USER_SOURCE_NAME" property="submittedFile"/>
+</resultMap>
+	
+	<resultMap type="com.repsrv.csweb.core.model.massupload.MuTemplate" id="templatesMap">
+		<result column="STATUS_CODE" property="status"/>
+		<result column="MSUTMPATID" property="id"/>
+		<result column="TEMPLATE_DESCRIPTION" property="description"/>
+		<result column="CHANGED_BY" property="changedBy"/>
+		<result column="DEF_TABLE_CHANGE" property="changedDate" typeHandler="as400DateHandler"/>
+		<result column="DETAIL_NOTES" property="detailDesc"/>
+		<result column="SYSTEM_TO_RUN" property="system"/>
+		<result column="DISPLAY_TEMPLATE_DOWNLOAD" property="showTemplateLink" />
+	</resultMap>
+</mapper>
+

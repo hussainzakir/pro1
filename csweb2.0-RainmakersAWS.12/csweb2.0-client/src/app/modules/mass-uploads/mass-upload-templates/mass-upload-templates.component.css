@@ -1,0 +1,16 @@
+.templates-card {
+  width: 470px;
+}
+
+mat-icon.mat-card-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+}
+
+mat-icon.orange600 { color: #FB8C00; }
+
+.orange-btn{
+  background-color: #FB8C00;
+  color: #fff;
+}

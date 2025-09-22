@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+    <rule enabled="true">
+        <note>Rewrite requests for /adlogin to /login.html</note>
+        <from>/adlogin</from>
+        <to type="passthrough" last="true">/static/login.html</to>
+    </rule>
+    <rule enabled="true">
+        <name>indexRouter</name>
+        <condition type="header" name="accept" casesensitive="false" operator="notequal">application/json</condition>
+        <condition type="request-uri" casesensitive="false" operator="notequal">^.*/ws/.*$</condition>
+        <condition type="request-uri" casesensitive="false" operator="notequal">^.*/auth/.*$</condition>
+        <condition type="request-uri" casesensitive="false" operator="notequal">^.*/assets/.*$</condition>
+        <condition type="request-uri" casesensitive="false" operator="notequal">^.*/static/.*$</condition>
+        <condition type="request-filename" casesensitive="false" operator="notfile"></condition>
+        <condition type="request-filename" casesensitive="false" operator="notdir"></condition>
+        <condition name="javascript" type="request-uri" operator="notequal">.*\.js$</condition>
+        <condition type="request-uri" operator="notequal">.*\.css$</condition>
+        <condition type="request-uri" operator="notequal">.*\.jpg$</condition>
+        <condition type="request-uri" operator="notequal">.*\.gif$</condition>
+        <from>^/(.*)$</from>
+        <to type="forward" last="true">/index.html</to>
+    </rule>
+</urlrewrite>

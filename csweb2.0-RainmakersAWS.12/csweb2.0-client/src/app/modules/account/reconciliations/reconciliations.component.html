@@ -1,0 +1,86 @@
+<div class="modal-dialog" id="my-modal-dialog">
+  <div class="maximize-button-group">
+    <button class="button1" (click)="maximize()"><span class="fa fa-window-maximize"></span></button>
+    <button class="button1" (click)="restore()"><span class="fa fa-window-restore"></span></button>
+    <button class="button1" mat-dialog-close><span class="fa fa-window-close"></span></button>
+  </div>
+<h1 mat-dialog-title>Account Reconciliations</h1>
+<div class="modal-body" id="my-modal-body">
+<div mat-dialog-content class="tableRates">
+  <mat-button-toggle-group name="fontStyle" value="OPEN" aria-label="Font Style" (change)="filterType($event.value)">
+    <mat-button-toggle value="OPEN" >Open</mat-button-toggle>
+    <mat-button-toggle value="ALL">All</mat-button-toggle>
+  </mat-button-toggle-group>
+<table mat-table [dataSource]="dataSource" matSort style="width: 100%;" *ngIf = "dataSource">
+  <ng-container matColumnDef="transactionType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="table-header"> Trans</th>
+      <td mat-cell *matCellDef="let element"> {{element.transactionType}} </td>
+  </ng-container>
+  <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Obl Id</th>
+      <td mat-cell *matCellDef="let element"><a class="repsrv-link" [routerLink]="" (click)="openObligationInvoiceDetailsDialog(element.id)">{{element.id}}</a></td>
+  </ng-container>
+  <ng-container matColumnDef="date" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-component"> Obl Date</th>
+      <td mat-cell *matCellDef="let element" class="align-component"> {{element.date | date:'MM/dd/yyyy'}} </td>
+  </ng-container>
+  <ng-container matColumnDef="appliedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-component"> Appl Date</th>
+      <td mat-cell *matCellDef="let element" class="align-component"> {{element.appliedDate | date:'MM/dd/yyyy'}} </td>
+  </ng-container>
+  <ng-container matColumnDef="checkNumber" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-component"> Check Num</th>
+      <td mat-cell *matCellDef="let element" class="align-component" > {{element.checkNumber}}</td>
+  </ng-container>
+  <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" > Total Amt</th>
+      <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.totalAmount | number:'2.2-2'}} </td>
+  </ng-container>
+  <ng-container matColumnDef="cashApplied">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before"> Cash Appl</th>
+    <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.cashApplied | number:'2.2-2'}} </td>
+  </ng-container>
+  <ng-container matColumnDef="openAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" > Open Amt</th>
+    <td mat-cell *matCellDef="let element" > {{element.openAmount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="bankAccount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-component">Bank Acct</th>
+    <td mat-cell *matCellDef="let element" class="align-component"> {{element.bankAccount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="anticipationAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before"  > Ant Amt</th>
+    <td mat-cell *matCellDef="let element" > {{element.anticipationAmount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="discountAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before"  > Discount Amt</th>
+    <td mat-cell *matCellDef="let element" > {{element.discountAmount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="tolleranceAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before"> Toll Amt</th>
+    <td mat-cell *matCellDef="let element" > {{element.tolleranceAmount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="writeOffAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" > W/O Amt</th>
+    <td mat-cell *matCellDef="let element" > {{element.writeOffAmount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="chargeBackAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before"  >C/B Amt</th>
+    <td mat-cell *matCellDef="let element" > {{element.chargeBackAmount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="debtCreditMemoApplied">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" >D/C Memo</th>
+    <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.debtCreditMemoApplied | number:'2.2-2'}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+  <div *ngIf="!dataSource || dataSource?.data?.length === 0" style="text-align: center; margin-top: 10px;">
+    No results found.
+  </div>
+<mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100,200]" showFirstLastButtons ></mat-paginator>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

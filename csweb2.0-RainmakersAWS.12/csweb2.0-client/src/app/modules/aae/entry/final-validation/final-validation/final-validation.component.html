@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Final Validation</h1>
+<div mat-dialog-content class="">
+  <!-- <form [formGroup]="form"> -->
+    <p>The Account Review is complete</p>
+    <p>Are you sure you want to update the following Account</p>
+    <td><strong>QuoteId:</strong></td><td>{{quoteId}}</td>
+    <br>
+    <td><strong>Account:</strong></td><td>{{accountDetail.account}} - {{accountDetail.customerName}}</td>
+    <br>
+    <p>I have checked the rate and other contract terms in AAE against the Customer Service Agreement (CSA) (OR)</p>
+    <p>I have checked rate information in AAE against the order form (Quote) and KMT (OR)</p>
+    <p>I have checked that the correct information in AAE matches InfoPro contract rates at the time of creation</p>
+
+<!-- </form> -->
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="cancel()" >Cancel</button>
+  <button [disabled]="accountDetail.account == '9999999' || accountDetail.account == '' " mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em"  (click)="submitButton.disabled=true; save();" #submitButton>Submit</button>
+</div>

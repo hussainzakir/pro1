@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+>
+
+        <util:properties id="cswebPropertyConfigurer"
+                         location="classpath:/configs/#{systemEnvironment['CSWEB_ENV']}.properties" />
+
+        <bean id="configPrefix" class="java.lang.String" >
+                <constructor-arg value="#{systemEnvironment['CSWEB_ENV']}/csweb2"/>
+        </bean>
+
+        <bean id="awsRegion" class="java.lang.String" >
+                <constructor-arg value="#{systemEnvironment['CSWEB_REGION']}"/>
+        </bean>
+
+        <!-- AWS Credentials provider -->
+        <bean id="awsCredentialsProvider" class="com.amazonaws.auth.DefaultAWSCredentialsProviderChain"/>
+
+        <!-- Define the AWS SSM Client -->
+        <bean id="ssmClient" class="com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClient">
+                <constructor-arg ref="awsCredentialsProvider"/>
+        </bean>
+
+        <bean class="com.repsrv.csweb.config.AwsConfigParamsPlaceholderConfigurer">
+                <property name="ignoreUnresolvablePlaceholders" value="false"/>
+                <property name="ignoreResourceNotFound" value="true"/>
+                <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+                <property name="locations">
+                        <list>
+                                <value>classpath:/configs/#{systemEnvironment['CSWEB_ENV']}.properties</value>
+                                <value>classpath:/messages.properties</value>
+                                <value>file:{user.home}/local-csweb2.properties</value>
+                        </list>
+                </property>
+        </bean>
+</beans>

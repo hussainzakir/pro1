@@ -1,0 +1,51 @@
+.orange-btn{
+  background-color: #FB8C00;
+  color: #fff;
+}
+
+mat-card {
+
+  height: 400px;
+			width: 450px;
+			margin-top: auto;
+			margin-bottom: auto;
+      background: #F5F5F5;
+      
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			padding: 10px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      border-radius: 20px;
+      border: #004a7c 5px solid;
+}
+
+mat-form-field {
+  display: block;
+}
+
+
+
+.brand_logo_container {
+			position: absolute;
+			height: 154px;
+			width: 154px;
+      top: -95px;
+      left: 150px;
+			border-radius: 50%;
+			background: #00adef;
+			padding: 10px;
+			text-align: center;
+		}
+		.brand_logo {
+			height: 150px;
+			width: 150px;
+			border-radius: 50%;
+			border: 2px solid white;
+			background-color:white;
+    }
+    
+
+

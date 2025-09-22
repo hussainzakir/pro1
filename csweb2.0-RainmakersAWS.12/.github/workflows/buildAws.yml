@@ -1,0 +1,119 @@
+
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: environment
+      changeNumber:
+        description: 'Change number for prod deployment'
+        required: false
+        type: string
+env:
+  APP_NAME: 'csweb2'
+  TF_API_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
+  BUILD_ID: ${{ github.run_number }}.${{ github.run_attempt }}-${{ github.run_id }}
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: validate-change-request
+        if: ${{ github.event.inputs.environment=='prod' }}
+        id: validate-change-request
+        uses: RepublicServicesRepository/gha-servicenow-validate-change@v1.0.0
+        with:
+          instance-url: ${{secrets.SN_INSTANCE_URL}}
+          client-id: ${{secrets.SN_CLIENT_ID}}
+          client-secret: ${{secrets.SN_CLIENT_SECRET}}
+          username: ${{secrets.SN_USERNAME}}
+          password: ${{secrets.SN_PASSWORD}}
+          change-number: ${{inputs.changeNumber}}
+
+      - name: update-change-request
+        if: ${{ github.event.inputs.environment=='prod' }}
+        id: update-change-request
+        uses: RepublicServicesRepository/gha-servicenow-update-change@v1.0.0
+        with:
+          instance-url: ${{secrets.SN_INSTANCE_URL}}
+          client-id: ${{secrets.SN_CLIENT_ID}}
+          client-secret: ${{secrets.SN_CLIENT_SECRET}}
+          username: ${{secrets.SN_USERNAME}}
+          password: ${{secrets.SN_PASSWORD}}
+          change-number: ${{inputs.changeNumber}}
+          update-body: '{"description":"updated by ${{ github.workflow }}","work_notes":"Triggering Actor: ${{ github.triggering_actor }} \nWorkflow: ${{ github.workflow }} \nWorkflow Branch: ${{ github.ref }} \nrepository: ${{  github.repository }} \naws_region: ${{ needs.determine-regions.outputs.regions }} \ngithub_ref: ${{ github.event.inputs.github_ref }} \nenvironment: ${{ github.event.inputs.environment }}"}'
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verify Actor
+        uses: RepublicServicesRepository/gha-verify-actor@v2.2.0
+        with:
+          github_token: ${{ secrets.REPUBLIC_SYSTEM_PAT }}
+          teamlist: ${{ vars.ECS_DEPLOY_AUTHORIZED_TEAMS }}
+          whitelist: ${{vars.ECS_DEPLOY_WHITELIST}}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{vars.AWS_OIDC_ROLE}}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-duration-seconds: 1600
+          role-session-name: GitHubActions
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Download task definition
+        run: |
+            aws ecs describe-task-definition --task-definition ${{vars.ID_PREFIX}}-task-def --query taskDefinition > task-definition.json
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{vars.ID_PREFIX}}-repository
+          IMAGE_TAG: ${{ env.BUILD_ID }}
+        run: |
+          docker build --progress=plain --build-arg BUILD_ID=${{ env.BUILD_ID }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Update image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{vars.ID_PREFIX}}-container
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{vars.ID_PREFIX}}-ecs-service
+          cluster: ${{vars.ID_PREFIX}}-ecs-cluster
+          wait-for-service-stability: true
+#      - name: Build, tag, and push image to Amazon ECR
+#        env:
+#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#          ECR_REPOSITORY: ${{vars.ID_PREFIX}}-repository
+#          IMAGE_TAG: ${{ github.sha }}
+#        run: |
+#          aws ecr describe-images --repository-name $ECR_REPOSITORY
+#          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+#          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#
+#      - name: Update ECS service
+#        run: |
+#          aws ecs update-service --cluster ${{vars.ID_PREFIX}}-ecs-cluster --service ${{vars.ID_PREFIX}}-ecs-service --force-new-deployment

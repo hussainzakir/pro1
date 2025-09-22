@@ -1,0 +1,14 @@
+view.id=error-response
+view.class=com.repsrv.csweb.core.model.aae.ErrorResponse
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+entity
+status
+errors
+errors.stagingId
+errors.identifier
+errors.key
+errors.value
+errors.description
+errors.error

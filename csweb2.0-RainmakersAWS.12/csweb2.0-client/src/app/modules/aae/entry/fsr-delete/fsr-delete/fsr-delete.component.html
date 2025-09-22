@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Delete Future Service Request</h1>
+<div mat-dialog-content class="" cdkDrag>
+    <p>Are you sure you want to delete the following request:</p>
+    <table>
+      <tr>
+        <td style="width: 200px;"><strong>Account-Site-Container:</strong></td><td>{{accountDetail.account}}-{{site?.site}}-{{container.containerId}}</td>
+      </tr>
+      <tr>
+        <td><strong>Effective Date:</strong></td><td>{{container.fsrEffectiveDate}}</td>
+      </tr>
+      <tr>
+        <td><strong>Qty On Order:</strong></td><td>{{container.fsrQtyOnOrder}}</td>
+      </tr>
+      <tr>
+        <td><strong>Total Lifts:</strong></td><td>{{container.fsrTotalLifts}}</td>
+      </tr>
+      <tr>
+        <tr>
+          <td><strong>Time Frame:</strong></td><td>{{container.fsrTimeFrame}}</td>
+        </tr>
+        <tr>
+          <tr>
+            <td><strong>Time Frame Ref:</strong></td><td>{{container.fsrTimeFrameRef}}</td>
+          </tr>
+          <tr>
+            <td><strong>On Call:</strong></td><td>{{container.fsrOnCall}}</td>
+          </tr>
+          <tr>
+            <td><strong>Min Lifts:</strong></td><td>{{container.fsrMinLifts}}</td>
+          </tr>
+          <tr>
+      </table>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="!updateForm.valid || quoteMetadata.allowUpdate != 'Y'" (click)="save()">Submit</button>
+</div>

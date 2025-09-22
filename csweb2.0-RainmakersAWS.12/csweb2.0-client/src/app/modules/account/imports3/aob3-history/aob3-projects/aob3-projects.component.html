@@ -1,0 +1,76 @@
+<div class="pagedTable " style="width: 90%; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" style="padding-top: 5px;">
+    <div fxFlexOffset="0" fxFlex="100">
+      <div class="pagedTable " style="width: 90%; margin: 0 auto;padding-top: 10px;">
+        <div class="loading-shade" *ngIf="isLoading">
+          <mat-spinner></mat-spinner>
+          </div>
+    <table style="width: 100%;padding-top: 30px;">
+      <tr>
+        <td><h1 style="display: inline-block;">Project List</h1>
+          <button mat-icon-button class="orange-txt" matTooltip="refresh table data" (click)="isToggleActive ? loadAllHistory(currentFileTypeName + '_ALL') : loadHistory(currentFileTypeName)"   style=" color: #FB8C00;margin-left: 15px;">
+            <mat-icon>autorenew</mat-icon>
+          </button>
+          <mat-slide-toggle #toggle style="margin-left: 10px;" (change)="onToggleChange($event)">Active Uploads</mat-slide-toggle>
+        </td>
+        <td style="width: 50%;text-align: right;">
+          <mat-form-field [style.width.%]="100">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    <table mat-table  [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="nodata" >
+        <td mat-footer-row *matFooterCellDef [colSpan]="displayedColumns.length"
+        style="text-align: center;">No Data Available</td>
+      </ng-container>
+      <tr mat-footer-row
+        [hidden]="dataSource && dataSource.data && dataSource.data.length >0"
+        *matFooterRowDef="['nodata']">
+      </tr>
+      <ng-container *ngIf="isToggleActive" matColumnDef="userId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.userid}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="projectId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Project ID - Bill To Count #</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.projectid}}-{{element.billToCounts}}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="projectName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Project Name </th>
+        <td mat-cell *matCellDef="let element"> 
+        <a class="repsrv-link"
+        [routerLink]="['/projectdetails', element.projectid?.trim()]">{{ element.projectname }}</a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="submittedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.submitteddate }} </td>
+      </ng-container>
+      <ng-container matColumnDef="numOfAccounts">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;"> # of Accounts </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.numofaccounts}} </td>
+      </ng-container>
+      <ng-container matColumnDef="numOfErrors">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> # of Bill-To's Errors </th>
+        <td mat-cell *matCellDef="let element"> {{element.numoferrors}} </td>
+      </ng-container>
+      <ng-container  matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+        <td mat-cell *matCellDef="let element"> </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="isToggleActive ? displayedActiveColumns : displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: isToggleActive ? displayedActiveColumns : displayedColumns;"></tr>
+    </table>
+    <mat-paginator *ngIf = "historyItems" [pageSizeOptions]="[10, 25, 50, 100]" pageSize="50"  showFirstLastButtons class="mat-elevation-z8"></mat-paginator>
+    </div>

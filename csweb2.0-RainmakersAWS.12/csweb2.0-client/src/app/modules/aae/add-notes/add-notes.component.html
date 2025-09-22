@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Change in Status - Enter notes</h1>
+<div mat-dialog-content class="two-col-container">
+  <form class="formNotes" [formGroup]="noteForm">
+  <mat-form-field class="matStyle">
+    <mat-label>Note</mat-label>
+    <textarea style="height: 19px;" #noteInput class="noteModal" maxlength="51" matInput formControlName="note" (ngModelChange)="noteForm.get('note').hasError('maxlength')">
+      </textarea><mat-error *ngIf="noteForm.get('note').hasError('maxlength')">
+        Note max length is 50 characters.
+      </mat-error>
+  </mat-form-field>
+</form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em"  [disabled]="noteForm.invalid" (click)="submitForm()">Submit</button>
+</div>

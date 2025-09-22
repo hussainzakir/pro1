@@ -1,0 +1,42 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.massuploads.dao.MassUploadsCbsDao" >
+
+	<select id="getHistory" statementType="CALLABLE" resultMap="historyMap">
+		{call GETQUEUERECORDS(
+		#{username},
+		#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+		#{result.sqlCode,jdbcType=INTEGER,mode=OUT})}
+	</select>
+	
+	<insert id="saveUpload">
+		{call CUQCS010_SAVE_AND_PROCESS_UPLOAD(
+         #{templateId},
+         #{uploadJson},
+         1,
+         #{result.sqlState,jdbcType=CHAR,mode=OUT},
+         #{result.sqlState,jdbcType=CHAR,mode=OUT},
+         #{result.sqlState,jdbcType=CHAR,mode=OUT})}
+	</insert>
+	
+	<resultMap type="com.repsrv.csweb.core.model.massupload.MuHistory" id="historyMap">
+		<result column="TOTAL_ERROR" property="errorCount"/>
+		<result column="SYSTEM_TO_RUN" property="system"/>
+		<result column="PATH_FOR_ERROR_XLS" property="filename"/>
+		<result column="CHANGED_DATE" property="lastUpdated"/>
+		<result column="STATUS_OF_JOB" property="status"/>
+		<result column="ADDED_DATE" property="submitted"/>
+		<result column="S_ENVIRONMENT" property="environment"/>
+		<result column="MSUTQUEID" property="logId"/>
+		<result column="TABLE_2_UPDATE" property="tableToUpdate"/>
+		<result column="TOTAL_CHANGED" property="totalChanged"/>
+		<result column="TOTAL_CLOSED" property="totalClosed"/>
+		<result column="TOTAL_RECORDS" property="totalRecords"/>
+		<result column="TOTAL_ADDED" property="totalAdded"/>
+		<result column="TEMPLATE_DESCRIPTION" property="templateName"/>
+		<result column="USER_SOURCE_NAME" property="submittedFile"/>
+</resultMap>
+</mapper>
+

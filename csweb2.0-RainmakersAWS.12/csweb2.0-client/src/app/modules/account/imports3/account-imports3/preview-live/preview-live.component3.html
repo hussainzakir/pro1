@@ -1,0 +1,67 @@
+<div style="min-width: 1220px; width: 1220px" id="AccountReview ">
+  <div
+    fxLayout="row"
+    fxLayoutGap="10px"
+    fxLayoutAlign="center"
+    style="padding-top: 10px"
+  >
+    <div fxFlex="100" style="padding: 0px;">
+      <div fxLayout="row wrap" fxLayoutGap="0px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%" fxLayoutAlign="center" >
+          <h2>Account View</h2>
+        </div>
+      </div>
+      <div fxLayout="row wrap" fxLayoutGap="0px grid" style="padding: 0px;">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%" fxLayoutAlign="center" style="padding: 0px;">
+          <table>
+            <tr>
+              <td>
+                <button mat-icon-button matTooltip="Previous Account"
+                [disabled]="viewIndex <= 0" class="{{viewIndex > 0 ? '' : 'btn-disabled'}}"
+                  (click)="decrement()">
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+              </td>
+              <td style="width: 100px;text-align: center;"> {{ viewIndex + 1 }} of {{ maxIndex  }}</td>
+              <td>
+                <button mat-icon-button matTooltip="Next Account"
+                [disabled]="viewIndex >= maxIndex - 1"
+                class="{{viewIndex < maxIndex ? '' : 'btn-disabled'}}" (click)="increment()">
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div fxLayout="row wrap" fxLayoutGap="10px grid" fxLayoutAlign="space-between">
+        <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="50%" fxLayoutAlign="left" >
+          <mat-form-field fxFlex="100">
+            <mat-label>Account Search:</mat-label>
+          <input matInput placeholder="Gallegos Sanitation" value="" #searchVal>
+          <button mat-icon-button matSuffix (click)="doSearch(searchVal.value)" >
+            <mat-icon style="font-size: 120%">search</mat-icon>
+        </button>
+        <mat-hint style="color: red;" *ngIf="!foundAcct">No account found</mat-hint>
+          </mat-form-field>
+        </div>
+        <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="50%" fxLayoutAlign="right" >
+          <mat-form-field fxFlex="100">
+            <mat-label>Jump to excel row number:</mat-label>
+          <input matInput type="number" value="" #jumpTo min="1" max="{{maxIndex}}">
+          <button mat-icon-button matSuffix (click)="doJumpTo(jumpTo.value)" >
+            <mat-icon style="font-size: 120%">swap_horiz</mat-icon>
+        </button>
+        <mat-hint style="color: red;" *ngIf="indexError">{{indexError}}</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+<app-resi-contract
+*ngIf="uploadType == 'ARC'"
+[account]="data.accounts[viewIndex]"
+></app-resi-contract>

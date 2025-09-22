@@ -1,0 +1,41 @@
+.mat-header-cell{
+  font-size: 1.1em;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  bottom: 0px;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-snackbar{
+justify-content: center !important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.center-buttons {
+  display: flex;
+}
+
+.right-button {
+  position: absolute;
+  right: 0;
+}
+
+.notesButton {
+  background: transparent;
+  border: none;
+  vertical-align: middle;
+}

@@ -1,0 +1,14 @@
+view.id=account-obligations-get
+view.class=com.repsrv.csweb.core.model.account.AccountObligation
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+history
+date
+transactionType
+id
+dueDate
+closeDate
+openAmount
+totalAmount
+poNumber

@@ -1,0 +1,66 @@
+  <div class="modal-dialog" id="my-modal-dialog">
+
+    <mat-card-title>
+        <mat-icon mat-card-avatar class="repsrv-dark-blue-font"
+          style="vertical-align: middle;">label_important</mat-icon> Notes
+        <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+      </mat-card-title>
+    <div class="modal-body" id="my-modal-body">
+      <div fxLayout="row" fxLayoutGap="0px" fxLayoutAlign="start" style="padding-top: 0px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="5px grid" fxLayoutAlign="start start">
+            <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="40%">
+              <table style="width: 100%;padding: 0px;">
+                <tr>
+                  <td>Quote ID: {{data.quoteId}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 10px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="20px grid">
+            <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="40%">
+  
+             <mat-card class="tableRates"> 
+                <mat-card-content class="card-content" style="height: 140px;">
+  
+                  <div *ngIf="!dataSource.data  && showError" style="color: red;">Error ocurred while loading the Notes for the Quote </div>
+  
+                  <table class="rate-table" *ngIf="dataSource.data && !showError" mat-table [dataSource]="dataSource" matSort ="createDate"  matSortDirection="desc" style="width: 100%;"  >
+                    
+                    <ng-container matColumnDef="note">
+                      <th style="text-align: left;" *matHeaderCellDef> Note </th>
+                      <td class="text-left" *matCellDef="let note"> {{note.noteLines}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="previousStatus">
+                      <th *matHeaderCellDef> Prev Status </th>
+                      <td class="text-center" *matCellDef="let note"> {{printStatus(note.oldAccountStatus)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="newStatus">
+                      <th *matHeaderCellDef> New Status </th>
+                      <td class="text-center" *matCellDef="let note">{{printStatus(note.newAccountStatus)}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="date">
+                      <th *matHeaderCellDef> Date </th>
+                      <td *matCellDef="let note" class="text-center"> {{note.createDate}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="username">
+                      <th *matHeaderCellDef> Username </th>
+                      <td *matCellDef="let note" class="text-center"> {{note.createUser}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>
+                  </table>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button mat-dialog-close style="background-color: lightgray">Close</button>
+      </div>
+    </div>

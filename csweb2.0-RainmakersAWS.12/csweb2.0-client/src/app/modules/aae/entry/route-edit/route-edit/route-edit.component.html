@@ -1,0 +1,63 @@
+<h1 mat-dialog-title>Update Route Details</h1>
+<div mat-dialog-content class="two-col-container">
+  <div>
+    <tr>
+      <td><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+    </tr>
+    <tr>
+      <td><strong>Account:</strong></td><td>{{accountDetail?.company}} - {{accountDetail?.account}}</td>  
+    </tr>
+    <tr>
+       <td><strong>Site:</strong></td><td>{{site?.site}}</td> 
+    </tr>
+    <tr>
+      <td><strong>Group:</strong></td><td>{{container?.containerId}}</td>  
+    </tr>
+    <tr>
+      <td><strong>Original Start Date:</strong></td><td>{{container?.startDate | dateFormat}}</td>  
+    </tr>
+</div>
+<ng-template [ngIf]="errorsList && errorsList.length > 0">
+  <strong>Errors:</strong>
+  <br/>
+  <ul>
+    <li *ngFor="let error of errorsList">
+      {{error.error}}
+    </li>
+  </ul>
+  <br/>
+</ng-template>
+<br/>
+  <form [formGroup]="updateForm">
+  <mat-form-field appearance="" class="fill">
+    <mat-label>Current Quantity on Site</mat-label>
+    <input matInput formControlName="containerQtyOnSite" value ="{{container.containerQtyOnSite}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Requested # of deliveries for this open</mat-label>
+    <input matInput formControlName="routeRequestedDelivery" value ="{{container.routeRequestedDelivery}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>PO Number</mat-label>
+    <input matInput formControlName="routePOnumber" value ="{{container.routePOnumber}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Plan Date</mat-label>
+    <input matInput formControlName="routeUrPlanDate" value ="{{container.routeUrPlanDate | dateFormat}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Notes</mat-label>
+    <textarea formControlName="routeNotes" matInput maxlength="420">{{container.routeNotes}}</textarea>
+    <mat-hint class="hint-right">Chars {{updateForm.get('routeNotes').value.length}}/420</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="" class="fill">
+    <mat-label>Expected # of deliveries for this open</mat-label>
+    <input matInput formControlName="containerOrder" value ="{{container.quantityOrder}}">
+  </mat-form-field>
+</form>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="routeSubmitButton.disabled=true; save();" #routeSubmitButton>Submit</button>
+</div>

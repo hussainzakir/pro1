@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Quote Validate</h1>
+<div mat-dialog-content class="">
+
+    <p>Are you sure you want to validate the following Account</p>
+    <td><strong>QuoteId:</strong></td><td>{{quoteId}}</td>
+    <br>
+    <td><strong>Account:</strong></td><td>{{accountDetail.account}} - {{accountDetail.customerName}}</td>
+    <br>
+
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeIt()">Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em"  [disabled]="quoteMetadata.allowUpdate != 'Y'" (click)="submitButton1.disabled=true; save();" #submitButton1 [loading]=loading>Submit</button>
+</div>

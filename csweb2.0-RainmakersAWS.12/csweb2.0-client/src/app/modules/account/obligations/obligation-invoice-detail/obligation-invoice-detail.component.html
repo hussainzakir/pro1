@@ -1,0 +1,77 @@
+<h1 mat-dialog-title>Obligation Invoice Detail</h1>
+<div mat-dialog-content>
+
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="left" style="padding-top:5px;">
+    <div fxFlex="75" >
+      <div fxLayout="row wrap" fxLayoutGap="10px grid">
+        <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="100%" >
+          <table style="width: 100%;" class="table">
+            <tr>
+              <td style="text-align: right;"><strong>Obligation Date:</strong></td><td>{{invoiceDetails.date}}</td>
+              <td style="text-align: right;"><strong>Obligation ID:</strong></td><td>{{invoiceDetails.id}}</td>
+              <td style="text-align: right;"><strong>Open Amount:</strong></td><td>${{invoiceDetails.openAmount}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: right;"><strong>Account:</strong></td><td>{{company}}-{{account}}</td>
+              <td style="text-align: right;"><strong>Obligation Ref:</strong></td><td>{{invoiceDetails.poNumber}}</td>
+              <td style="text-align: right;"><strong>Invoice Amount:</strong></td><td>${{invoiceDetails.totalAmount}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<table mat-table [dataSource]="dataSource" matSort style="width: 100%;" *ngIf = "dataSource">
+  <ng-container matColumnDef="site">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="table-header"> Site </th>
+      <td mat-cell *matCellDef="let element"> {{element.site}} </td>
+  </ng-container>
+  <ng-container matColumnDef="containerGroup">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cont Group </th>
+      <td mat-cell *matCellDef="let element" style= "text-align: center;"> {{element.containerGroup}} </td>
+  </ng-container>
+  <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Qty </th>
+      <td mat-cell *matCellDef="let element">{{element.containerQuantity | number:'1.2'}}</td>
+  </ng-container>
+  <ng-container matColumnDef="containerType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cont Type </th>
+      <td mat-cell *matCellDef="let element" style= "text-align: center;"> {{element.containerType}} </td>
+  </ng-container>
+  <ng-container matColumnDef="containerSize">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cont Size </th>
+      <td mat-cell *matCellDef="let element"> {{element.containerSize | number:'1.2'}}</td>
+  </ng-container>
+  <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.invoiceDate}} </td>
+  </ng-container>
+  <ng-container matColumnDef="chargeDescription">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Charge Desc </th>
+    <td mat-cell *matCellDef="let element"> {{element.chargeDescription}} </td>
+  </ng-container>
+  <ng-container matColumnDef="fromDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> From Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.fromDate}} </td>
+  </ng-container>
+  <ng-container matColumnDef="toDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> To Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.toDate}} </td>
+  </ng-container>
+  <ng-container matColumnDef="receipt">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Receipt </th>
+    <td mat-cell *matCellDef="let element"> {{element.receipt}} </td>
+  </ng-container>
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+    <td mat-cell *matCellDef="let element" style= "text-align: right;"> {{element.charge | currency }} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100,200]" showFirstLastButtons ></mat-paginator>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

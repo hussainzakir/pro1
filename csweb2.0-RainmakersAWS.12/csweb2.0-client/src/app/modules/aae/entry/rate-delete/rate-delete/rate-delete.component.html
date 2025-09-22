@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>Delete Container Rate</h1>
+<div mat-dialog-content class="" cdkDrag>
+    <p>Are you sure you want to delete the following rate:</p>
+    <table>
+      <tr>
+        <td style="width: 200px;"><strong>Account-Site-Container:</strong></td><td>{{rate.customerAccount}}-{{rate.site || '???'}}-{{rate.containerGroup}}</td>
+      </tr>
+      <tr>
+        <td><strong>Charge Code:</strong></td><td>{{rate.chargeCode}}</td>
+      </tr>
+      <tr>
+        <td><strong>Charge Type:</strong></td><td>{{rate.chargeType}}</td>
+      </tr>
+      <tr>
+        <td><strong>Charge Method:</strong></td><td>{{rate.chargeMethod}}</td>
+      </tr>
+      <tr>
+        <tr>
+          <td><strong>Effective Date:</strong></td><td>{{rate.effectiveDate | dateFormat}}</td>
+        </tr>
+        <tr>
+          <tr>
+            <td><strong>Rate:</strong></td><td>{{rate.chargeRate}}</td>
+          </tr>
+      </table>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="!updateForm.valid || quoteMetadata.allowUpdate != 'Y'" (click)="save()">Submit</button>
+</div>

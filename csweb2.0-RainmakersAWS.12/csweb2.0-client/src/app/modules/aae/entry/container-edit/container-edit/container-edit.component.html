@@ -1,0 +1,295 @@
+<h1 mat-dialog-title>Update Container Details</h1>
+<div mat-dialog-content class="fields-container" cdkScrollable>
+  <table style="width: 100%;">
+    <div class="grid-container" cdkScrollable>
+      <div>
+        <strong>Format:</strong> {{quoteMetadata?.formatType}}
+      </div>
+      <div>
+        <strong>Account:</strong> {{accountDetail?.company}} - {{accountDetail?.account}}
+      </div>
+      <div>
+        <strong>Site:</strong> {{site?.site}}
+      </div>
+      <div>
+        <strong>Group:</strong> {{container?.containerId}}
+      </div>
+      <div>
+        <strong>Original Start Date:</strong> {{container?.originalStartDate | dateFormat}}
+      </div>
+      <div>
+        <strong>Last Service Date:</strong> {{container?.lastServiceDate | dateFormat}}
+      </div>
+    </div>
+    <tr *ngIf="errorsList && errorsList.length > 0">
+        <td colspan="2"><strong>Errors:</strong></td>
+      </tr>
+      <tr *ngIf="errorsList && errorsList.length > 0">
+        <td colspan="2">
+          <ul>
+            <li *ngFor="let error of errorsList">
+              {{error.error}}
+            </li>
+          </ul>
+        </td>
+      </tr>
+  </table>
+  <br/>
+<form [formGroup]="updateForm">
+  <div class="container-form-fields">
+  <mat-card class="mat-elevation-z3">
+  <mat-card-content>
+  <mat-form-field>
+    <mat-select placeholder="Type/Size/Compactor" [value]="selectedTypeSize" #select1 (selectionChange)="onSelectionChange($event)">
+      <mat-select-filter *ngIf="select1.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="containerSizeTypeValues" (filteredReturn)="filteredContainerSizeTypeValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredContainerSizeTypeValues" [value]="et">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Id Code" #select2 formControlName="idCode">
+      <mat-select-filter *ngIf="select2.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="containerIdCodeValues" (filteredReturn)="filteredContainerIdCodeValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredContainerIdCodeValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Quantity On Order</mat-label>
+    <input matInput formControlName="containerQtyOrder" value ="{{container.quantityOrder}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Quantity on Site</mat-label>
+    <input matInput formControlName="containerQtyOnSite" value ="{{container.containerQtyOnSite}}">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Account Type" #select5 formControlName="accountType">
+      <mat-select-filter *ngIf="select5.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="accountTypeValues" (filteredReturn)="filteredAccountTypeValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredAccountTypeValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Revenue Dist" #select10 formControlName="revenueDistributionCode">
+      <mat-select-filter *ngIf="select10.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="revenueDistributionCodeValues" (filteredReturn)="filteredRevenueDistributionCodeValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredRevenueDistributionCodeValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Lifts</mat-label>
+    <input matInput formControlName="totalLifts" value ="{{container.totalLifts}}">
+    <mat-error *ngIf="updateForm.get('totalLifts').hasError('pattern')">Total can only have digits
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('totalLifts').hasError('maxlength')">Total can only have 3 nums
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Cycle</mat-label>
+    <input matInput formControlName="periodLength" value ="{{container.periodLength}}">
+    <mat-error *ngIf="updateForm.get('periodLength').hasError('pattern')">Length can only have digits
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('periodLength').hasError('maxlength')">Length can only have 2 nums
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Close Date</mat-label>
+    <input matInput formControlName="closeDate">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Bill To Date</mat-label>
+    <input matInput formControlName="billedToDate">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Mths in Adv Recur</mat-label>
+    <input matInput formControlName="recurMnthsAdvBill" value ="{{container.recurMnthsAdvBill}}">
+    <mat-error *ngIf="updateForm.get('recurMnthsAdvBill').hasError('pattern')">Recur can only have digits
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('recurMnthsAdvBill').hasError('maxlength')">Recur can only have 1 num
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Recurring Chg Freq" #select11 formControlName="recurringChargeFrequency">
+      <mat-select-filter *ngIf="select11.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="recurringChargeFrequencyValues" (filteredReturn)="filteredRecurringChargeFrequencyValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredRecurringChargeFrequencyValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Customer Owned</mat-label>
+    <input matInput formControlName="containerOwned" value ="{{container.customerOwned}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Muni Contract</mat-label>
+    <input matInput formControlName="contractNumber" value ="{{container.contractNumber}}">
+    <mat-error *ngIf="updateForm.get('contractNumber').hasError('maxlength')">Contract can only have 10 chars
+    </mat-error>
+  </mat-form-field> 
+  <mat-form-field appearance="">
+    <mat-label>Contract Group</mat-label>
+    <input matInput formControlName="contractGroupNumber" value ="{{container.contractGroup}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Contract Group Desc</mat-label>
+    <input matInput formControlName="contractDescription" value ="{{container.contractDescription}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Contract Name</mat-label>
+    <input matInput formControlName="contractName" value ="{{container.contractName}}">
+  </mat-form-field>
+  </mat-card-content>
+  </mat-card>
+   <div style="width: 100%; margin: 0 auto;">
+    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 5px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="20px grid">
+           <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="quoteMetadata?.formatType === 'RESI'" class="mat-elevation-z4" style="padding-top: 5px; padding-bottom: 5px;" (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+              <mat-panel-title>
+                Resi
+              </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-form-field>
+                <mat-select placeholder="Stop Code" #select3 formControlName="stopCode">
+                  <mat-select-filter *ngIf="select3.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="stopCodeValues" (filteredReturn)="filteredStopCodeValues =$event"></mat-select-filter>
+                  <mat-option *ngFor="let et of filteredStopCodeValues" [value]="et.value">
+                    {{et.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-select placeholder="Rate Type" #select4 formControlName="rateType">
+                  <mat-select-filter *ngIf="select4.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="rateTypeValues" (filteredReturn)="filteredRateTypeValues =$event"></mat-select-filter>
+                  <mat-option *ngFor="let et of filteredRateTypeValues" [value]="et.value">
+                    {{et.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-select placeholder="District" #select12 formControlName="districtCode">
+                  <mat-select-filter *ngIf="select12.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="districtCodeValues" (filteredReturn)="filteredDistrictCodeValues =$event"></mat-select-filter>
+                  <mat-option *ngFor="let et of filteredDistrictCodeValues" [value]="et.value">
+                    {{et.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              </mat-expansion-panel>
+            </mat-accordion>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div style="width: 100%; margin: 0 auto;">
+        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 5px;">
+        <div fxFlex="100">
+        <div fxLayout="row wrap" fxLayoutGap="20px grid">
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="50%">
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="quoteMetadata?.formatType === 'NON RESI'" class="mat-elevation-z4" style="padding-top: 5px; padding-bottom: 5px;" (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+              <mat-panel-title>
+                Non Resi
+              </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-form-field appearance="">
+                <mat-label>On Call</mat-label>
+                <input matInput formControlName="oncallFlag" value ="{{container.onCall}}">
+                <mat-error *ngIf="updateForm.get('oncallFlag').hasError('maxlength')">Flag can only have 1 char
+                </mat-error>
+              </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>Est Lifts/Period</mat-label>
+                  <input matInput formControlName="minNumberOfLifts" value ="{{container.estimatedLifts}}">
+                  <mat-error *ngIf="updateForm.get('minNumberOfLifts').hasError('pattern')">Lifts can only have digits
+                  </mat-error>
+                  <mat-error *ngIf="updateForm.get('minNumberOfLifts').hasError('maxlength')">Lifts can only have 3 nums
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Special Handling" #select6 formControlName="specialHandling">
+                    <mat-select-filter *ngIf="select6.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="specialHandlingValues" (filteredReturn)="filteredSpecialHandlingValues =$event"></mat-select-filter>
+                    <mat-option *ngFor="let et of filteredSpecialHandlingValues" [value]="et.value">
+                      {{et.description}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>PO Required</mat-label>
+                  <input matInput formControlName="purchaseOrderRequired" value ="{{container.poRequired}}">
+                  <mat-error *ngIf="updateForm.get('purchaseOrderRequired').hasError('maxlength')">PO can only have 1 char
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Receipt Req'd" #select7 formControlName="receiptRequired">
+                    <mat-select-filter *ngIf="select7.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="receiptReqdValues" (filteredReturn)="filteredReceiptReqdValues =$event"></mat-select-filter>
+                    <mat-option *ngFor="let et of filteredReceiptReqdValues" [value]="et.value">
+                      {{et.description}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Disposal/Price Code" [value]="selectedPriceCde" #select8 (selectionChange)="onDisposalChange($event)" [disabled]="isDisposalCodeDisabled">
+                    <mat-select-filter *ngIf="select8.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="disposalCodeValues" (filteredReturn)="filteredDisposalCodeValues =$event"></mat-select-filter>
+                    <mat-option *ngFor="let et of filteredDisposalCodeValues" [value]="et">
+                      {{et.description}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>Weight Limit</mat-label>
+                  <input matInput formControlName="weightLimit" value ="{{container.weightLimit}}">
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Primary UOM" #select9 formControlName="unitOfMeasure">
+                    <mat-select-filter *ngIf="select9.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="uomValues" (filteredReturn)="filteredUOMValues =$event"></mat-select-filter>
+                    <mat-option *ngFor="let et of filteredUOMValues" [value]="et.value">
+                      {{et.description}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>Dis Rate Restr</mat-label>
+                  <input matInput formControlName="disposalRateRestriction" value ="{{container.disposalRateRestriction}}">
+                  <mat-error *ngIf="updateForm.get('disposalRateRestriction').hasError('pattern')">Rest can only have nums
+                  </mat-error>
+                  <mat-error *ngIf="updateForm.get('disposalRateRestriction').hasError('maxlength')">Rest can only have 8 nums
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>Oper Rate Restr</mat-label>
+                  <input matInput formControlName="rateRestrOperDate" value ="{{container.rateRestrOperDate}}">
+                </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>City Account Num</mat-label>
+                  <input matInput formControlName="cityAccountNumber" value ="{{container.cityAccountNumber}}">
+                  <mat-error *ngIf="updateForm.get('cityAccountNumber').hasError('maxlength')">Acct Num can only have 20 chars
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="">
+                  <mat-label>Shared Container</mat-label>
+                  <input matInput formControlName="sharedContainerID" value ="{{container.sharedContainerId}}">
+                </mat-form-field>
+              </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="containerSubmitButton.disabled=true; save();" #containerSubmitButton>Submit</button>
+</div>

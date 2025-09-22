@@ -1,0 +1,78 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.imports.dao.AccountImportDao" >
+	
+	<select id="deleteStagingData" statementType="CALLABLE">
+		Call CUQACQ102_CSWEB_DELETE_PROCESS
+		(#{request.json},
+		#{request.errorCode,jdbcType=CHAR,mode=OUT},
+ 		#{request.errorMessage,jdbcType=CHAR,mode=OUT}
+ 		) 
+	</select>
+	<select id="handOffResiContractUpload"  statementType="CALLABLE" >
+	Call CUQARC101_PROCESS_RESICONT(
+                    #{request.metadata.json, jdbcType=VARCHAR, mode=INOUT},                                
+ 					#{request.metadata.library, jdbcType=VARCHAR,mode=OUT},
+ 					#{request.accountTable, jdbcType=VARCHAR,mode=OUT},
+ 					#{request.siteTable, jdbcType=VARCHAR,mode=OUT}, 
+ 					#{request.containerTable, jdbcType=VARCHAR,mode=OUT},
+ 					#{request.rateTable, jdbcType=VARCHAR,mode=OUT},  
+ 					#{request.routeTable, jdbcType=VARCHAR,mode=OUT}, 
+ 					#{request.errorCode,jdbcType=CHAR,mode=OUT},
+ 					#{request.errorMessage,jdbcType=CHAR,mode=OUT} 
+	)
+	</select>
+	
+	<select id="doSaveData" statementType="CALLABLE">
+	CALL CUQACQ101_CSWEB_INSERT_PROCESS
+	 (#{metadata, jdbcType=CLOB, mode=IN},
+	 #{tableData, jdbcType=CLOB, mode=IN}, 
+	 #{result.sqlState,jdbcType=CHAR,mode=OUT},
+     #{result.errorMessage,jdbcType=CHAR,mode=OUT})
+	</select>
+	
+	<select id="getUserImportHistory" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		CALL CUQACQ100_CSWEB_ACTIVITIES (
+		#{userId},
+		'1',
+		#{result.sqlState,jdbcType=CHAR,mode=OUT},
+        #{result.errorMessage,jdbcType=CHAR,mode=OUT})
+	</select>
+	
+	<select id="getUploadHistory" statementType="CALLABLE"
+	resultType="java.lang.String" resultMap="clobToStringMap">
+   CALL CUQOMAOB08_CSWEB_ACTIVITIES(                                        
+	  #{request.json,jdbcType=CHAR, mode=IN},
+	 #{request.sqlState,jdbcType=CHAR,mode=OUT},
+	 #{request.errorMessage,jdbcType=CHAR,mode=OUT} )
+	</select>
+
+	<select id="scheduleUpload" statementType="CALLABLE">
+		Call CUQOMAAI03_SBM_REQUEST_DRIVER(
+						#{request.json, jdbcType=CHAR, mode=IN},                                
+						#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+						#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT} 
+		)
+	 </select>
+
+	 <select id="changeScheduleUpload" statementType="CALLABLE">
+		Call CUQOMAAI13_UPLOAD_SCHEDULE(
+						#{request.requestedUser, jdbcType=CHAR, mode=IN},      
+						#{request.projectId, jdbcType=CHAR, mode=IN},
+						#{request.action, jdbcType=CHAR, mode=IN},
+						#{request.scheduleDate, jdbcType=CHAR, mode=INOUT},
+						#{request.scheduleTime, jdbcType=CHAR, mode=INOUT},                          
+						#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+						#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT} 
+		)
+	 </select>
+	
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+
+</mapper>

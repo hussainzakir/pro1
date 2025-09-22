@@ -1,0 +1,7 @@
+<p style="color: green;">Level 1 validation Successful</p>
+<p>
+  <strong>Are you sure you want to copy all {{uploadResult.accounts.length}} Accounts to InfoPro?</strong>
+  <br/>
+  <em>This includes all associated data like Sites, Containers, Rates, etc</em>
+</p>
+<p><mat-checkbox (change)="emitState($event.checked)">Continue to Level 2 InfoPro Validation</mat-checkbox></p>

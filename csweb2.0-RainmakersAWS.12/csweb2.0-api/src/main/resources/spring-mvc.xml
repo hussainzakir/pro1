@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/task 
+		http://www.springframework.org/schema/task/spring-task-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!--  <mvc:resources mapping="/static/**" location="/static/" /> -->
+	
+	<mvc:annotation-driven />
+	<mvc:default-servlet-handler/>
+	<context:component-scan
+		base-package="com.repsrv.csweb" />
+	<context:annotation-config />
+
+	<security:global-method-security
+		secured-annotations="enabled" pre-post-annotations="enabled" />
+
+<!--	<util:properties id="cswebPropertyConfigurer"-->
+<!--		location="classpath:/configs/#{systemProperties['csweb-env']}.properties,-->
+<!--		classpath:/messages.properties" />-->
+
+<!--	<context:property-placeholder-->
+<!--		location="classpath:/configs/#{systemProperties['csweb-env']}.properties,-->
+<!--		classpath:/messages.properties" />-->
+
+	<bean id="messageSource"
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>messages</value>
+        </property>
+    </bean>
+    
+	<mvc:cors>
+		<mvc:mapping path="/**" allowed-origins="*"
+			allowed-methods="GET, PUT, POST, OPTIONS,DELETE" />
+	</mvc:cors>
+	<mvc:annotation-driven>
+		<mvc:message-converters
+			register-defaults="true">
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+						<property name="serializationInclusion">
+							<value
+								type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- 
+	<mvc:resources location="/css/" mapping="/css/**"  /> -->
+	<!--  <mvc:resources location="/static/" mapping="/static/**"  /> -->
+	<!-- 	 -->
+		
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".html" />
+	</bean>
+	
+	
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="100" />
+	</bean>
+ 
+</beans>

@@ -1,0 +1,88 @@
+<h1 mat-dialog-title>Update Account Contact Information</h1>
+<div>
+  <tr>
+    <td><strong>Account:</strong></td><td>{{accountDetail?.company}} - {{accountDetail?.account}}</td>  
+  </tr>
+</div>
+<br/>
+<div mat-dialog-content class="two-col-container">
+  <form [formGroup]="updateForm">
+  <mat-form-field appearance="" class="fill">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="accountContactName" value ="{{accountDetail?.accountContactName}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="accountContactTitle" value ="{{accountDetail?.accountContactTitle}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Area Code 1</mat-label>
+    <input matInput formControlName="accountContactAreaCode1" value ="{{accountDetail?.accountContactAreaCode1}}">
+    <mat-error *ngIf="updateForm.get('accountContactAreaCode1').hasError('pattern')">Area Code can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('accountContactAreaCode1').hasError('maxlength')">Area Code can only have 3 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone 1</mat-label>
+    <input matInput formControlName="accountContactTelephone1" value ="{{accountDetail?.accountContactTelephone1}}">
+    <mat-error *ngIf="updateForm.get('accountContactTelephone1').hasError('pattern')">Tele can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('accountContactTelephone1').hasError('maxlength')">Tele can only have 7 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone Ext 1</mat-label>
+    <input matInput formControlName="accountContactTelephoneExtn1" value ="{{accountDetail?.accountContactTelephoneExtn1}}">
+    <mat-error *ngIf="updateForm.get('accountContactTelephoneExtn1').hasError('pattern')">Ext can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('accountContactTelephoneExtn1').hasError('maxlength')">Ext can only have 6 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Contact Type 1</mat-label>
+    <input matInput formControlName="accountContactType1" value ="{{accountDetail?.accountContactType1}}">
+    <mat-error *ngIf="updateForm.get('accountContactType1').hasError('maxlength')">Type can only have 4 chars
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Area Code 2</mat-label>
+    <input matInput formControlName="accountContactAreaCode2" value ="{{accountDetail?.accountContactAreaCode2}}">
+    <mat-error *ngIf="updateForm.get('accountContactAreaCode2').hasError('pattern')">Area Code can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('accountContactAreaCode2').hasError('maxlength')">Area Code can only have 3 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone 2</mat-label>
+    <input matInput formControlName="accountContactTelephone2" value ="{{accountDetail?.accountContactTelephone2}}">
+    <mat-error *ngIf="updateForm.get('accountContactTelephone2').hasError('pattern')">Tele can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('accountContactTelephone2').hasError('maxlength')">Tele can only have 7 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone Ext 2</mat-label>
+    <input matInput formControlName="accountContactTelephoneExtn2" value ="{{accountDetail?.accountContactTelephoneExtn2}}">
+    <mat-error *ngIf="updateForm.get('accountContactTelephoneExtn2').hasError('pattern')">Ext can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('accountContactTelephoneExtn2').hasError('maxlength')">Ext can only have 6 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Contact Type 2</mat-label>
+    <input matInput formControlName="accountContactType2" value ="{{accountDetail?.accountContactType2}}">
+    <mat-error *ngIf="updateForm.get('accountContactType2').hasError('maxlength')">Type can only have 4 chars
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="accountContactEmail" value ="{{accountDetail?.accountContactEmail}}">
+  </mat-form-field>
+</form>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="!updateForm.valid" (click)="save()">Submit</button>
+</div>

@@ -1,0 +1,82 @@
+<div class="title-container" fxLayout="row" fxLayoutAlign="space-between center">
+  <h1 mat-dialog-title>{{ isExceptionForm ? 'AAE Exception Report' : 'AAE Activity Report' }}</h1>
+  <mat-slide-toggle [(ngModel)]="isExceptionForm" class="toggle-switch" (change)="onToggleChange()">Exception Report</mat-slide-toggle>
+</div>
+<div mat-dialog-content class="">
+  <form [formGroup]="updateForm" *ngIf="!isExceptionForm" (ngSubmit)="save()">
+    <div class="form-container">   
+      <div class="container-form-fields" fxLayout="row" fxLayoutGap="10px" >
+        <mat-form-field fxFlex="100">
+          <mat-label>From Date:</mat-label>
+          <input matInput [matDatepicker]="reportFromDatePicker"
+                 formControlName="reportFromDate" placeholder="mm/dd/yyyy"
+                 autocomplete="off">
+          <mat-datepicker-toggle matSuffix [for]="reportFromDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #reportFromDatePicker></mat-datepicker>
+          <mat-error *ngIf="updateForm.get('reportFromDate').hasError('futureDate')">
+            Date cannot be in the future.
+          </mat-error>
+          <mat-error *ngIf="updateForm.get('reportFromDate').hasError('required')">
+            Date is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-label>To Date:</mat-label>
+          <input matInput [matDatepicker]="reportToDatePicker"
+                 formControlName="reportToDate" placeholder="mm/dd/yyyy"
+                 autocomplete="off">
+          <mat-datepicker-toggle matSuffix [for]="reportToDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #reportToDatePicker></mat-datepicker>
+          <mat-error *ngIf="updateForm.get('reportToDate').hasError('futureDate')">
+            Date cannot be in the future.
+          </mat-error>
+          <mat-error *ngIf="updateForm.get('reportToDate').hasError('required')">
+            Date is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="checkbox-container" fxFlex="33">
+        <mat-checkbox formControlName="includeAll"> Include All </mat-checkbox>
+      </div>
+    </div>
+  </form>
+  <form [formGroup]="exceptionForm" *ngIf="isExceptionForm" (ngSubmit)="saveException()">
+    <div class="form-container">   
+      <div class="container-form-fields" fxLayout="row" fxLayoutGap="10px" >
+        <mat-form-field fxFlex="100">
+          <mat-label>From Date:</mat-label>
+          <input matInput [matDatepicker]="exceptionReportFromDatePicker"
+                 formControlName="reportFromDate" placeholder="mm/dd/yyyy"
+                 autocomplete="off">
+          <mat-datepicker-toggle matSuffix [for]="exceptionReportFromDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #exceptionReportFromDatePicker></mat-datepicker>
+          <mat-error *ngIf="exceptionForm.get('reportFromDate').hasError('futureDate')">
+            Date cannot be in the future.
+          </mat-error>
+          <mat-error *ngIf="exceptionForm.get('reportFromDate').hasError('required')">
+            Date is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100">
+          <mat-label>To Date:</mat-label>
+          <input matInput [matDatepicker]="exceptionReportToDatePicker"
+                 formControlName="reportToDate" placeholder="mm/dd/yyyy"
+                 autocomplete="off">
+          <mat-datepicker-toggle matSuffix [for]="exceptionReportToDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #exceptionReportToDatePicker></mat-datepicker>
+          <mat-error *ngIf="exceptionForm.get('reportToDate').hasError('futureDate')">
+            Date cannot be in the future.
+          </mat-error>
+          <mat-error *ngIf="exceptionForm.get('reportToDate').hasError('required')">
+            Date is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" (click)="onSubmit()" [disabled]="updateForm.invalid && exceptionForm.invalid" #submitButton [loading]="loading">Submit</button>
+</div>

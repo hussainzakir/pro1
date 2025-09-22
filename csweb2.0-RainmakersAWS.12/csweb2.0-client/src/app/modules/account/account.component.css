@@ -1,0 +1,54 @@
+ul.horizontal li{
+  display:inline;
+  padding: 10px;
+}
+
+
+
+hr { height:3px; border:none; color:#00adef; background-color:#004a7c; }
+
+
+.card-content{
+  overflow: auto;
+  height: 200px;
+}
+
+.underline {
+  text-decoration:none;
+  color:black;
+}
+
+.underline:hover {
+  text-decoration:underline;
+  color:blue;
+}
+
+.account-info-card {
+  width: 350px;
+  height: 280px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding:10px;
+}
+
+.service-recording-card {
+  width: 370px;
+  height: 580px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding:10px;
+  border-radius: 4px;
+}
+
+mat-icon.mat-card-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+}
+
+mat-icon.orange600 { color: #FB8C00; }
+
+.orange-btn{
+  background-color: #FB8C00;
+  color: #fff;
+}

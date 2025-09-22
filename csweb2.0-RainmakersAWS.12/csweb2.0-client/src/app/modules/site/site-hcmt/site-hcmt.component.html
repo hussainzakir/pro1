@@ -1,0 +1,71 @@
+<div class="maximize-button-group">
+  <button (click)="maximize()"><span class="fa fa-window-maximize"></span></button>
+  <button (click)="restore()"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+</div>
+<div class="modal-dialog" id="my-modal-dialog">
+
+  <h1 mat-dialog-title style="margin: 0 0 5px">HCMT Rates</h1>
+  <div class="modal-body" id="my-modal-body">
+    <div fxLayout="row" fxLayoutGap="0px" fxLayoutAlign="start" style="padding-top: 0px;">
+      <div fxFlex="100">
+        <div fxLayout="row wrap" fxLayoutGap="5px grid" fxLayoutAlign="start start">
+          <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="40%">
+            <table style="width: 100%;padding: 0px;">
+              <tr>
+                <td>Account: {{company}} - {{account}} | Site: {{site}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 10px;">
+      <div fxFlex="100">
+        <div fxLayout="row wrap" fxLayoutGap="20px grid">
+          <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="40%">
+
+            <mat-card class="tableRates">
+              <mat-card-title>
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font"
+                  style="vertical-align: middle;">label_important</mat-icon> Rate Info
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+              </mat-card-title>
+              <mat-card-content class="card-content" style="height: 140px;">
+                <table class="rate-table" mat-table [dataSource]="dataSource" matSort matSortActive="ChargeType"
+                  matSortDirection="desc" style="width: 100%;">
+
+                  <ng-container matColumnDef="ChargeCode">
+                    <th *matHeaderCellDef> Charge Code </th>
+                    <td class="text-center" *matCellDef="let hcmtRate"> {{hcmtRate.chargeCode}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Cost">
+                    <th class="text-right" *matHeaderCellDef> Cost </th>
+                    <td class="text-right" *matCellDef="let hcmtRate"> {{hcmtRate.haulerCost}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="UOM">
+                    <th *matHeaderCellDef> Unit of Measure </th>
+                    <td class="text-center" *matCellDef="let hcmtRate"> {{hcmtRate.unitOfMeasure}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="FRF/EVR/3PF">
+                    <th *matHeaderCellDef> FRF/EVR/3PF Allowed</th>
+                    <td class="text-center" *matCellDef="let hcmtRate"> {{hcmtRate.frfAllowed}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="EffectiveDate">
+                    <th *matHeaderCellDef> Effective Date </th>
+                    <td class="text-center" *matCellDef="let hcmtRate"> {{hcmtRate.effectiveDate}} </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></tr>
+                </table>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button mat-dialog-close>Close</button>
+    </div>
+  </div>
+</div>

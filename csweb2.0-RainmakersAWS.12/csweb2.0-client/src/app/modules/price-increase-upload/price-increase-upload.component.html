@@ -1,0 +1,36 @@
+<div fxFlex="60" fxFlexOffset="15" [style.margin-top.%]="10" >
+	<mat-card class="mat-elevation-z8">
+		<mat-card-header>
+	  <mat-icon mat-card-avatar class="orange600" fontSet="fas" style="font-size: 18pt;color: orange;" fontIcon="fa-money-check-alt"></mat-icon>
+    <mat-card-title>Price Increase Upload</mat-card-title>
+    <mat-card-subtitle>Select your CVS file and submit</mat-card-subtitle>
+  </mat-card-header>
+   <mat-card-content style="text-align: center;">
+	<form [formGroup]="options">
+		<div>
+			<label>Upload Type: </label>
+			<mat-radio-group [formControl]="uploadType" required ngModel>
+				<mat-radio-button value="C">Commercial</mat-radio-button>
+				<mat-radio-button value="R">Residential</mat-radio-button>
+			</mat-radio-group>
+      <mat-error *ngIf="uploadType.hasError('required')  && (uploadType.dirty || uploadType.touched)">Upload Type required</mat-error>
+		</div>
+
+		<mat-form-field style="width: 80%;">
+			<mat-label>Select upload file:</mat-label><br />
+			<ngx-mat-file-input placeholder="Basic Input"  formControlName="uploadFile" (change)="selectFile($event)" accept =".csv"></ngx-mat-file-input>
+			<mat-icon matSuffix>folder</mat-icon>
+			<mat-error *ngIf="uploadFile.hasError('required') && (uploadFile.dirty || uploadFile.touched)">File required</mat-error>
+		</mat-form-field>
+	</form>
+	</mat-card-content>
+<div fxLayout="row" fxLayoutGap="0px" style=" position: relative; left: 18%; bottom: 10px; display: flex; align-items: center; ">
+  <a [style.visibility]="uploadType.value ? 'visible' : 'hidden'" [style.text-decoration]="'none'"  href="{{templateUrl}}/{{uploadType.value}}">
+    Download Template
+  </a>
+</div>
+	<mat-card-actions style="text-align: center;padding-top: 0px;">
+    <button mat-raised-button [loading]=loading  color="orange" (click)="doSubmit()" class="btn-w-md">Begin Upload</button>
+  </mat-card-actions>
+</mat-card>
+</div>

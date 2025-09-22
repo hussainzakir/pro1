@@ -1,0 +1,14 @@
+view.id=get-templates-dto
+view.class=com.repsrv.csweb.core.model.massupload.GetTemplatesDto
+view.global.excludes=class,authority,preMenu,jobType,node
+
+templates.id
+templates.status
+templates.description
+templates.changedBy
+templates.changedDate
+templates.detailDesc
+templates.system
+templates.showTemplateLink
+changeReq
+templates

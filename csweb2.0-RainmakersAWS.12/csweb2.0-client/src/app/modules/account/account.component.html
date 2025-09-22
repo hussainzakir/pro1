@@ -1,0 +1,275 @@
+<div *ngIf="accountDetailReady" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+	<div fxFlex="95" >
+    <div fxLayout="row wrap" fxLayoutGap="20px grid">
+      <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card class="">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Account Information
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content">
+                <table style="width: 100%;padding-top: 10px;">
+                    <tr>
+                        <td style="text-align: left;vertical-align: top;">
+                            <label># {{accountDetail.company }} - {{accountDetail.account}} </label><br /><span *ngIf="isNationalAccount" style= "text-align: left; color:red"> National Account</span>
+                        <td>
+                            <label>
+                                <a class="repsrv-link" [state]="accountDetail"
+                                routerLink="/account/{{accountDetail.company}}/{{accountDetail.account}}/{{theSite.site}}/detail">{{accountDetail.customerName}}</a>&nbsp;&nbsp;<span *ngIf="accountDetail.riskDescription" style= "text-align:right; color:red"> {{accountDetail.riskDescription}}</span><br/>
+                                <span *ngIf="accountDetail.addressLine1">{{accountDetail.addressLine1}} </span>
+                                <span *ngIf="accountDetail.addressLine2">{{accountDetail.addressLine2}}</span><br *ngIf="accountDetail.addressLine2" />
+                                <span *ngIf="accountDetail.addressLine3">{{accountDetail.addressLine3}}</span><br *ngIf="accountDetail.addressLine3"/>
+
+                                {{accountDetail.city}}, {{accountDetail.state}} {{accountDetail.postalCode}}
+                              <span *ngIf="accountDetail.accountContact"><br/>
+                                <span >{{accountDetail.accountContact.businessEmail1}}</span>
+                                <br>
+                                <span >{{accountDetail.accountContact.homeEmail1}}</span>
+                                <br>
+                                <span >{{accountDetail.accountContact.businessEmail2}}</span>
+                                <br>
+                                <span >{{accountDetail.accountContact.homeEmail2}}</span>
+                              </span>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card>
+            <mat-card-title >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Site Information
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+            <mat-card-content class="card-content">
+                <table style="width: 100%;padding-top: 10px;">
+                    <tr>
+                        <td style="text-align: left;vertical-align: top;">
+                            <label>{{theSite.site}}</label>
+                        </td>
+                        <td>
+                            <label>
+                                <a class="repsrv-link" [routerLink]="" (click)="openSiteDetail()">{{theSite.siteName}}</a><span *ngIf="theSite.closeDate!=0" style="color:red"> CLOSED</span>
+                                 <span *ngIf="isSiteInactive(theSite)" style="color:rgb(243, 17, 5)"> INACTIVE</span>
+                                <br />
+                                {{theSite.addressNumberName}}, {{theSite.city}} {{theSite.stateProvince}} {{theSite.postalCode}} <br />
+                                Contact: {{theSite.serviceContact}} {{theSite.phoneNumber}}
+                            </label>
+                            <span *ngIf="accountDetail.accountSiteContact"><br/>
+                              <span >{{accountDetail.accountSiteContact.businessEmail1}}</span>
+                              <br>
+                              <span >{{accountDetail.accountSiteContact.homeEmail1}}</span>
+                              <br>
+                              <span >{{accountDetail.accountSiteContact.businessEmail2}}</span>
+                              <br>
+                              <span >{{accountDetail.accountSiteContact.homeEmail2}}</span>
+                            </span>
+                        </td>
+                        <td style="text-align: left;vertical-align: top;">
+                            <label>
+                                <a [routerLink]="" (click)="openRates(theSite)" class="repsrv-link">Rates</a> <br />
+                                <a *ngIf="isNationalAccount" [routerLink]="" (click)="openHaulers(theSite)" class="repsrv-link">Haulers</a> <br />
+                                <a *ngIf="isNationalAccount" [routerLink]="" (click)="openHcmt(theSite)" class="repsrv-link">HCMT Rates</a>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card>
+            <mat-card-title >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Site - Container Summary
+                <hr style="width: 90%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+            <mat-card-content class="card-content" >
+              <ul style="list-style-type: none;padding-left: 0;padding-top: 10px;">
+                <li *ngFor="let site of accountDetail.sites">
+                    <a class="repsrv-link; item underline" [state]="accountDetail" routerLink="/account/{{accountDetail.company}}/{{accountDetail.account}}/{{site.site}}" (click)="reloadLink()">{{site.site}}  {{site.siteName}} {{site.addressNumberName}} {{site.city}} {{site.stateProvince}}</a>
+                <ul style="list-style-type: none;">
+                    <li style="padding-bottom: 10px;" *ngFor="let container of site.containers">
+                      <i class="material-icons mat-icon-repsrv" >delete_outline</i> <a class="repsrv-link" [routerLink]="['/container-detail', company, account, site.site, container.containerId]" ># {{container.containerId | number: '3.0'}} - {{container.containerSize | number: '1.2-2'}} YARD {{container.containerType}} {{container.compactor}} {{container.customerOwned}} {{container.onCall}} {{container.accountType.label}} {{container.containerStatus}} {{container.specialHandlingDescription}} {{container.poRequired}}</a>
+                    </li>
+                </ul>
+              </li>
+            </ul>
+            </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+</div>
+</div>
+    <!--Bottom part -->
+    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;" *ngIf="balanceReady">
+        <div fxFlex="95">
+        <div fxLayout="row wrap" fxLayoutGap="20px grid">
+          <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="50%">
+            <mat-card>
+                <mat-card-title>
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>High Level Account Details
+                    <button style="float: right;" class="orange-btn" (click)="showReage()"  mat-button >Reage</button>
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+                <mat-card-content style="width: 100%;" [style.overflow]="'auto'" [style.height.px]="'250'">
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>Open Item Balance :</label>  <label style="float: center; margin-left: 48px;"> $ {{balance.openInvoiceAmount | number: '1.0':'en-US'}}</label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">{{reage.agingCategory1}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 60px;"> $ {{reage.agingAmount1 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>Cash on Account :</label> <label style="float: center; margin-left: 60px;"> $ {{balance.cashOnAccount | number: '1.0':'en-US'}}</label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">{{reage.agingCategory2}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 49px;"> $ {{reage.agingAmount2 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>AR Balance :</label>  <label style="float: center; margin-left: 100px;">$ {{balance.totalAmountDue | number: '1.0':'en-US'}} </label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">{{reage.agingCategory3}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 60px;">$ {{reage.agingAmount3 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>Past Due :</label> <label style="float: center; margin-left: 116px;">$ {{balance.pastDueAmount | number: '1.0':'en-US'}}</label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow"> {{reage.agingCategory4}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 60px;">$ {{reage.agingAmount4 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>Deposit Balance :</label>  <label style="float: center; margin-left: 69px;">$ {{balance.depositBalance | number: '1.0':'en-US' }}</label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">{{reage.agingCategory5}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 60px;">$ {{reage.agingAmount5 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>Debit Memos :</label>  <label style="float: center; margin-left: 84px;"> $ {{balance.debitMemos | number: '1.0':'en-US'}} </label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">{{reage.agingCategory6}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 48px;"> $ {{reage.agingAmount6 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">
+                            <label>Credit Memos :</label> <label style="float: center; margin-left: 79px;"> $ {{balance.creditMemos | number: '1.0':'en-US'}}</label>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">{{reage.agingCategory7}} :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 48px;"> $ {{reage.agingAmount7 | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <label *ngIf= "reageShow">Total Aged :</label> <label *ngIf= "reageShow" style="float: center; margin-left: 42px;"> $ {{(reage.agingAmount1*1 + reage.agingAmount2*1 + reage.agingAmount3*1
+                                + reage.agingAmount4*1 + reage.agingAmount5*1 + reage.agingAmount6*1 + reage.agingAmount7*1) | number: '1.0':'en-US'}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">
+                          <ul class="horizontal">
+                            <li><i class="material-icons mat-icon-repsrv" >list_alt</i><a class="repsrv-link" [routerLink]="" (click)="openObligationsDialog()">Obligations</a></li>
+                            <li><i class="material-icons mat-icon-repsrv" >list_alt</i><a class="repsrv-link" [routerLink]="" (click)="openPaymentsDialog()">Payments</a></li>
+                            <li><i class="material-icons mat-icon-repsrv" >list_alt</i><a class="repsrv-link" [routerLink]="" (click)="openChargesDialog()">Charges</a></li>
+                            <li><i class="material-icons mat-icon-repsrv" >list_alt</i><a class="repsrv-link" [routerLink]="" (click)="openReconsilesDialog()">Reconciliations</a></li>
+                        </ul>
+                        </td>
+                    </tr>
+                </mat-card-content>
+            </mat-card>
+          </div>
+          <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="50%" *ngIf="openRecordingsReady">
+            <mat-card class="" style="border: 0px;">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                    Service Recordings <button style="float: right;" class="orange-btn" (click)="openAddDialog()" mat-button >Create New</button>
+                    <a class="repsrv-link" [routerLink]=""  (click)="loadServiceData()"> <mat-icon  style="float: right; margin-right: 1em;" title="refresh recordings">sync</mat-icon></a>
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+                <mat-card-content [style.overflow]="'auto'" [style.height.px]="'250'">
+                    <mat-tab-group>
+                        <mat-tab label="Open/Pending Service Recordings">
+                          <div style="width: 100%;">
+                            <table mat-table [dataSource]="dataSourceOpen" matSort style="width: 100%;" >
+
+                              <!-- ID Column -->
+                              <ng-container matColumnDef="serviceRecordingNumber">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                                <td mat-cell *matCellDef="let row"><a class="repsrv-link" [routerLink]="" (click)="openMaintainDialog(row.serviceRecordingNumber, row.serviceRecordDate)"> {{row.serviceRecordingNumber}} </a></td>
+                              </ng-container>
+
+                              <!-- Progress Column -->
+                              <ng-container matColumnDef="transactionDescription">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc </th>
+                                <td mat-cell *matCellDef="let row"> {{row.transactionDescription}} </td>
+                              </ng-container>
+
+                              <!-- Name Column -->
+                              <ng-container matColumnDef="scheduleCompletionDate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                                <td mat-cell *matCellDef="let row"> {{row.scheduleCompletionDate}} </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                          </table>
+                            <div *ngIf="dataSourceOpen.data.length == 0">
+                              No Open recordings at this time
+                            </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Closed Service Recordings">
+                          <div  style="width: 100%;">
+                            <table mat-table [dataSource]="dataSourceClosed" matSort style="width: 100%;" >
+
+                              <!-- ID Column -->
+                              <ng-container matColumnDef="serviceRecordingNumber">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                                <td mat-cell *matCellDef="let row"><a class="repsrv-link" [routerLink]="" (click)="openMaintainDialog(row.serviceRecordingNumber, row.serviceRecordDate)"> {{row.serviceRecordingNumber}} </a></td>
+                              </ng-container>
+
+                              <!-- Progress Column -->
+                              <ng-container matColumnDef="transactionDescription">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc </th>
+                                <td mat-cell *matCellDef="let row"> {{row.transactionDescription}} </td>
+                              </ng-container>
+
+                              <!-- Name Column -->
+                              <ng-container matColumnDef="scheduleCompletionDate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                                <td mat-cell *matCellDef="let row"> {{row.scheduleCompletionDate}} </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                              <!-- Row shown when there is no matching data. -->
+
+                            </table>
+                            <div *ngIf="dataSourceOpen.data.length == 0">
+                              No Closed recordings at this time
+                            </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                    <br />
+                    <label><a class="repsrv-link" [routerLink]="" (click)="openAllRecordingsDialog(theSite)">VIEW ALL OPEN, PENDING, & CLOSED RECORDINGS</a></label>
+                </mat-card-content>
+            </mat-card>
+            </div>
+          </div>
+        </div>
+</div>

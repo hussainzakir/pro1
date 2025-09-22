@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.pricing.dao.PriceIncreaseDao" >
+
+	<insert id="processUpload">
+	{CALL CUQCS022_LOAD_PRICE_INCREASE_WORKFILE
+  	(#{uploadType},
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</insert>
+	
+
+</mapper>
+

@@ -1,0 +1,129 @@
+<div class="pagedTable " style="width: 90%; margin: 0 auto;">
+  <div fxLayout="row" fxLayoutGap="10px" style="padding-top: 5px;">
+    <div fxFlexOffset="0" fxFlex="100">
+      <div class="pagedTable " style="width: 90%; margin: 0 auto;padding-top: 10px;">
+        <div class="loading-shade" *ngIf="isLoading">
+          <mat-spinner></mat-spinner>
+          </div>
+    <table style="width: 100%;padding-top: 30px;">
+      <tr>
+        <td><h1 style="display: inline-block;">Import List</h1>
+          <button mat-icon-button class="orange-txt" matTooltip="refresh table data" (click)="isToggleActive ? loadAllHistory(currentFileTypeName + '_ALL') : loadHistory(currentFileTypeName)"   style=" color: #FB8C00;margin-left: 15px;">
+            <mat-icon>autorenew</mat-icon>
+          </button>
+          <mat-slide-toggle #toggle style="margin-left: 10px;" (change)="onToggleChange($event)">Active Uploads</mat-slide-toggle>
+        </td>
+        <td style="width: 50%;text-align: right;">
+          <mat-form-field [style.width.%]="100">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+    <table mat-table  [dataSource]="dataSource" matSort class="mat-elevation-z8" matSortActive="submittedDate" matSortDirection="desc">
+      <ng-container matColumnDef="nodata" >
+        <td mat-footer-row *matFooterCellDef [colSpan]="displayedColumns.length"
+        style="text-align: center;">No Data Available</td>
+      </ng-container>
+  
+      <tr mat-footer-row
+        [hidden]="dataSource && dataSource.data && dataSource.data.length >0"
+        *matFooterRowDef="['nodata']">
+      </tr>
+
+      <ng-container *ngIf="isToggleActive" matColumnDef="userId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.userid}}
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="changeTicketNum">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Change Ticket #</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.changeTicket}}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="excelName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>File Name</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.excelname}}
+        </td>
+      </ng-container>
+  
+     <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Upload Type </th>
+        <td mat-cell *matCellDef="let element"> {{ element.type  }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="division">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Project Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.projectname }} </td>
+      </ng-container>
+  
+        <ng-container matColumnDef="submittedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Submitted Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.submitteddate | as400DateToString}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="lastModified">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Updated Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.lastmodified | as400DateToString}} </td>
+      </ng-container>
+  
+      <ng-container  matColumnDef="addressCount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Address Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.numofaccounts}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="errorsCount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Errors Count </th>
+        <td mat-cell *matCellDef="let element"> {{element.numoferrors}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button *ngIf="element.status == 'Errored' || element.status == 'Review'"
+          (click)="reupload(element)" #tooltip="matTooltip" matTooltip="Reupload">
+          <mat-icon>redo</mat-icon></button>
+  
+          <button mat-icon-button *ngIf="element.status == 'Review'"
+          (click)="reviewModal(element)" #tooltip="matTooltip" matTooltip="Schedule">
+          <mat-icon>settings</mat-icon></button>
+
+          <button mat-icon-button *ngIf="element.status == 'Scheduled'"
+          (click)="changeUpload(element)" #tooltip="matTooltip" matTooltip="Schedule">
+          <mat-icon>date_range</mat-icon></button>
+  
+         <button mat-icon-button *ngIf="element.status == 'Open' || element.status == 'Errored' "
+          (click)="doDownloadErrors(element)" #tooltip="matTooltip" matTooltip="Download Error file">
+          <mat-icon>file_download</mat-icon></button>
+  
+         <button mat-icon-button *ngIf="element.status == 'Closed' || element.status == 'Completed'"
+            style="color: green;" matTooltip="Complete"><mat-icon>done</mat-icon></button>
+  
+            <button mat-icon-button *ngIf="element.status == 'Stop'"
+             matTooltip="Upload #{{element.seq}}"><mat-icon>minimize</mat-icon></button>
+  
+        <mat-progress-spinner *ngIf="element.status == 'Processing'"
+        #tooltip="matTooltip"
+            matTooltip="Processing upload" mode="indeterminate" diameter="20" coloe="accent"></mat-progress-spinner>
+  
+        <button mat-icon-button *ngIf="element.status == 'MissData'"
+            style="color: green;" matTooltip="Complete"><mat-icon>done</mat-icon></button>
+  
+        <button mat-icon-button *ngIf="element.status == 'MissData'"
+            (click)="doDownloadErrors(element)" #tooltip="matTooltip" matTooltip="Download Error file">
+            <mat-icon>file_download</mat-icon></button>
+          </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="isToggleActive ? displayedActiveColumns : displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: isToggleActive ? displayedActiveColumns : displayedColumns;"></tr>
+    </table>
+    <mat-paginator *ngIf = "historyItems" [pageSizeOptions]="[10, 25, 50, 100]" pageSize="50"  showFirstLastButtons class="mat-elevation-z8"></mat-paginator>
+    </div>
+  

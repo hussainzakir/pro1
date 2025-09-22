@@ -1,0 +1,31 @@
+.mat-form-field{ width: 48%; padding: 5px; }
+.
+.fill{ width: 98%; padding: 5px; }
+
+.hint-right{
+  width: 50%;
+  text-align: right;
+}
+
+.success-snackbar{
+  background-color: green;
+  color: white;
+}
+
+.error-snackbar{
+  background-color: red;
+  color: white;
+}
+
+.error-banner{
+  background-color: #00adef;
+  color: #fff;
+  padding: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.mat-icon {
+  vertical-align: middle;
+  padding-right: 15px;
+}

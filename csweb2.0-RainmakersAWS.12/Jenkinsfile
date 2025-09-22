@@ -1,0 +1,355 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+pipeline {
+    agent {label 'QAJNKAPVW214'}
+	tools {
+		maven 'mvn-3.8.4'
+		// jdk 'Java 1.8.0_221'
+	}
+    environment {
+    
+    	//deploy configs
+    	MDCMS_REST_URL = "http://harainbw.repsrv.com:3100/mdcms"
+    	MDCMS_DEV_USER = "CUSTSRVDEV"
+    	MDCMS_TEST_USER = "CUSTSRVTST"
+    	
+    	//Build configs
+    	SOURCE_REPO = "github.com/RepublicServicesRepository/csweb2.0.git"
+    	LAST_BUILD_ID = ""
+    	BUILD_ID = ""
+    	LAST_SUCCESSFUL_BUILD_FILE = "csweb2-1.0-b${LAST_BUILD_ID}.war"
+    	ARTIFACT_FILENAME = " "
+
+    	IS_EXISTING_BUILD = "false"
+    	LEVEL_CODE = 0
+    }
+
+    parameters {
+    	 choice(name: 'PROMOTION_LEVEL',
+                choices: ['Dev', 'Test'],
+                description: 'What environment should this deployment be deployed to') 
+         string(name: 'BRANCH_NAME',
+                defaultValue: 'develop',
+                description: 'The git branch to build/deploy.  Must be "develop" for Test')
+        string(name: 'BUILD_TO_DEPLOY',
+                defaultValue: '',
+                description: 'The build id to build/deploy.  If blank creates a new build from the branch specified')  
+        choice(name: 'SKIP_TESTS',
+	            choices: [true, false],
+	            description: 'Whether to skip all functional tests')
+	    string(name: 'CONTEXT_ROOT',
+                defaultValue: '/csweb2',
+                description: 'Must start with a foward slash - this is the context root when deployed, ie = https://repsrv.com/my-context-root')       
+        separator(name: "TEST_ENVIRONMENT", sectionHeader: "Required for Test promotions")
+        string(name: 'MDCMS_TASK_NUM',
+                defaultValue: '1',
+                description: 'The Change Number that defines the MDCMS task id.  Required for Test deployments')
+        string(name: 'PROMOTION_REASON',
+                defaultValue: ' ',
+                description: 'Explain what this promotion is for')
+        	    
+
+    }
+    
+    options { disableConcurrentBuilds() }
+
+    stages {
+        stage('setup') {
+            
+			tools {
+                jdk 'JDK_8_221'
+            }
+          
+			steps {
+                script {
+
+                	 ///////////////////////////////////
+               		 /////// VALIDATION RULES  /////////
+               		 
+               		 if(PROMOTION_LEVEL == "Test"){
+               		 	if(BUILD_TO_DEPLOY == "" && (BRANCH_NAME != "develop" && BRANCH_NAME !="openMarket" )){
+               		 		currentBuild.result = "FAILURE"
+                			throw new Exception("Can only promote develop branch to Test")
+               		 	} else if(BUILD_TO_DEPLOY != "" && !BUILD_TO_DEPLOY.contains("develop")){
+               		 		currentBuild.result = "FAILURE"
+                			throw new Exception("Can only promote previous builds from develop to Test")
+               		 	} else if (MDCMS_TASK_NUM=="" || !MDCMS_TASK_NUM.isNumber()|| MDCMS_TASK_NUM.toInteger()<=1) {
+               		 		currentBuild.result = "FAILURE"
+                			throw new Exception("When promoting to test, MDCMS_TASK_NUM must be greater than 1")
+               		 	}
+               		 } else if(PROMOTION_LEVEL == "Dev") {
+               		 	if (MDCMS_TASK_NUM=="" || !MDCMS_TASK_NUM.isNumber()|| MDCMS_TASK_NUM.toInteger()<1) {
+               		 		currentBuild.result = "FAILURE"
+                			throw new Exception("MDCMS_TASK_NUM must be a positive integer")
+               		 	}
+               		 }
+               		 
+               		 if(PROMOTION_LEVEL == "Test" && PROMOTION_REASON == " ") {
+               		 	currentBuild.result = "FAILURE"
+                		throw new Exception("PROMOTION_REASON required when promoting to Test")
+               		 }
+                	
+                	
+          			def checkoutClause = ""
+					if(BUILD_TO_DEPLOY != "") {
+						checkoutClause = "tags/${BUILD_TO_DEPLOY}"
+						IS_EXISTING_BUILD = "true"
+					} else {
+						checkoutClause = "${BRANCH_NAME}"
+					}
+					
+                	//get last build id
+                	def branchToken = ""
+					if(IS_EXISTING_BUILD=="true") {
+                		branchToken = "rebuild"
+                	} else {
+                		switch(BRANCH_NAME) {
+						  case "develop":
+						    branchToken = "dev"
+						    break
+						  case "master":
+						    branchToken = "mas"
+						    break
+						  default:
+						    branchToken = "fb"
+						    break
+						}
+                	}
+                	
+                	def lastSuccessfulBuildID = 0
+			        def build = currentBuild.previousBuild
+			        while (build != null) {
+			            if (build.result.toString() == "SUCCESS")
+			            {
+			                lastSuccessfulBuildID = build.id as Integer
+			                break
+			            }
+			            build = build.previousBuild
+			        }
+        
+                	LAST_BUILD_ID = lastSuccessfulBuildID
+			    	BUILD_ID = (IS_EXISTING_BUILD=="true") ? BUILD_TO_DEPLOY : "csweb2-1.0-b${currentBuild.number}-t${MDCMS_TASK_NUM}-${BRANCH_NAME}"
+			    	LAST_SUCCESSFUL_BUILD_FILE = "csweb2-1.0-b${LAST_BUILD_ID}.war"
+    				ARTIFACT_FILENAME = "${BUILD_ID}.war"
+
+				  	LEVEL_CODE = (PROMOTION_LEVEL == "Test") ? 200 : 100;
+						
+					if(PROMOTION_LEVEL == "Dev") {
+               		 	PROMOTION_REASON == sh(returnStdout: true, script: 'git log -1 --oneline').trim()
+               		 }
+					
+					withCredentials([usernamePassword(credentialsId: 'giduturiOSS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+					sh "git checkout ${checkoutClause}"
+				    }
+				    
+				    // update display name
+                	currentBuild.displayName = "${BUILD_ID} (${PROMOTION_LEVEL})"
+                	
+                	echo "[INFO] Building build id: ${currentBuild.displayName}"
+					echo "[INFO] The application will be logged and deployed to: ${MDCMS_REST_URL}"
+					echo "[INFO] The build id is ${currentBuild.number}"
+					echo "[INFO] Last successful WAR deployment: ${LAST_SUCCESSFUL_BUILD_FILE}"
+					echo "[INFO] Building branch ${BRANCH_NAME}"
+          			echo "[INFO] Promotion level will be ${LEVEL_CODE}"
+
+					
+                }
+                
+            }
+        }
+        stage('unit test') {
+            when {
+                expression { return SKIP_TESTS != 'true' }
+            }
+            steps {
+            	
+                script {
+                	sh """#!/bin/bash -ex
+                    printenv
+                    """
+                    withMaven {
+				      sh "mvn clean test -Dmaven.test.failure.ignore=false"
+				    }
+                }
+            }
+        }
+        stage('build ') {
+            steps {
+            	//create war file with name tph2-1.0-b${currentBuild.number}
+                script {
+                    withMaven {
+                    		sh """#!/bin/bash -ex
+                    		echo "jenkins-build=${BUILD_ID}" >> csweb2.0-api/src/main/resources/configs/dev.properties
+		                    echo "jenkins-build=${BUILD_ID}" >> csweb2.0-api/src/main/resources/configs/prod.properties
+		                    echo "jenkins-build=${BUILD_ID}" >> csweb2.0-api/src/main/resources/configs/test.properties
+		                    
+		                    cat csweb2.0-api/src/main/resources/configs/dev.properties
+		                    """
+		                    
+				            sh "JAVA_HOME='C:\\Program Files (x86)\\Java\\jdk1.8.0_221' mvn clean install -P full-build -Dskiptests -Dbuild.number=${currentBuild.number} -Dbuild.env=${PROMOTION_LEVEL}"
+				            
+				            // rename the artifact to match naming of build - for posterity downstream
+				    		sh "mv csweb2.0-api/target/csweb2.0-0.0.1-SNAPSHOT.war ${BUILD_ID}.war"
+				    		ARTIFACT_FILENAME = "${BUILD_ID}.war"
+				            }
+				            
+				        }
+            }
+        }
+
+       	stage('Set MDCMS context') {
+       		//skip this stage for now
+	       	when {
+	                expression { return false }
+	            }
+			steps {
+	
+	        	echo "Setting context wildcard values in MDCMS...."
+	        	script {
+	
+	        		MD_REQ = JsonOutput.toJson([
+		              wild: 'CONTXT',
+		              appl: 'CSWEB',
+		              lvl: LEVEL_CODE,
+		              fldv: CONTEXT_ROOT
+	        		])
+
+	            sh "curl -v POST -F \'payload=${MD_REQ};type=application/json\' ${MDCMS_REST_URL}/level/wildcard"
+	            	
+
+	          MD_REQ = JsonOutput.toJson([
+						wild: 'APPNAM',
+						appl: 'CSWEB',
+						lvl: PROMOTION_LEVEL,
+						fldv: LAST_SUCCESSFUL_BUILD_FILE,
+	        		])
+
+	        	}
+	      }
+
+    	}
+        stage('Push artifact to MDCMS') {
+            steps {
+				withCredentials([string(credentialsId: 'cswebTphAuthToken', variable: 'authToken')]) {
+	            	script {
+
+	            		def mdcmsUser = LEVEL_CODE == 100 ? MDCMS_DEV_USER : MDCMS_TEST_USER
+                  		def mdcmParms = [:]
+	            		mdcmParms["appl"] = 'CSWEB2'
+	            		mdcmParms["lvl"]  = LEVEL_CODE
+	            		mdcmParms["objt"] = '*IFS'
+	            		mdcmParms["attr"] = 'WS_CSWEB2'
+	            		mdcmParms["objn"] = ARTIFACT_FILENAME
+	            		mdcmParms["user"] = mdcmsUser
+	            		mdcmParms["folb"] = '/apps/WebDeployments/StagingArea/csweb2.0/temp' //IFS staging folder
+	            		mdcmParms["proj"] = 'CSWEB2'
+	            		mdcmParms["task"] = MDCMS_TASK_NUM.toInteger()
+	            		mdcmParms["arfp"] = '*AUTO'
+	            		mdcmParms["rfpd"] = PROMOTION_REASON
+	            		mdcmParms["pipe"] = 'JEN-NONPRD'
+	            		mdcmParms["pipa"] = 'JENKINS'
+	            		mdcmParms["tkey"] = currentBuild.number
+	            		
+	            		mdcmsJson = JsonOutput.toJson(mdcmParms)
+	                     
+                   sh 'ls -al'
+
+                   def response =
+                          sh(script: "curl -v -H \'Expect:\' -H \'Content-Type: multipart/mixed\' -F \'payload=${mdcmsJson};type=application/json\' -F \'file=@${ARTIFACT_FILENAME}\' -H 'Authorization: Bearer ${authToken}' ${MDCMS_REST_URL}/object-request"
+                          , returnStdout: true);
+							
+                    echo "[INFO]  HTTP response status code: ${response}"
+                    JsonSlurper parser = new groovy.json.JsonSlurper()
+                    Map parsedJson = parser.parseText(response)
+                    if(parsedJson.rtn.sev == "30" || parsedJson.rtn.sev == "20") {
+                      currentBuild.result = "FAILURE"
+                      throw new Exception("Failed to submit WAR file to MDCMS.  Error returned: ${response.msg}")
+                    }
+                }
+        	}}
+    	}
+		stage('MDCMS rfp submit') {
+			steps {
+	
+	        	echo "Triggering MDCMS rfp submission...."
+				withCredentials([string(credentialsId: 'cswebTphAuthToken', variable: 'authToken')]) {
+	        	script {
+	
+	        		TRIGGER_REQ = JsonOutput.toJson([
+						proj: 'CSWEB2',
+						appl: 'CSWEB2',
+						task: MDCMS_TASK_NUM.toInteger(),
+						lvl: LEVEL_CODE,
+						flvl: LEVEL_CODE,
+						tlvl: LEVEL_CODE,
+	        		])
+
+            def response = sh (script: "curl -v -F \'payload=${TRIGGER_REQ};type=application/json\' -H 'Authorization: Bearer ${authToken}' ${MDCMS_REST_URL}/rfp/submit"
+              , returnStdout: true);
+
+            echo "HTTP response status code: ${response}"
+	        JsonSlurper parser = new groovy.json.JsonSlurper()
+                    Map parsedJson = parser.parseText(response)
+                    if(parsedJson.transactions[0].sev == "30" || parsedJson.transactions[0].sev == "20") {
+                      currentBuild.result = "FAILURE"
+                      throw new Exception("Failed to trigger MDCMS.  Error returned: ${response.msg}")
+                    } 	
+	        	}
+	      }
+
+    	}}
+        
+        stage('MDCMS-INPUT') {
+
+        options {
+        timeout(time: 15, unit: 'MINUTES') 
+      }
+		// the MDCMS-DEV stage goes into a waiting for input state after the push to MDCMS is complete
+		// MDCMS will post an ok to the job once the RFP is installed into the DEV environment using MDUPDPIPE
+		// the id parameter must match the STAGE parameter on MDUPDPIPE and the ok parameter must be defined and set // to OK
+			input {
+						message "Installed to DEV"
+						id "MDCMS-INPUT"
+						ok "ok"
+						parameters {
+							string(name: 'MD_STATUS', defaultValue: 'Success', description: 'MD Status Value', trim: true)
+							string(name: 'MD_MESSAGE', defaultValue: 'RFP ##### Installed Successfully ', description: 'MD Return Message')
+						} 
+				}
+			steps {
+				
+				script {
+					if (MD_STATUS == "Abort") {
+						echo "MD Status is: ${MD_STATUS}"
+						currentBuild.result="ABORTED"
+						error("Aborted by MDCMS for: ${MD_MESSAGE}")
+					} else {
+						echo 'MD Status is: ' + MD_STATUS
+						echo 'RFP Status is: ' + MD_MESSAGE 
+					}
+				} 
+			}
+		}
+	    stage('post deployment cleanup') {
+            steps {
+                script {
+                	if(IS_EXISTING_BUILD == "false") {
+	                   withCredentials([usernamePassword(credentialsId: 'giduturiOSS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+					      sh "git tag -a ${BUILD_ID} -m \"Jenkins build ${BUILD_ID}\""
+					      sh "git push https://${USERNAME}:${PASSWORD}@${SOURCE_REPO}  ${BUILD_ID}"
+					    }
+				    } else {
+				    	echo "[INFO] Skipped Git tag - not a Test promotion"
+				    }
+                }
+            }
+        }
+	}
+	post {
+    cleanup{
+        deleteDir()
+    }
+}
+}
+

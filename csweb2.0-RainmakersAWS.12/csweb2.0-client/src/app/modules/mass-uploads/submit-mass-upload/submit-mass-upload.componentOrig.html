@@ -1,0 +1,41 @@
+<mat-card class="upload-card">
+  <mat-card-header>
+	  <mat-icon mat-card-avatar class="orange600">cloud_upload</mat-icon>
+    <mat-card-title>Submit Mass Upload</mat-card-title>
+    <mat-card-subtitle>Here you can upload a CSV for processing</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <ol>
+		<li style="margin: 0 0 3px 0;">
+			<mat-form-field style="width: 100%;">
+			<mat-label>Select upload type:</mat-label>
+			<mat-select [formControl]="template" [errorStateMatcher]="matcher" >
+				<mat-option > </mat-option>
+				<mat-option value="template_01">template test 1</mat-option>
+				<mat-option value="template_02">template test 2</mat-option>
+			</mat-select>
+			<mat-error *ngIf="template.hasError('required')">You must make a selection</mat-error>
+			</mat-form-field>
+		</li>
+		<li style="margin: 0 0 3px 0;">
+			<mat-form-field style="width: 100%;">
+			<mat-label>Enter change number:</mat-label><br/>
+			<input type="text" matInput [formControl]="changeNumber" [errorStateMatcher]="matcher"
+           placeholder="Ex. CR-1234">
+			<mat-error *ngIf="changeNumber.hasError('required')">Change number required</mat-error>
+			</mat-form-field>
+		</li>
+		<li style="margin: 0 0 3px 0;">
+			<mat-form-field style="width: 100%;">
+			<mat-label>Select upload file:</mat-label><br/>
+			 <ngx-mat-file-input  placeholder="Basic Input" ></ngx-mat-file-input>
+      <mat-icon matSuffix>folder</mat-icon>
+			<mat-error *ngIf="changeNumber.hasError('required')">File required</mat-error>
+			</mat-form-field>
+		</li>
+	</ol>
+  </mat-card-content>
+  <mat-card-actions style="text-align: center;padding-top: 0px;;">
+    <button  mat-raised-button color="orange" class="btn-w-md">Begin Upload</button>
+  </mat-card-actions>
+</mat-card>

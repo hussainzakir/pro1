@@ -1,0 +1,111 @@
+<h1 mat-dialog-title>Update Sales Transaction Details</h1>
+<div mat-dialog-content class="fields-container" cdkScrollable>
+  <div>
+    <tr>
+      <td><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+    </tr>
+    <tr>
+      <td><strong>Account:</strong></td><td>{{accountDetail?.company}} - {{accountDetail?.account}}</td>
+    </tr>
+    <tr>
+       <td><strong>Site:</strong></td><td>{{site?.site}}</td>
+    </tr>
+    <tr>
+      <td><strong>Group:</strong></td><td>{{container?.containerId}}</td>
+    </tr>
+    <tr>
+      <td><strong>Original Start Date:</strong></td><td>{{container?.startDate | dateFormat}}</td>
+    </tr>
+</div>
+<ng-template [ngIf]="errorsList && errorsList.length > 0">
+  <strong>Errors:</strong>
+  <br/>
+  <ul>
+    <li *ngFor="let error of errorsList">
+      {{error.error}}
+    </li>
+  </ul>
+<br/>
+</ng-template>
+<br/>
+  <form [formGroup]="updateForm">
+    <div class="container-form-fields" >
+  <mat-form-field>
+    <mat-select placeholder="Transaction/Reason Code" [value]="selectedTransReasonCode" #transactionCodeSelect (selectionChange)="onSelectionChange($event)">
+      <mat-select-filter *ngIf="transactionCodeSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="transactionReasonCodeValues" (filteredReturn)="filteredTransactionReasonCodeValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredTransactionReasonCodeValues" [value]="et">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select aria-readonly="true" placeholder="Servicing Rep" #servicingRepSelect formControlName="sdServicingRep" (selectionChange)="onServiceRepSelectionChange($event)" (openedChange)="onDropdownOpenedServiceRep($event)" (blur)="onServiceRepBlur()">
+      <mat-select-filter *ngIf="servicingRepSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="serviceRepValues" (filteredReturn)="onFilterServiceRep($event)"></mat-select-filter>
+      <ng-container *ngIf="filteredServiceRepValues?.length > 0; else noDataServicingRep">
+        <cdk-virtual-scroll-viewport #serviceRepViewport itemSize="48" class="select-viewport" (scrolledIndexChange)="onScrollServiceRep($event)">
+          <mat-option *cdkVirtualFor="let et of filteredServiceRepValues" [value]="et.value" >
+              {{ et.description }}
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+      <ng-template #noDataServicingRep>
+        <mat-option disabled>
+          No data
+        </mat-option>
+      </ng-template>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select aria-readonly="true" placeholder="Signing Rep" #signingRepSelect formControlName="sdSigningRep" (selectionChange)="onSigningRepSelectionChange($event)" (openedChange)="onDropdownOpenedSigningRep($event)" (blur)="onSigningRepBlur()">
+      <mat-select-filter *ngIf="signingRepSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="signingRepValues" (filteredReturn)="onFilterSigningRep($event)"></mat-select-filter>
+      <ng-container *ngIf="filteredSigningRepValues?.length > 0; else noDataSigningRep">
+        <cdk-virtual-scroll-viewport #signingRepViewport itemSize="48" class="select-viewport" (scrolledIndexChange)="onScrollSigningRep($event)">
+          <mat-option *cdkVirtualFor="let et of filteredSigningRepValues" [value]="et.value" >
+              {{ et.description }}
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+      <ng-template #noDataSigningRep>
+        <mat-option disabled>
+          No data
+        </mat-option>
+      </ng-template>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select aria-readonly="true" placeholder="Competitor Code" #competitorCodeSelect formControlName="sdCompetitorCode" (selectionChange)="onComCodeSelectionChange($event)" (openedChange)="onDropdownOpenedComCode($event)" (blur)="onComCodeBlur()">
+      <mat-select-filter *ngIf="competitorCodeSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="comCodeValues" (filteredReturn)="onFilterComCode($event)"></mat-select-filter>
+      <ng-container *ngIf="filteredComCodeValues?.length > 0; else noDataCompetitorCode">
+        <cdk-virtual-scroll-viewport #comCodeViewport itemSize="48" class="select-viewport" (scrolledIndexChange)="onScrollComCode($event)">
+          <mat-option *cdkVirtualFor="let et of filteredComCodeValues" [value]="et.value" >
+              {{ et.description }}
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+      <ng-template #noDataCompetitorCode>
+        <mat-option disabled>
+          No data
+        </mat-option>
+      </ng-template>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>CSA Contract #</mat-label>
+    <input matInput formControlName="sdCsaContractNumber" value ="{{container.sdCsaContractNumber}}">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Lead Source" #leadSourceSelect formControlName="sdLeadSource">
+      <mat-select-filter *ngIf="leadSourceSelect.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="leadSourceValues" (filteredReturn)="filteredLeadSourceValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredLeadSourceValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+</form>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="salesSubmitButton.disabled=true; save();" #salesSubmitButton>Submit</button>
+</div>

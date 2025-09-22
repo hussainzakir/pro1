@@ -1,0 +1,104 @@
+<h1 mat-dialog-title>Update Customer Contact Information</h1>
+<div>
+  <tr>
+    <td><strong>Account:</strong></td><td>{{accountDetail.company}} - {{accountDetail?.account}} - {{site.site}}</td>  
+  </tr>
+</div>
+<br/>
+<div mat-dialog-content class="two-col-container">
+  <form [formGroup]="updateForm">
+  <mat-form-field appearance="" class="fill">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="siteContactName" value ="{{site?.siteContactName}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="siteContactTitle" value ="{{site?.siteContactTitle}}">
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Area Code 1</mat-label>
+    <input matInput formControlName="siteContactAreaCode1" value ="{{site?.siteContactAreaCode1}}">
+    <mat-error *ngIf="updateForm.get('siteContactAreaCode1').hasError('pattern')">Area Code can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactAreaCode1').hasError('maxlength')">Area Code can only have 3 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone 1</mat-label>
+    <input matInput formControlName="siteContactTelephone1" value ="{{site?.siteContactTelephone1}}">
+    <mat-error *ngIf="updateForm.get('siteContactTelephone1').hasError('pattern')">Tele can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactTelephone1').hasError('maxlength')">Tele can only have 7 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone Ext 1</mat-label>
+    <input matInput formControlName="siteContactTelephoneExtn1" value ="{{site?.siteContactTelephoneExtn1}}">
+    <mat-error *ngIf="updateForm.get('siteContactTelephoneExtn1').hasError('pattern')">Ext can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactTelephoneExtn1').hasError('maxlength')">Ext can only have 6 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Contact Type 1</mat-label>
+    <input matInput formControlName="siteContactType1" value ="{{site?.siteContactType1}}">
+    <mat-error *ngIf="updateForm.get('siteContactType1').hasError('maxlength')">Type can only have 4 chars
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Area Code 2</mat-label>
+    <input matInput formControlName="siteContactAreaCode2" value ="{{site?.siteContactAreaCode2}}">
+    <mat-error *ngIf="updateForm.get('siteContactAreaCode2').hasError('pattern')">Area Code can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactAreaCode2').hasError('maxlength')">Area Code can only have 3 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone 2</mat-label>
+    <input matInput formControlName="siteContactTelephone2" value ="{{site?.siteContactTelephone2}}">
+    <mat-error *ngIf="updateForm.get('siteContactTelephone2').hasError('pattern')">Tele can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactTelephone2').hasError('maxlength')">Tele can only have 7 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Telephone Ext 2</mat-label>
+    <input matInput formControlName="siteContactTelephoneExtn2" value ="{{site?.siteContactTelephoneExtn2}}">
+    <mat-error *ngIf="updateForm.get('siteContactTelephoneExtn2').hasError('pattern')">Ext can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactTelephoneExtn2').hasError('maxlength')">Ext can only have 6 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Contact Type 2</mat-label>
+    <input matInput formControlName="siteContactType2" value ="{{site?.siteContactType2}}">
+    <mat-error *ngIf="updateForm.get('siteContactType2').hasError('maxlength')">Type can only have 4 chars
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Fax Area Code</mat-label>
+    <input matInput formControlName="siteContactFaxAreaCode" value ="{{site?.siteContactFaxAreaCode}}">
+    <mat-error *ngIf="updateForm.get('siteContactFaxAreaCode').hasError('pattern')">Area Code can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactFaxAreaCode').hasError('maxlength')">Area Code can only have 3 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Fax Number</mat-label>
+    <input matInput formControlName="siteContactFaxNumber" value ="{{site?.siteContactFaxNumber}}">
+    <mat-error *ngIf="updateForm.get('siteContactFaxNumber').hasError('pattern')">Fax can only have numbers
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('siteContactFaxNumber').hasError('maxlength')">Fax can only have 7 numbers
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="siteContactEmail" value ="{{site?.siteContactEmail}}">
+  </mat-form-field>
+</form>
+ <div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div> 
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="!updateForm.valid" (click)="save()">Submit</button>
+</div>

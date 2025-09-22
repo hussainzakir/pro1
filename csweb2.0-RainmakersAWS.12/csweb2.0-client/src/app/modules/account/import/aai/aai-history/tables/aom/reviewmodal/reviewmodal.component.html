@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Schedule Upload to InfoPro</h1>
+<div mat-dialog-content class="modelContent">
+    <form [formGroup]="updateForm" (ngSubmit)="save()">
+      <div class="form-container">   
+        <div class="container-form-fields" fxLayout="row" fxLayoutGap="10px" >
+        <mat-form-field fxFlex="100">
+          <mat-label>Schedule Date:</mat-label>
+          <input matInput [matDatepicker]="scheduleDatePicker"
+                 formControlName="scheduleDate" placeholder="mm/dd/yyyy"
+                 autocomplete="off">
+          <mat-datepicker-toggle matSuffix [for]="scheduleDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #scheduleDatePicker></mat-datepicker>
+          <mat-error *ngIf="updateForm.get('scheduleDate').hasError('required')">
+            Date is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field id="timeBox2" fxFlex="100">
+          <mat-label>Time:</mat-label>
+            <input type="time" matInput formControlName="scheduleTime" min="09:00" max="18:00" />
+            <mat-error *ngIf="updateForm.get('scheduleTime').hasError('required')">
+              Time is required.
+            </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    </form>
+  <br>
+    *Scheduled uploads occur in AZ time.
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em"  (click)="save();" [disabled]="updateForm.invalid" #submitButton [loading]=loading>Submit</button>
+</div>

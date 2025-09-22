@@ -1,0 +1,39 @@
+table {
+    width: 100%;
+  }
+  
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+  
+  .mat-column-template{
+  flex: 0 0 10%;
+  }
+  
+  .pagedTable {
+    width: 100%;
+  }
+  
+  .spinner-wrapper {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+  }
+
+  .loading-shade {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    bottom: 0px;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mat-column-numOfErrors.mat-header-cell,
+  .mat-column-numOfErrors.mat-cell {
+    text-align: center;
+  }
+  

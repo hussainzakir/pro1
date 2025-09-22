@@ -1,0 +1,9 @@
+view.id=employee-list
+view.class=com.repsrv.csweb.core.model.employee.Employee
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+employeeNumber
+firstName
+lastName
+employeeType

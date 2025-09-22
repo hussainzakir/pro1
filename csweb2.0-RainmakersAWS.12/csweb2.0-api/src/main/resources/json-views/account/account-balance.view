@@ -1,0 +1,14 @@
+view.id=account-balance
+view.class=com.repsrv.csweb.core.model.account.AccountBalance
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+openInvoiceAmount
+cashOnAccount
+totalAmountDue
+pastDueAmount
+creditMemos
+debitMemos
+depositBalance
+creditLimit
+riskCode

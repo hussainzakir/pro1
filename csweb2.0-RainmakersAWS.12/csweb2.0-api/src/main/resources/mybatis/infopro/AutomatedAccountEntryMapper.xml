@@ -1,0 +1,211 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.aae.dao.AutomatedAccountEntryDao" >
+
+	<select id="getAccountDetail" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMAPRF_Get_Account_Profile(
+     #{company},                                
+     #{projectId},
+	 #{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	 #{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	 #{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<select id="getQuoteMetadata" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{Call CUQOMQINF_QUOTE_INFO(
+           #{request.json},
+           #{request.errorCode,jdbcType=CHAR,mode=OUT},  
+           #{request.errorMessage,jdbcType=CHAR,mode=OUT})}
+
+	</select>
+	
+	<select id="searchQuotes" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{Call CUQOMQGET_GET_QUOTES(#{request.division},
+	 	#{request.json},
+		#{request.pageSize},
+		#{request.pageNumber},
+		#{request.totalRowCount,jdbcType=DECIMAL,mode=OUT},
+		#{request.errorMessage,jdbcType=CHAR,mode=OUT}, 
+		#{request.errorCode,jdbcType=CHAR,mode=OUT})}
+
+	</select>
+	
+	<select id="searchDivisionalQuotes" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{Call CUQOMFGET_GET_FIELDQUOTES(#{request.division},
+	 	#{request.json},
+		#{request.pageSize},
+		#{request.pageNumber},
+		#{request.totalRowCount,jdbcType=DECIMAL,mode=OUT},
+		#{request.errorMessage,jdbcType=CHAR,mode=OUT}, 
+		#{request.errorCode,jdbcType=CHAR,mode=OUT})}
+
+	</select>
+	
+	<update id="updateQuoteAssignee" statementType="CALLABLE" >
+	{Call CUQOMQLCK_QUOTE_ASSIGNMENT(#{request.json},
+			#{request.quoteAssignedTo,jdbcType=CHAR,mode=OUT},
+			#{request.errorCode,jdbcType=CHAR,mode=OUT},
+			#{request.errorMessage,jdbcType=CHAR,mode=OUT})}
+			
+	</update>
+	
+	<update id="updateStatusCode" statementType="CALLABLE" >
+		{CALL CUQOMUPSST_UPDATE_QUOTE_STATUS(#{request.json},
+				#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT}, 
+				#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+				#{request.previousStatusCode, jdbcType=CHAR,mode=OUT})}
+				
+	</update>
+
+	<select id="getErrorResponse" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMGETER_GET_ERROR_RESPONSE(
+     ' ',                                
+     #{quoteId},
+	 #{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	 #{result.errorCode,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<select id="getErrorReport" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{CALL CUQOMERRPT_ERROR_REPORT (
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+	
+	<select id="getExceptionReport" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{CALL CUQOMEXPRP_EXCEPTION_REPORT (
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+	
+	<update id="updateAccountInfo" statementType="CALLABLE">
+	{CALL CUQOMUPSAC_UPDATE_ACCOUNT_STAGING (
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<update id="updateSiteInfo" statementType="CALLABLE">
+	{CALL CUQOMUPSSI_UPDATE_SITE_STAGING (
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<update id="updateContainerInfo" statementType="CALLABLE">
+	{CALL CUQOMUPSCN_UPDATE_CONTAINER_STAGING (
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<update id="updateRateInfo" statementType="CALLABLE">
+	{CALL CUQOMUPSRT_UPDATE_RATE_STAGING (
+  	#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+
+	<update id="submitFinalizationInfo" statementType="CALLABLE">
+		{CALL CUQOMRQSBM_AAE_REQUEST_SUBMIT(
+		#{request.json,jdbcType=CHAR,mode=IN},
+		#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<select id="getContractInfo" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+		{Call CUQOMCTINF_CONTRACT_INFO(
+           #{request.json},
+           #{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  		   #{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getQuoteNotes" statementType="CALLABLE" 
+	resultType="java.lang.String" resultMap="clobToStringMap">
+	{Call CUQOMNGET_GET_NOTES(
+	   #{request.json},
+	   #{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+	
+	
+	<select id="getAccountListData" statementType="CALLABLE" 
+	resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMDTA11_ACCOUNT_LIST_DATA(
+		#{request.json,jdbcType=CHAR,mode=IN},
+		#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getSiteListData" statementType="CALLABLE" 
+	resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMDTA12_SITE_LIST_DATA(
+		#{request.json,jdbcType=CHAR,mode=IN},
+		#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getContainerListData" statementType="CALLABLE" 
+	resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMDTA13_CONTAINER_LIST_DATA(
+		#{request.json,jdbcType=CHAR,mode=IN},
+		#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getRatesListData" statementType="CALLABLE" 
+	resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMDTA14_RATES_LIST_DATA(
+		#{request.json,jdbcType=CHAR,mode=IN},
+		#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getSalesListData" statementType="CALLABLE" 
+	resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQOMDTA15_SALESDETAIL_LIST_DATA(
+		#{request.json,jdbcType=CHAR,mode=IN},
+		#{request.returnStatus,jdbcType=CHAR,mode=OUT},
+		#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getNewAccountNumber" statementType="CALLABLE" resultMap="clobToStringMap"> 
+	{CALL CUQOMUPACC(
+		#{projectId,jdbcType=CHAR,mode=IN},
+		#{result.outStatus,jdbcType=CHAR,mode=OUT},
+		#{result.outErrorMsg,jdbcType=VARCHAR,mode=OUT},
+		#{result.outNewAccount, jdbcType=CHAR, mode=OUT})}
+	</select>
+
+	<select id="resetNewAccountNumber" statementType="CALLABLE" resultMap="clobToStringMap"> 
+		{CALL CUQOMRMVAC_REMOVE_ACCOUNT(
+			#{quoteId,jdbcType=CHAR,mode=IN},
+			#{result.outStatus,jdbcType=CHAR,mode=OUT},
+			#{result.outErrorMsg,jdbcType=VARCHAR,mode=OUT}
+			)}
+	</select>	
+
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+			 xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:util="http://www.springframework.org/schema/util"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="
+             http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.repsrv.csweb" />	
+	<context:annotation-config/>
+	
+	
+<!--	<util:properties id="cswebPropertyConfigurer"-->
+<!--		location="classpath:/configs/#{systemProperties['csweb-env']}.properties" />-->
+
+<!--	<context:property-placeholder-->
+<!--		location="classpath:/configs/${csweb-env}.properties" />-->
+
+    <http auto-config="false" entry-point-ref="loginUrlAuthenticationEntryPoint" >
+        <!-- Required authentication and sign up endpoints -->
+        <intercept-url pattern="/" access="permitAll" />
+        <intercept-url pattern="/auth/login" access="permitAll" />
+        <intercept-url pattern="/auth/login/**/*" access="permitAll" />
+        <intercept-url pattern="/ws/user/authenticated" access="permitAll" />
+        <intercept-url pattern="/ws/build-version" access="permitAll" />
+		<intercept-url pattern="/favicon.ico" access="permitAll"/>
+		<intercept-url pattern="/static/index.html" access="permitAll()"/>
+		<intercept-url pattern="/static/**" access="permitAll()"/>
+		<intercept-url pattern="/" access="permitAll()"/>
+
+		<intercept-url pattern="/*.js" access="permitAll"/>
+		<intercept-url pattern="/*.js.map" access="permitAll"/>
+		<intercept-url pattern="/*.css" access="permitAll"/>
+		<intercept-url pattern="/assets/img/*.png" access="permitAll"/>
+		<intercept-url pattern="/assets/**" access="permitAll"/>
+		
+        <!-- Health check -->
+        <intercept-url pattern="/ws/health" access="isAnonymous()" method="GET"/>
+        <intercept-url pattern="/ws/massuploads/error-file/generate*" access="isAnonymous()" method="GET"/>
+
+        <!-- Data import with token security -->
+        <intercept-url pattern="/assets/**" access="permitAll()" />
+
+	     <!-- WS Configuration -->
+        <intercept-url pattern="/ws/**/*" access="isAuthenticated()" />
+        <intercept-url pattern="/ws/**/*" access="permitAll" method="OPTIONS"/>
+        <intercept-url pattern="/ws/**/*" access="permitAll" method="HEAD"/>
+<!-- 
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <intercept-url pattern="/" access="isAuthenticated()" /> -->
+        
+        <custom-filter ref="corsFilter" before="CSRF_FILTER" />
+        <custom-filter before ="FORM_LOGIN_FILTER" ref="basicDomainAuthorizationFilter"  />
+
+        <logout success-handler-ref="logoutSuccessHandler" invalidate-session="true" delete-cookies="true"  logout-url="/auth/logout"  />
+		<session-management  session-fixation-protection="none" >
+			<concurrency-control max-sessions="2" />
+		</session-management>
+        <csrf disabled="true"  />
+        <anonymous enabled="true"/>
+        <headers>
+        	<cache-control disabled="true"/>
+    	</headers>
+    </http>
+ 
+    <util:list id="invalidSessionPassthroughUrls">
+        <beans:value>/ws/health</beans:value>
+        <beans:value>/ws/user/authenticated</beans:value>
+    </util:list>
+    
+	
+	<util:list id="allowedCORSOriginRegex">
+        <beans:value>http:\/\/local\.csweb\.repsrv\.com:?\d*</beans:value>
+        <beans:value>https:\/\/harainbw\.repsrv\.com:?\d*</beans:value>
+        <beans:value>https:\/\/([a-zA-Z0-9_]+)\.csweb2(-nonprod|)\.awsext\.repsrv\.com:?\d*</beans:value>
+    </util:list>
+
+    <beans:bean id="corsFilter" class="com.repsrv.csweb.core.filter.CorsFilter">
+        <beans:property name="allowMethods" value="POST, PUT, GET, OPTIONS, DELETE"/>
+        <beans:property name="allowedOriginRegexString" ref="allowedCORSOriginRegex"/>
+        <beans:property name="maxAge" value="600"/>
+        <beans:property name="allowHeaders" value="X-Requested-With, X-CSRF-TOKEN, Content-Type, Accept, Origin, Authorization"/>
+    </beans:bean>
+    
+	
+    <authentication-manager alias="authManager">
+        <authentication-provider ref="republicAuthProvider" />
+    </authentication-manager>
+
+    <beans:bean id="loginUrlAuthenticationEntryPoint" class="com.repsrv.csweb.core.authentication.basic.CswebBasicHttpAuthEntryPoint"/>
+
+    <beans:bean id="successHandler" class="com.repsrv.csweb.core.authentication.basic.AuthSuccessHandler"/>
+
+    <beans:bean id="logoutSuccessHandler" class="com.repsrv.csweb.core.authentication.basic.LogoutHttpSuccessHandler"/>
+
+    <beans:bean id="failureHandler" class="com.repsrv.csweb.core.authentication.basic.AuthFailureHandler"/>
+
+    <beans:bean id="basicDomainAuthorizationFilter" class="com.repsrv.csweb.core.authentication.basic.filter.CswebBasicAuthorizationFilter">
+        <beans:property name="authenticationFailureHandler" ref="failureHandler"/>
+        <beans:property name="authenticationSuccessHandler" ref="successHandler"/>
+    </beans:bean>
+
+<!-- Configure bean to convert JSON to POJO and vice versa -->
+	<beans:bean id="jsonMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+	<beans:bean id="serializer"
+		class="com.repsrv.csweb.core.flexjson.SerializerFactory" init-method="init">
+		<beans:property name="resourcesPath" value="json-views" />
+
+		<beans:property name="globalIncludes">
+			<beans:list>
+				<beans:value>name</beans:value>
+			</beans:list>
+		</beans:property>
+
+		<beans:property name="globalExcludes">
+			<beans:list>
+			<beans:value>class</beans:value>
+			<beans:value>authority</beans:value>
+			<beans:value>preMenu</beans:value>
+			<beans:value>jobType</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+	
+	</beans:beans>

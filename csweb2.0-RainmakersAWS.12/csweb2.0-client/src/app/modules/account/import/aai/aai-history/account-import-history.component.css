@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-column-template{
+flex: 0 0 10%;
+}
+
+.pagedTable {
+  width: 100%;
+}
+
+.spinner-wrapper {
+  display: flex;
+  align-items: left;
+  justify-content: left;
+}

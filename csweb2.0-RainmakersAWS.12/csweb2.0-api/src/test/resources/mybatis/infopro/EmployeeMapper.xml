@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.employee.dao.EmployeeDao" >
+	
+	<select id="getCompanyEmployees" statementType="CALLABLE"
+		resultType="java.lang.String" resultMap="clobToStringMap">
+			{CALL CUQCS019_Get_Employee_Master 
+                (#{company},
+                  '1',
+				#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+				#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+				#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+	</select>
+
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+	
+</mapper>
+

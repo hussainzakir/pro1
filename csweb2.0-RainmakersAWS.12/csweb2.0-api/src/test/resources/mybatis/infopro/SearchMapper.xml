@@ -1,0 +1,56 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.search.dao.SearchDao" >
+	
+	<select id="getSearchAccounts" statementType="CALLABLE" 
+	            parameterType="com.repsrv.csweb.core.model.search.AccountSearchRequest" 
+				resultMap="accountLookupMap" useCache="false">
+	{call CUQCS004_GET_CUSTOMER_ACCOUNT_LOOKUP(
+		#{request.division}, 
+		#{request.locationId},
+		#{request.acctNum}, 
+		#{request.site},
+		#{request.accountSiteName}, 
+		#{request.streetAddress},
+		#{request.city}, 
+		#{request.state},
+		#{request.zipcode}, 
+		#{request.phone},
+		#{request.includeClosedSites},
+		#{request.nationalAccountsOnly}, 
+		<!-- #{request.accountEmail},
+		#{request.openObligationBalance},
+		#{request.purchaseOrderNum}, -->
+		#{request.orderBy},
+		#{request.userId},
+		#{request.returnJson},
+		#{request.rows}, 
+		#{request.changeRequired,jdbcType=CHAR,mode=OUT},
+		#{request.sqlCode,jdbcType=CHAR,mode=OUT}, 
+		#{request.sqlState,jdbcType=CHAR,mode=OUT}
+		)}
+	</select>
+	
+	 
+	 <resultMap type="com.repsrv.csweb.core.model.search.AccountLookup" id="accountLookupMap">
+		<result column="ASCOMP" property="company"/>
+		<result column="LOCATID" property="locationId"/>
+		<result column="ASACCT" property="accountNumber"/>
+		<result column="CUNAME" property="account"/>
+		<result column="ASSITE" property="siteNumber"/>
+		<result column="ASSNAM" property="site"/>
+		<result column="ASCLDT" property="siteStatusDescription"/>
+		<result column="CUADR1" property="accountAddressNumber"/>
+		<result column="CUADR2" property="accountAddressName"/>
+		<result column="CUCITY" property="accountCity"/>
+		<result column="CUSTAT" property="accountState"/>
+		<result column="CUPOST" property="accountZipCode"/>
+		<result column="ASSADR" property="siteAddress"/>
+		<result column="ASCITY" property="siteCity"/>
+		<result column="ASSTPR" property="siteState"/>
+		<result column="ASZPPC" property="siteZipCode"/>
+	 </resultMap>
+	 
+</mapper>

@@ -1,0 +1,18 @@
+<mat-card class="templates-card">
+  <mat-card-header>
+	  <mat-icon mat-card-avatar class="orange600">cloud_download</mat-icon>
+    <mat-card-title>Mass Upload Tempaltes</mat-card-title>
+    <mat-card-subtitle>Below is a list of available templates. Click the link <br/>to download the template.</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content [style.overflow]="'auto'" [style.height.px]="'250'">
+   <ul>
+   <li *ngFor="let template of templates" style="padding-bottom: 10px;">
+	<a [routerLink]="" (click)="downloadTemplate()">
+    {{template.name}}
+	</a>
+	<br/>
+<em>{{template.updatedDate}}</em>
+</li>
+   </ul>
+  </mat-card-content>
+</mat-card>

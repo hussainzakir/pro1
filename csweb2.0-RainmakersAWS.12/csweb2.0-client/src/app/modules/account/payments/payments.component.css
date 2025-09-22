@@ -1,0 +1,15 @@
+
+  .maximize-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .maximize-button-group .button1 {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+  }
+
+  .tableRates {
+    max-height: 75vh;
+  }

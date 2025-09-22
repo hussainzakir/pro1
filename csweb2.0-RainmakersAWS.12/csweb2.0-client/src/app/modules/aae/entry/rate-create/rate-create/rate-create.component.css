@@ -1,0 +1,46 @@
+.mat-form-field{ width: 100%; }
+
+.hint-right{
+  width: 50%;
+  text-align: right;
+}
+
+.success-snackbar{
+  background-color: green;
+  color: white;
+}
+
+.error-snackbar{
+  background-color: red;
+  color: white;
+}
+
+li {
+  display: list-item;
+  float: left;
+  list-style-type: none;
+  width: 380px;
+  padding: 5px;
+  list-style: circle;
+  color: red;
+}
+
+.fields-container mat-form-field{
+  margin-left: 18px;
+}
+
+.fields-container mat-form-field {
+  width: 260px;
+}
+
+.fields-container form {
+  margin-bottom: 20px;
+}
+
+.fields-container form > * {
+  margin: 12px 0;
+}
+
+.example-container .mat-radio-button {
+  margin: 0 12px;
+}

@@ -1,0 +1,44 @@
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+}
+
+.example-container {
+  height: 400px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  text-align: left !important;
+  font-weight: bold;
+  border-bottom: 1px solid black ;
+  font-size: 14px;
+ padding-left: 10px;
+ padding-right: 10px;
+
+  white-space: nowrap;
+  word-wrap: break-word;
+  max-width: 200px;
+}
+
+
+/* .mat-footer-row,
+.mat-header-row,
+.mat-row {
+    display: inline-flex;
+    min-width: 100%;
+} */
+
+.mat-table td, th {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 500px;
+    padding: 6px 10px 0px 10px;
+}
+
+td.mat-cell{
+  padding-left: 10px;
+}

@@ -1,0 +1,11 @@
+.modelContent {
+    height: 100px;
+}
+
+.error-banner{
+    background-color: #00adef;
+    color: #fff;
+    padding: 15px;
+      margin-bottom: 15px;
+      text-align: left;
+  }

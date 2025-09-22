@@ -1,0 +1,93 @@
+<h1 mat-dialog-title>Update Future Service Request</h1>
+<div mat-dialog-content class="fields-container" cdkScrollable>
+  <div>
+    <tr>
+      <td><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+    </tr>
+    <tr>
+      <td><strong>Account:</strong></td><td>{{accountDetail?.company}} - {{accountDetail?.account}}</td>
+    </tr>
+    <tr>
+       <td><strong>Site:</strong></td><td>{{site?.site}}</td>
+    </tr>
+    <tr>
+      <td><strong>Group:</strong></td><td>{{container?.containerId}}</td>
+    </tr>
+    <tr>
+      <td><strong>Original Start Date:</strong></td><td>{{container?.startDate | dateFormat}}</td>
+    </tr>
+</div>
+<ng-template [ngIf]="errorsList && errorsList.length > 0">
+  <strong>Errors:</strong>
+  <br/>
+  <ul>
+    <li *ngFor="let error of errorsList">
+      {{error.error}}
+    </li>
+  </ul>
+<br/>
+</ng-template>
+  <form [formGroup]="updateForm">
+    <div class="container-form-fields" >
+  <mat-form-field appearance="" >
+    <mat-label>Effective Date</mat-label>
+    <input matInput formControlName="fsrEffectiveDate" value ="{{container.fsrEffectiveDate}}">
+    <mat-error *ngIf="updateForm.get('fsrEffectiveDate').hasError('invalidDate')">
+      Date must be today or in the future.
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Qty On Order</mat-label>
+    <input matInput formControlName="fsrQtyOnOrder" value ="{{container.fsrQtyOnOrder}}">
+    <mat-error *ngIf="updateForm.get('fsrQtyOnOrder').hasError('pattern')">Qty On Order can only have nums
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Total Lifts</mat-label>
+    <input matInput formControlName="fsrTotalLifts" value ="{{container.fsrTotalLifts}}">
+    <mat-error *ngIf="updateForm.get('fsrTotalLifts').hasError('pattern')">Total Lifts can only have nums
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Time Frame</mat-label>
+    <input matInput formControlName="fsrTimeFrame" value ="{{container.fsrTimeFrame}}">
+    <mat-error *ngIf="updateForm.get('fsrTimeFrame').hasError('pattern')">Time Frame can only have nums
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Time Frame Ref</mat-label>
+    <input matInput formControlName="fsrTimeFrameReference" value ="{{container.fsrTimeFrameRef}}">
+    <mat-error *ngIf="updateForm.get('fsrTimeFrameReference').hasError('pattern')">Time Frame Ref can only have chars
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('fsrTimeFrameReference').hasError('maxlength')">Time Frame Ref can only have 1 char
+    </mat-error>
+  </mat-form-field>
+  <!-- <mat-form-field appearance="" >
+    <mat-label>On Call</mat-label>
+    <input matInput formControlName="fsrOnCall" value ="{{container.fsrOnCall}}">
+  </mat-form-field> -->
+  <mat-form-field appearance="">
+    <mat-label>On Call:</mat-label>
+    <mat-select formControlName="fsrOnCall" autocomplete="off"
+    matInput>
+    <mat-option value=""></mat-option>
+      <mat-option value="Y">Yes</mat-option>
+      <mat-option value="N">No</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="" >
+    <mat-label>Min Lifts</mat-label>
+    <input matInput formControlName="fsrMinLifts" value ="{{container.fsrMinLifts}}">
+    <mat-error *ngIf="updateForm.get('fsrMinLifts').hasError('required')">Min Lifts is required when On Call is Y
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('fsrMinLifts').hasError('pattern')">Min Lifts can only have nums
+    </mat-error>
+  </mat-form-field>
+</div>
+</form>
+</div>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="!updateForm.valid || quoteMetadata.allowUpdate != 'Y'" (click)="fsrSubmitButton.disabled=true; save();" #fsrSubmitButton>Submit</button>
+</div>

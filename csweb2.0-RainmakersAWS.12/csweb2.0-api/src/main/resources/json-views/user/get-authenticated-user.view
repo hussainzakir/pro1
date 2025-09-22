@@ -1,0 +1,8 @@
+view.id=get-authenticated-user
+view.class=org.springframework.security.core.Authentication
+
+view.global.excludes=class,authority,preMenu,jobType,node
+
+name
+authorities
+authorities.menuOption

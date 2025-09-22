@@ -1,0 +1,107 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.account.dao.AccountDao" >
+	
+	<select id="getAccountDetail" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS003_Get_Account_Profile(
+     #{company},                                
+     #{account},
+     #{site},                           
+     '1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<select id="getAccountBalance" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL ARQCS001_Get_Customer_Balance(
+     #{company},                                
+     #{account},
+     0,                          
+     '1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+	
+	<select id="getAccountContacts" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS001_Get_Customer_Contacts(
+     #{company},                                
+     #{account},
+     ' ',                          
+     '1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}
+	</select>
+	
+	<select id="getAccountSiteContacts" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS001_Get_Customer_Contacts(
+     #{company},                                
+     #{account},
+     #{site},                         
+     '1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}
+	</select>
+
+	<select id="getAccountReage" statementType="CALLABLE" 
+		resultType="java.lang.String" resultMap="clobToStringMap">
+	{CALL CUQCS018_Get_Age(
+     #{company},                                
+     #{account},
+	'1', 
+	#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+	#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+	#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+		
+	</select>
+
+	<update id="updateCustomer" statementType="CALLABLE">
+	{CALL CUQCS021_UPDATE_CUSTOMER_NAME_ADDRESS
+  	(#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+
+	<update id="updateCustomerContacts" statementType="CALLABLE">
+	{CALL CUQCS020_UPDATE_CUSTOMER_CONTACTS
+  	(#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<update id="updateCustomerSiteContacts" statementType="CALLABLE">
+	{CALL CUQCS020_UPDATE_CUSTOMER_CONTACTS
+  	(#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<update id="updateSite" statementType="CALLABLE">
+	{CALL CUQCS023_UPDATE_SITE_ADDRESS
+  	(#{request.json,jdbcType=CHAR,mode=IN}, 
+  	#{request.returnStatus,jdbcType=CHAR,mode=OUT}, 
+  	#{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+
+	</update>
+	
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+
+</mapper>
+

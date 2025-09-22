@@ -1,0 +1,196 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 20px; ">
+	<div fxFlex="100" >
+    <div fxLayout="row wrap" fxLayoutGap="20px grid">
+      <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card class="mat-elevation-z8">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Account Information
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content" style="padding-top: 0px;min-height: 285px;">
+                <table style="width: 100%;padding-top: 10px;" class="cardTable">
+                    <tr>
+                      <td style="text-align: left;vertical-align: top;">
+                        <strong>Account #:  </strong> {{account['Account #']}}
+                     </td>
+                     </tr>
+                     <tr>
+                        <td style="text-align: left;vertical-align: top;">
+                           <strong>Customer Name:  </strong> {{account['Customer Name']}}
+                        </td>
+                      </tr>
+                      <tr>
+                          <td><strong>Address: </strong> {{account['Add Line 1']}} {{account['Add Line 2']}}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Unit/Suite: </strong> {{account['Add Line 3']}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>City: </strong>{{account['City']}}
+                          <strong>State: </strong>{{account['State']}}
+                          <strong>Zip: </strong>{{account['Postal Code']}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <strong>Phone: </strong>{{account['Telephone #']}}
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>
+                      <strong>Closed Date: </strong> {{ account['Acct Closed Date'] | dateFormat}}
+                    </td>
+                    </tr>
+                    
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card class="mat-elevation-z8">
+            <mat-card-title >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Site Information
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+            <mat-card-content class="card-content" *ngIf="!site" style="padding-top: 0px;min-height: 285px;">(no Site data for this account)</mat-card-content>
+            <mat-card-content class="card-content" *ngIf="site" style="padding-top: 0px;min-height: 285px;">
+              <table>
+                <tr>
+                  <td>
+                    <button disabled="{{siteIndex > 0 ? 'false' : 'disabled'}}" mat-icon-button
+                      matTooltip="Previous"
+                      class="{{siteIndex > 0 ? '' : 'btn-disabled'}}"   (click)=decrementSite() >
+                      <mat-icon>chevron_left</mat-icon>
+                    </button>
+                  </td>
+                  <td style="width: 100px;text-align: center;"> {{siteIndex+1}} of {{sitesCount}}</td>
+                  <td>
+                    <button mat-icon-button matTooltip="Next" disabled="{{(siteIndex+1) < sitesCount ? 'false' : 'disabled'}}"
+                      class="{{(siteIndex+1) < sitesCount ? '' : 'btn-disabled'}}"
+                    (click)=incrementSite()>
+                      <mat-icon>chevron_right</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+                <table style="width: 100%;padding-top: 0px;" class="cardTable">
+                    <tr>
+                        <td style="text-align: left;vertical-align: top;">
+                          <strong>Site Name:  </strong> {{site['Site Name']}}
+
+                        </td>
+                      </tr>
+                      <tr>
+                          <td>
+                           <strong>Address: </strong> {{site['Address #']}} {{site['Pre Directional']}} {{site['Address Name']}} {{site['Street Type']}} {{site['Post Directional']}}
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>
+                           <strong>Unit/Suite: </strong> {{site['Suite #']}}
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>
+                           <strong>City: </strong>{{site['City']}}
+                           <strong>State: </strong>{{site['State']}}
+                           <strong>Zip: </strong>{{site['Postal Code']}}
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>
+                           <strong>Phone: </strong>({{site['Area Code']}}) {{site['Contact Phone'] | slice:0:3}}-{{site['Contact Phone'] | slice:3:7}}
+                        </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Closed Date: </strong> {{ site['Close Date'] | dateFormat}}
+                      </td>
+                      </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+      <mat-card class="mat-elevation-z8">
+          <mat-card-title >
+              <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Site - Container Summary
+              <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+          </mat-card-title>
+          <mat-card-content class="card-content" *ngIf="!container" style="padding-top: 0px;min-height: 285px;">(no Container data for this Site)</mat-card-content>
+          <mat-card-content class="card-content" *ngIf="container" style="padding-top: 0px;min-height: 285px;">
+            <table>
+              <tr>
+                <td>
+                  <button mat-icon-button matTooltip="Previous Site"  (click)=decrementContainer()
+                  disabled="{{containerIndex > 0 ? 'false' : 'disabled'}}" class="{{containerIndex > 0 ? '' : 'btn-disabled'}}">
+                    <mat-icon>chevron_left</mat-icon>
+                  </button>
+                </td>
+                <td style="width: 100px;text-align: center;"> {{containerIndex+1}} of {{containerCount}}</td>
+                <td>
+                  <button mat-icon-button matTooltip="Next Container"
+                  disabled="{{(containerIndex+1) < containerCount ? 'false' : 'disabled'}}"
+                  class="{{(containerIndex+1) < containerCount ? '' : 'btn-disabled'}}"
+                    (click)=incrementContainer()>
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </table>
+              <table style="width: 100%;padding-top: 0px;" class="cardTable">
+                  <tr>
+                      <td><strong>Container Type/Size:</strong>
+                        {{container['Container Type']}}/{{container['Container Size']}}
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <strong>R D C</strong>  {{container['Rev Dist Code']}}
+                      </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Qty Ordered:</strong> {{container['Qty On Order']}}
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <strong>Qty On Site:</strong> {{container['Qty On Order']}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Account Type: </strong> {{container['Account Type']}}
+                      &nbsp;&nbsp;
+                      <strong>Customer Owned: </strong> {{container['Customer Owned']}}
+                      &nbsp;&nbsp;
+                      <strong>On Call: </strong> {{container['Total Lifts'] && container['Period Length'] ? 'N' : 'Y'}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lifts Per Cycle:</strong> {{container['Total Lifts']}} / {{container['Period Length']}} W weeks
+                    &nbsp; &nbsp; &nbsp;     
+                    <strong>Disp Code:</strong>  {{container['Disposal Code']}}
+                  </td>
+                  </tr>
+                    <tr>
+                    <td>
+                      <strong>Container Notes</strong>
+                      <br/>
+                      <ul>
+                        <ng-template ngFor let-note [ngForOf]="['1','2','3','4']">
+                          <li *ngIf="container['Note ' + note]">
+                           {{ container['Note '+note]}}
+                          </li>
+                      </ng-template>
+                      </ul>
+                      <span *ngIf="!(container['Note 1'] || container['Note 2']
+                      || container['Note 3'] || container['Note 4'])">(No notes present)</span>
+                    </td>
+                  </tr>
+
+              </table>
+          </mat-card-content>
+      </mat-card>
+  </div>
+    </div>
+</div>
+</div>
+

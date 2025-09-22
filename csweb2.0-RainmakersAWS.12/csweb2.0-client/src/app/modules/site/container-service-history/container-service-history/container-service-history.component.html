@@ -1,0 +1,107 @@
+<div class="maximize-button-group" >
+  <button appWindowbuttons (click)="maximize()" class="maximize-button"><span  class="fa fa-window-maximize"></span></button>  
+  <button appWindowbuttons (click)="restore()" class="restore-button"><span class="fa fa-window-restore"></span></button>
+  <button mat-dialog-close><span class="fa fa-window-close"></span></button>
+</div>
+ <div class="modal-dialog" id="my-modal-dialogCon">
+      <div fxLayout="row" fxLayoutGap="0px" fxLayoutAlign="start" style="padding-top: 0px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="5px grid" fxLayoutAlign="start start">
+            <div fxFlex="75%" fxFlex.xs="100%" fxFlex.sm="40%">
+              <table style="width: 100%;padding: 0px;">
+                <tr>
+                  <td>Account: {{account}} | Site: {{site}}</td>
+                </tr>
+                <tr>
+                  <td>Container group : {{containerGroup}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 10px;">
+        <div fxFlex="100">
+          <div fxLayout="row wrap" fxLayoutGap="20px grid">
+            <div fxFlex="100%" fxFlex.xs="100%" fxFlex.sm="40%">
+              <mat-card>
+                <mat-card-title>
+                  <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                  Container Service History
+                  <hr style="width: 70%; text-align: left; margin: 0px;">
+                </mat-card-title>
+                <mat-card-content class="card-content">
+                          <table mat-table [dataSource]="dataSource" matSort matSortActive="dateServiced" matSortDirection="desc" style="width: 100%;" *ngIf="dataSource">
+                    <ng-container matColumnDef="dateServiced">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Date</th>
+                      <td mat-cell *matCellDef="let history">{{ formateDate(history.dateServiced) }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="liftTime">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Time</th>
+                      <td mat-cell *matCellDef="let history"  style="padding-left: 8px ;">{{ history.liftTime }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="serviceCode">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Code</th>
+                      <td mat-cell *matCellDef="let history">{{ history.serviceCode }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="routeNumber">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Route Number</th>
+                      <td mat-cell *matCellDef="let history">{{ history.routeNumber }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="containerQty">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Container Qty</th>
+                      <td mat-cell *matCellDef="let history">{{ history.containerQty }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="containerType">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Container Type</th>
+                      <td mat-cell *matCellDef="let history">{{ history.containerType }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="containerSize">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Container Size</th>
+                      <td mat-cell *matCellDef="let history">{{ history.containerSize }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="compacted">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Compacted</th>
+                      <td mat-cell *matCellDef="let history">{{ history.compacted }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="specialHandling">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Special Handling</th>
+                      <td mat-cell *matCellDef="let history">{{ history.specialHandling }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="poNumber">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Number</th>
+                      <td mat-cell *matCellDef="let history">{{ history.poNumber }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="extraLift">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Extra Lift</th>
+                      <td mat-cell *matCellDef="let history">{{ history.extraLift }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="printSequence">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Print Sequence</th>
+                      <td mat-cell *matCellDef="let history">{{ history.printSequence }}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div mat-dialog-actions>
+      <button mat-button mat-dialog-close>Close</button>
+    </div>
+  </div>

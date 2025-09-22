@@ -1,0 +1,14 @@
+.maximize-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .maximize-button-group .button1 {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+  }
+
+.mat-dialog-content {
+  max-height: 95vh;
+}

@@ -1,0 +1,210 @@
+<h1 mat-dialog-title>Update Account Details</h1>
+
+  <div mat-dialog-content class="fields-container" cdkScrollable>
+    <table>
+      <tr>
+        <td style="width: 140px;"><strong>Format:</strong></td><td>{{quoteMetadata?.formatType}}</td>
+      </tr>
+      <tr>
+        <td><strong>Account:</strong></td><td>{{accountDetail?.company}} - {{accountDetail?.account}}</td>
+      </tr>
+      <tr>
+        <td><strong>Original Start Date:</strong></td><td>{{accountDetail?.originalStartDate | dateFormat}}</td>
+      </tr>
+      <tr>
+        <td colspan="2" *ngIf="errorsList && errorsList.length > 0"><strong>Errors:</strong></td>
+      </tr>
+      <tr *ngIf="errorsList && errorsList.length > 0">
+        <td colspan="2">
+          <ul>
+            <li *ngFor="let error of errorsList">
+              {{error.error}}
+            </li>
+          </ul>
+        </td>
+      </tr>
+      </table>
+  <form [formGroup]="updateForm">
+    <div class="container-form-fields">
+  <mat-form-field appearance="">
+    <mat-label>Account Name</mat-label>
+    <input matInput formControlName="customerName" value ="{{accountDetail?.customerName}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Attention</mat-label>
+    <input matInput formControlName="attention" value ="{{accountDetail?.attention}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Address Line 1</mat-label>
+    <input matInput formControlName="addressLine1" value ="{{accountDetail?.addressLine1}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Address Line 2</mat-label>
+    <input matInput formControlName="addressLine2" value ="{{accountDetail?.addressLine2}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Street Type</mat-label>
+    <input matInput formControlName="streetType" value ="{{accountDetail?.streetType}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Address Line 3</mat-label>
+    <input matInput formControlName="addressLine3" value ="{{accountDetail?.addressLine3}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>City</mat-label>
+    <input matInput formControlName="city" value ="{{accountDetail.city}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>State</mat-label>
+    <input matInput formControlName="state" value ="{{accountDetail?.state}}">
+    <mat-error *ngIf="updateForm.get('state').hasError('maxlength')">State can only have 3 chars
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Zip</mat-label>
+    <input matInput formControlName="postalCode" value ="{{accountDetail?.postalCode}}">
+    <mat-error *ngIf="updateForm.get('postalCode').hasError('maxlength')">Zip can only have 10 chars
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Telephone</mat-label>
+    <input matInput formControlName="telephone">
+    <mat-error *ngIf="updateForm.get('telephone').hasError('pattern')">Phone can only have nums
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('telephone').hasError('minlength')">Phone has to be 10 nums
+    </mat-error>
+    <mat-error *ngIf="updateForm.get('telephone').hasError('maxlength')">Phone has to be 10 nums
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Telephone Ext</mat-label>
+    <input matInput formControlName="phoneExtension" value ="{{accountDetail.phoneExtension}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Alias</mat-label>
+    <input matInput formControlName="accountAlias" value ="{{accountDetail?.accountAlias}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Fax</mat-label>
+    <input matInput formControlName="fax" value ="{{accountDetail?.fax}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="accountContactEmail" value ="{{accountDetail?.accountContactEmail}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Chain Code</mat-label>
+    <input matInput formControlName="chainCode" value ="{{accountDetail?.chainCode}}">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Acquisition Code" #select1 formControlName="acquisitionCode">
+      <mat-select-filter *ngIf="select1.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="aquisitionCodeValues" (filteredReturn)="filteredAquisitionCodeValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredAquisitionCodeValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Invoice Group" #select2 formControlName="invoiceGroupCode">
+      <mat-select-filter *ngIf="select2.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="invoiceGroupValues" (filteredReturn)="filteredInvoiceGroupValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredInvoiceGroupValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Account Class" #select3 formControlName="accountClassTable">
+      <mat-select-filter *ngIf="select3.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="accountClassValues" (filteredReturn)="filteredAccountClassValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredAccountClassValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Customer Category" #select4 formControlName="customerCategory">
+      <mat-select-filter *ngIf="select4.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="customerCategoryValues" (filteredReturn)="filteredCustomerCategoryValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredCustomerCategoryValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>SI Eligible</mat-label>
+    <input matInput formControlName="siEligible" value ="{{accountDetail?.siEligible}}">
+    <mat-error *ngIf="updateForm.get('siEligible').hasError('maxlength')">SI can only have 1 char
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Next Review Date</mat-label>
+    <input matInput formControlName="nextReviewDate" value ="{{accountDetail?.nextReviewDate}}">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select placeholder="Late Fee Policy" #select5 formControlName="lateFeePolicy">
+      <mat-select-filter *ngIf="select5.focused" [placeholder]="'Search'" [displayMember]="'description'" [array]="lateFeePolicyValues" (filteredReturn)="filteredLateFeePolicyValues =$event"></mat-select-filter>
+      <mat-option *ngFor="let et of filteredLateFeePolicyValues" [value]="et.value">
+        {{et.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Charge Admin Fee</mat-label>
+    <input matInput formControlName="chargeAdministrativeFee" value ="{{accountDetail?.chargeAdministrativeFee}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Charge Serv Int Fee</mat-label>
+    <input matInput formControlName="chargeServiceIntFee" value ="{{accountDetail?.chargeServiceIntFee}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Charge Late Fee</mat-label>
+    <input matInput formControlName="chargeLateFee" value ="{{accountDetail?.chargeLateFee}}">
+    <mat-error *ngIf="updateForm.get('chargeLateFee').hasError('maxlength')">Fee can only have 1 char
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Charge Fuel Fee</mat-label>
+    <input matInput formControlName="chargeFuelFee" value ="{{accountDetail?.chargeFuelFee}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Charge Envr Fee</mat-label>
+    <input matInput formControlName="chargeEnvironmentalFee" value ="{{accountDetail?.chargeEnvironmentalFee}}">
+    <mat-error *ngIf="updateForm.get('chargeEnvironmentalFee').hasError('maxlength')">Fee can only have 1 char
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Charge Fees on Admin</mat-label>
+   <input matInput formControlName="erfFrfFlag" value ="{{accountDetail?.erfFrfFlag}}">
+   <mat-error *ngIf="updateForm.get('erfFrfFlag').hasError('maxlength')">Fee can only have 1 char
+   </mat-error>
+ </mat-form-field> 
+  <mat-form-field appearance="">
+    <mat-label>Print Method Desc</mat-label>
+    <input matInput formControlName="printMethodDescription" value ="{{accountDetail?.printMethodDescription}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Acquisition Code Desc</mat-label>
+    <input matInput formControlName="acquisitionCodeDesc" value ="{{accountDetail?.acquisitionCodeDesc}}" >
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Last Invoice Date</mat-label>
+    <input matInput formControlName="lastInvoiceDate">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Account Class Desc</mat-label>
+    <input matInput formControlName="accountClassDesc" value ="{{accountDetail?.accountClassDesc}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Online Payment Profile</mat-label>
+    <input matInput formControlName="onlinePaymentProfile" value ="{{accountDetail?.onlinePaymentProfile}}">
+  </mat-form-field>
+  <mat-form-field appearance="">
+    <mat-label>Credit Analyst</mat-label>
+    <input matInput formControlName="creditAnalyst" value ="{{accountDetail?.creditAnalyst}}">
+  </mat-form-field>
+</div>
+</form>
+<div *ngIf="errorMsg" class="error-banner"><mat-icon>error_outline</mat-icon>{{errorMsg}}</div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="orange" class="btn-w-md" style="margin-left: 1em" [disabled]="isDisabled" (click)="accountSubmitButton.disabled=true; save();" #accountSubmitButton>Submit</button>
+</div>

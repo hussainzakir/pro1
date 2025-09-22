@@ -1,0 +1,49 @@
+name: Static Analysis with CodeQL
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+      - Release*
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - language: java-kotlin
+            working-directory: csweb2.0-api
+          - language: typescript
+            working-directory: csweb2.0-client
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Maven
+        run: sudo apt-get install -y maven
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      
+      - name: Build API application (Java)
+        if: ${{ matrix.language == 'java-kotlin' }}
+        working-directory: ${{ matrix.working-directory }}
+        run: mvn compile
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '${{ matrix.working-directory }}-${{ matrix.language }}'

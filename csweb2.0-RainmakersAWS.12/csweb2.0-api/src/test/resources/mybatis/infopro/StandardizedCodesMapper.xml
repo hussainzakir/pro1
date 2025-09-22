@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.codes.dao.StandardizedCodesDao" >
+	
+	<select id="getStandardizedCodesByType" statementType="CALLABLE"
+		resultType="java.lang.String" resultMap="clobToStringMap">
+			{CALL CUQCS017_Get_Table_Data    
+                (#{company},               
+                  #{tableName},
+                  #{type},
+                  #{status},
+                  '1',
+				#{result.errorMessage,jdbcType=CHAR,mode=OUT},
+				#{result.sqlState,jdbcType=CHAR,mode=OUT}, 
+				#{result.sqlState,jdbcType=CHAR,mode=OUT})}	
+	</select>
+
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="data" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+	
+</mapper>
+

@@ -1,0 +1,58 @@
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: left;
+}
+
+.example-headers-align .mat-mdc-form-field + .mat-mdc-form-field {
+  margin-left: 8px;
+}
+
+.mat-accordion .mat-expansion-panel:not(.mat-expanded),
+.mat-accordion .mat-expansion-panel:not(.mat-expansion-panel-spacing) {
+   margin-bottom: 20px;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+  display: flex;
+  /* flex-grow: 1; */
+  margin-right: 16px;
+}
+
+.mat-dialog-content {
+  display: block;
+  max-width: 100%;
+  padding-top: 25px;
+  padding-bottom: 27px;
+}
+
+.repsrv-btn{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+
+/* .mat-table td, th {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 200px;
+} */
+
+
+.right-aligned-header > .mat-content {
+  justify-content: left;
+}
+
+.mat-content > mat-panel-title, .mat-content > mat-panel-description {
+flex: 0 0 auto;
+}
+
+.maximize-button-group {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  button {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+}

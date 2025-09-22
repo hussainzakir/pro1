@@ -1,0 +1,181 @@
+<div class="pagedTable " style="width: 90%; margin: 0 auto;">
+  <h1>Obligations Lookup</h1>
+  <form [formGroup]="form" autocomplete="off" (keyup)="handleKey($event)">
+    <div fxLayout="row" fxLayoutGap="5px">
+      <div fxFlexOffset="0" fxFlex="30">
+        <mat-form-field class="full-width">
+          <mat-label>Region</mat-label>
+          <mat-select formControlName="region">
+            <mat-option *ngFor="let region of regions" [value]="region.region">
+              {{region.description}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlexOffset="0" fxFlex="30">
+        <mat-form-field class="full-width">
+          <mat-label>Obligation ID</mat-label>
+          <input matInput formControlName="obligationId" placeholder="Ex. 1234567" autocomplete="off">
+          <mat-error *ngIf="form.get('obligationId').hasError('pattern')">Obligation Number is not valid, Only Numeric values are allowed.</mat-error>
+          <mat-error *ngIf="form.get('obligationId').hasError('minlength')">The Obligation Number needs a minimum of 3 digits.</mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div fxFlexOffset="0" fxFlex="30">
+        <mat-form-field class="full-width">
+          <mat-label>Starting Period</mat-label>
+          <input matInput formControlName="accountingPeriodFrom"  autocomplete="off" />
+          <mat-hint>MM/YYYY</mat-hint>
+          <mat-error *ngIf="form.get('accountingPeriodFrom').hasError('pattern')">Accounting Starting Period is not a valid pattern.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlexOffset="0" fxFlex="30">
+        <mat-form-field class="full-width">
+          <mat-label>Ending Period</mat-label>
+          <input matInput formControlName="accountingPeriodTo" placeholder="Ex. 202302" autocomplete="off">
+          <mat-hint>MM/YYYY</mat-hint>
+          <mat-error *ngIf="form.get('accountingPeriodTo').hasError('pattern')">Accounting Ending Period is not a valid pattern.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="5px">
+
+      <div fxFlexOffset="0" fxFlex="30">
+        <mat-form-field class="full-width">
+          <mat-label>From Amount</mat-label>
+          <input matInput formControlName="amountRangeFrom" placeholder="Ex. 12345.67" autocomplete="off">
+          <mat-error *ngIf="form.get('amountRangeFrom').hasError('pattern')">Amount Range "From" value error</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlexOffset="0" fxFlex="30">
+        <mat-form-field class="full-width">
+          <mat-label>To Amount</mat-label>
+          <input matInput formControlName="amountRangeTo" placeholder="Ex. 12345.67" autocomplete="off">
+          <mat-error *ngIf="form.get('amountRangeTo').hasError('pattern')">Amount Range "To" value error</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlexOffset="0" fxFlex="30"></div>
+      <div fxFlexOffset="0" fxFlex="30"></div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="5px" *ngIf="showMessage">
+      <div fxFlexOffset="0" style="color:red;">
+        Error: Invalid search criteria. A Region, Obligation Number, and Period Range are required.<br /> <br />
+      </div>
+    </div>
+
+    <div *ngIf="errorMsg" style="color:red;">{{errorMsg}}</div>
+
+    <div fxLayout="row" fxLayoutGap="5px">
+      <div fxFlexOffset="0" fxFlex="100" fxLayoutAlign="center center">
+        <button mat-raised-button color="orange" class="repsrv-btn" (click)="searchData(true)" [loading]=loading>Search</button>
+        <button mat-raised-button color="orange" class="repsrv-btn" (click)="clearData()">Clear</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<div [formGroup]="form" class="pagedTable" style="width: 90%; margin: 0 auto;" (keyup)="handleKey($event)" *ngIf="dataSource.data.length > 0">
+
+  <table style="width: 100%;padding-top: 30px;">
+    <tr style="width:25%; text-align: right;">
+      <td>
+        <h1>&nbsp;</h1>
+      </td>
+      <td style="width: 50%;text-align: right;">
+        <mat-form-field [style.width.%]="100">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+        </mat-form-field>
+      </td>
+    </tr>
+  </table>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 " >
+
+    <ng-container matColumnDef="company">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'padLeft'">{{element.company}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="account">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Account</th>
+      <td mat-cell *matCellDef="let element"> {{element.account}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="companyName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Company Name</th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="element.site"><a  class="repsrv-link"  routerLink="/account/{{element.company}}/{{element.account}}/{{element.site}}">{{element.companyName}}</a></div>
+        <div *ngIf = "!element.site"><a  class="repsrv-link"  routerLink="/account/{{element.company}}/{{element.account}}/00000">{{element.companyName}}</a></div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="obligationId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'padLeft'"> Obligation Id </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'padLeft'"> {{element.obligationId}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="obligationDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Obligation Date</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'center-cell'"> {{element.obligationDate|date:'MM/dd/yyyy'}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="openAmount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Open Amount</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'center-cell'"> {{element.openAmount}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header >Total Amount</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'center-cell'"> {{element.totalAmount}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="transType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Trans Type</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'padLeft'" > {{element.transType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="accountingPeriod">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Accounting Period</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'center-cell'" > {{element.accountingPeriod|date:'MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="region">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'padLeft'" > {{element.region}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="site">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Site</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="'padRight'"> {{element.site}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+  <mat-paginator [pageSize]="25" [pageSizeOptions]="[25, 50, 100,200]" showFirstLastButtons class="mat-elevation-z8"></mat-paginator>
+</div>
+
+<div style="width: 90%; margin: auto;"  *ngIf="(dataSource.data.length < 1) && searchExecuted" fxLayout="row">
+  <div fxFlex="100" fxFlex.xs="100%" fxFlex.sm="40%" fxLayoutAlign="center center" fxLayoutGap="5px"
+    class="noData-banner">
+    No results found.
+  </div>
+</div>
+
+

@@ -1,0 +1,38 @@
+table {
+    width: 100%;
+  }
+
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+  .mat-column-template{
+  flex: 0 0 10%;
+  }
+
+  .pagedTable {
+    width: 100%;
+  }
+
+  .spinner-wrapper {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+  }
+
+
+  .cardTable td{
+    padding: 10px 0px;
+  }
+
+  .header-table tr td{
+    font-size: 1.2em;
+  }
+
+  .error-banner{
+    background-color: #00adef;
+    color: #fff;
+    padding: 15px;
+      margin-bottom: 15px;
+      text-align: left;
+  }

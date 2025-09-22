@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.obligations.dao.ObligationsSearchDao">
+
+    <sql id="obligationsListSQL">
+        {Call CUQCS032_GET_OBLIGATIONS_LIST(
+        #{request.json,jdbcType=CHAR,mode=IN},
+        #{request.returnStatus,jdbcType=CHAR,mode=OUT},
+        #{request.returnErrorMsg,jdbcType=CHAR,mode=OUT})}
+    </sql>
+
+    <select id="getObligations" resultMap="obligationsSearchMap" statementType="CALLABLE">
+        <include refid="obligationsListSQL"/>
+    </select>
+
+    <resultMap type="com.repsrv.csweb.core.model.obligationsSearch.Obligation" id="obligationsSearchMap">
+        <result javaType="string" column="COMPANY" property="company"/>
+        <result javaType="string" column="ACCOUNT" property="account"/>
+        <result javaType="string" column="COMPANYNAME" property="companyName"/>
+        <result javaType="string" column="OBLIGATIONID" property="obligationId"/>
+        <result javaType="string" column="OBLIGATIONDATE" property="obligationDate"/>
+        <result javaType="string" column="OPENAMOUNT" property="openAmount"/>
+        <result javaType="string" column="TOTALAMOUNT" property="totalAmount"/>
+        <result javaType="string" column="TRANSTYPE" property="transType"/>
+        <result javaType="string" column="STATUS" property="status"/>
+        <result javaType="string" column="REGION" property="region"/>
+        <result javaType="string" column="ACCOUNTINGPERIOD" property="accountingPeriod"/>
+        <result javaType="string" column="SITE" property="site"/>
+    </resultMap>
+
+    <select id="getObligationRegions" resultMap="obligationRegionsMap" >
+        {Call CUQCS031_GET_REGIONS(?,?)}
+    </select>
+
+    <resultMap type="com.repsrv.csweb.core.model.obligationsSearch.ObligationRegion" id="obligationRegionsMap">
+        <result javaType="string" column="REGION" property="region"/>
+        <result javaType="string" column="DESCRIPTION" property="description"/>
+    </resultMap>
+
+
+</mapper>
+

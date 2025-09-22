@@ -1,0 +1,30 @@
+.upload-card {
+  width: 470px;
+}
+
+mat-icon.mat-card-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+}
+
+.header-pad-top{
+  padding-top: 15px;
+}
+
+.stepper{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.mat-step-header {
+  pointer-events: none;
+}
+
+.step-title {
+  pointer-events: none !important; /**<-----------*/
+}
+
+.left-pad-med{
+  padding-left: 30px;
+}

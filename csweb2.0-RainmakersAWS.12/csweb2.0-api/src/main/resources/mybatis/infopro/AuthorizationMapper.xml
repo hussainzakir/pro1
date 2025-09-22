@@ -1,0 +1,31 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.repsrv.csweb.core.authorization.dao.AuthorizationDao" >
+	
+	<select id="getUserAuthorizations" resultMap="userAuthMap">
+		{CALL CUQSC000_INF_MENU_OPTIONS(  
+     #{username},     
+      ?,                         
+      ?) }
+	</select>
+  
+	<select id="getUserAuthDetail" statementType="CALLABLE" resultType="java.lang.String" resultMap="clobToStringMap">
+    {CALL CUQOMUAUTH_GET_USER_AUTH_DETAIL(      
+        #{system, jdbcType=CHAR, mode=IN},
+        #{username, jdbcType=CHAR, mode=IN},                                
+        #{result.errorCode, jdbcType=CHAR,mode=OUT},
+        #{result.errorMessage, jdbcType=VARCHAR,mode=OUT}                
+    )}
+	</select>
+	
+	<resultMap type="com.repsrv.csweb.core.model.UserAuthorization" id="userAuthMap">
+		<result column="MENUITEM" property="menuOption"/>
+	</resultMap>
+
+	<resultMap type="java.lang.String" id="clobToStringMap" >
+		<result column="DATA" javaType="java.lang.String" jdbcType="CLOB" 
+		typeHandler="org.apache.ibatis.type.ClobTypeHandler"/>
+	</resultMap>
+</mapper>

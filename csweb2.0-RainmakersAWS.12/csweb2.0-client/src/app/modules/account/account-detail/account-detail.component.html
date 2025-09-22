@@ -1,0 +1,137 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="begin" style="padding-top: 5px;padding-left:30px;">
+   Return to&nbsp;<a class="repsrv-link" [state]="accountDetail"
+                                routerLink="/account/{{accountDetail.company}}/{{accountDetail.account}}/{{theSite.site}}">Account Summary</a>
+
+</div>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+	<div fxFlex="70" >
+    <div fxLayout="row"   fxLayoutGap="20px grid"  >
+      <div fxFlex="60%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card class="" >
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Account
+                    <button style="float: right;" class="orange-btn" (click)="openEditAccount()" mat-button >Edit</button>
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content">
+              <table style="width: 100%;padding-top: 10px;">
+                <tr><td>&nbsp;</td><td>{{accountDetail.company}} - {{accountDetail.account}}</td></tr>
+                <tr><td>&nbsp;</td><td>{{accountDetail.customerName}}</td></tr>
+                <tr><td>Attention:</td><td>{{accountDetail.attention}}</td></tr>
+                <tr><td>Alias:</td><td>{{accountDetail.accountAlias}}</td></tr>
+                <tr>
+                  <td style="vertical-align: top;">Address:</td>
+                  <td>
+                    <span *ngIf="accountDetail.addressLine1">{{accountDetail.addressLine1}} </span>
+                    <span *ngIf="accountDetail.addressLine2">{{accountDetail.addressLine2}}</span><br *ngIf="accountDetail.addressLine2" />
+                    <span *ngIf="accountDetail.addressLine3">{{accountDetail.addressLine3}}</span>
+                    {{accountDetail.city}},{{accountDetail.stateProvince}} {{accountDetail.postalCode}}
+                  </td>
+              </tr>
+                <tr><td>Telephone:</td><td>{{accountDetail.telephone}}</td></tr>
+                <tr><td>Telephone Ext:</td><td>{{accountDetail.telephoneExtension}}</td></tr>
+                <tr><td>Fax:</td><td>{{accountDetail.fax | phonePipe}}</td></tr>
+              </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div fxFlex="40%" fxFlex.xs="100%" fxFlex.sm="50%" style="margin-bottom: 30px;">
+        <mat-card fxFill>
+            <mat-card-title >
+                <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon>
+                Contact <!-- <button style="float: right;" class="orange-btn" (click)="openEditContact()" mat-button >Edit</button> -->
+                        <!-- This is 'commented' out per Shankar March31, 2022-->
+                <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+            </mat-card-title>
+            <mat-card-content class="card-content">
+              <table style="width: 100%;padding-top: 10px;">
+                <tr><td>Bus Email1: </td><td>{{accountDetail.accountContact?.businessEmail1}}</td></tr>
+                <tr><td>Home Email1:</td><td>{{accountDetail.accountContact?.homeEmail1}}</td></tr>
+                <tr><td>Bus Email2: </td><td>{{accountDetail.accountContact?.businessEmail2}}</td></tr>
+                <tr><td>Home Email2:</td><td>{{accountDetail.accountContact?.homeEmail2}}</td></tr>
+            </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    </div>
+</div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center" style="padding-top: 50px;">
+	<div fxFlex="98" >
+    <div fxLayout="row wrap" fxLayoutGap="20px grid" fxFill>
+      <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card class="">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Credit / AR
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content">
+              <table style="width: 100%;padding-top: 10px;">
+                <tr><td>Account Class:</td><td>{{accountDetail.accountClassTable}} - {{accountDetail.accountClassDesc}}</td></tr>
+                <tr><td>Acquisition Code:</td><td>{{accountDetail.acquisitionCode}}</td></tr>
+                <tr><td>Chain Code:</td><td>{{accountDetail.chainCode}} - {{accountDetail.chainCodeDescription}}</td></tr>
+                <tr><td>Credit Analyst:</td><td>{{accountDetail.creditAnalyst}} - {{accountDetail.userName}}</td></tr>
+                <tr><td>Cust Category:</td><td>{{accountDetail.customerCategory}} - {{accountDetail.custCategoryDesc}}</td></tr>
+                <tr><td>Dunning Date:</td><td>{{accountDetail.dunningDate}}</td></tr>
+                <tr><td>Dunning Stage:</td><td>{{accountDetail.dunningStage}}</td></tr>
+                <tr><td>Invoice Group:</td><td>{{accountDetail.invoiceGroupCode}} - {{accountDetail.invoiceGroupDescription}}</td></tr>
+                <tr><td>Language:</td><td>{{accountDetail.languageCode}} - {{accountDetail.languageDesc}}</td></tr>
+                <tr><td>Last Invoice Date:</td><td>{{accountDetail.lastInvoiceDate | singleDigitFormat}}</td></tr>
+                <tr><td>QuickPay Enrolled:</td><td>{{accountDetail.quickPay}}</td></tr>
+                <tr><td>Service Interrupt Date:</td><td>{{accountDetail.siStartDate | singleDigitFormat}}</td></tr>
+                <tr><td>Service Interrupt Eligible:</td><td>{{accountDetail.siEligible}}</td></tr>
+                <tr><td>Service Interrupt Status:</td><td>{{accountDetail.siStatus}}</td></tr>
+              </table>
+            </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" fxFill>
+        <mat-card class="" >
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Fees
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content">
+              <table style="width: 100%;padding-top: 10px;">
+                <tr><td>Charge Admin Fee:</td><td>{{accountDetail.chargeAdminFee}} <span *ngIf="accountDetail.adminFeeExc">Exempt Code {{accountDetail.adminFeeExc}} - {{accountDetail.adminFeeExcDesc}}</span></td></tr>
+                <tr><td>Charge Serv Int Fee:</td><td>{{accountDetail.chargeServIntFee}} <span *ngIf="accountDetail.servIntFeeExc">Exempt Code {{accountDetail.servIntFeeExc}} - {{accountDetail.servIntFeeDesc}}</span></td></tr>
+                <tr><td>Charge Late Fee:</td><td>{{accountDetail.chargeLateFee}} <span *ngIf="accountDetail.lateFeeExc">Exempt Code {{accountDetail.lateFeeExc}} - {{accountDetail.lateFeeExcDesc}}</span></td></tr>
+                <tr><td>Charge Fuel Fee:</td><td>{{accountDetail.chargeFuelFee}} <span *ngIf="accountDetail.fuelFeeExc">Exempt Code {{accountDetail.fuelFeeExc}} - {{accountDetail.fuelFeeExcDesc}}</span></td></tr>
+                <tr><td>Charge Enviro Fee:</td><td>{{accountDetail.chargeEnviroFee}} <span *ngIf="accountDetail.envrFeeExc">Exempt Code {{accountDetail.envrFeeExc}} - {{accountDetail.envrFeeExcDesc}}</span></td></tr>
+                <tr><td>Late Fee Policy:</td><td>{{accountDetail.lateFeePolicy}} <span *ngIf="accountDetail.lateFeePolicyDesc">- {{accountDetail.lateFeePolicyDesc}}</span></td></tr>
+                <tr><td>Next Review Date:</td><td>{{accountDetail.nextReviewDate}}</td></tr>
+              </table>
+            </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="50%" >
+        <mat-card class="">
+                <mat-card-title >
+                    <mat-icon mat-card-avatar class="repsrv-dark-blue-font" style="vertical-align: middle;">label_important</mat-icon> Print Options
+                    <hr style="width: 70%;text-align: left;padding: 0px;margin: 0px;">
+                </mat-card-title>
+            <mat-card-content class="card-content">
+              <table style="width: 100%;padding-top: 10px;">
+                <tr><td>Page Break at Site:</td><td>{{accountDetail.invoicePageBreak}}</td></tr>
+                <tr><td>Show Site Subtotals:</td><td>{{accountDetail.invoiceSiteTotals}}</td></tr>
+                <tr><td>Show Site Taxes:</td><td>{{accountDetail.invoiceSiteTaxes}}</td></tr>
+                <tr><td>Show Container Subtotals:</td><td>{{accountDetail.invoiceContainerTotals}}</td></tr>
+                <tr><td>Show Container Taxes:</td><td>{{accountDetail.invoiceContainerTaxes}}</td></tr>
+
+                <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                <tr><td>Invoice Destination:</td><td>{{accountDetail.invoiceDestination}} - {{accountDetail.invoiceDestinationDesc}}</td></tr>
+                <tr><td>Remit-To Code:</td><td>{{accountDetail.remitCode}} - {{accountDetail.remitCodeDesc}}</td></tr>
+                <tr><td>Print Method:</td><td>{{accountDetail.printMethod}} - {{accountDetail.printMethodDesc}}</td></tr>
+                <tr><td>EDI Required:</td><td>{{accountDetail.ediRequired}}</td></tr>
+                <tr><td>Broker Code:</td><td>{{accountDetail.brokerCode}}</td></tr>
+                <tr><td>Account Group:</td><td>{{accountDetail.accountGroup}}</td></tr>
+                <tr><td>Enterprise Cust Portal:</td><td>{{accountDetail.ePortalCustomer}}</td></tr>
+                <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                <tr><td colspan="2" style="text-align: center;font-weight: bold;font-size: 90%;">Last Updated: {{accountDetail.lastInvoiceDate | singleDigitFormat}} | Original Start Date: {{accountDetail.originalStartDate}}</td></tr>
+              </table>
+            </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

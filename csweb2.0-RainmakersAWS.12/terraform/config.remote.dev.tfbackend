@@ -1,0 +1,3 @@
+workspaces { name = "infopro-csweb2-dev-ue2" }
+hostname     = "app.terraform.io"
+organization = "RepublicServices"

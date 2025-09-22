@@ -1,0 +1,14 @@
+.mat-card {
+    overflow: auto;
+  }
+  
+  .maximize-button-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    button {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+    }
+  }

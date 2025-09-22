@@ -1,0 +1,90 @@
+<div class="pagedTable " style="width: 90%; margin: 0 auto;">
+<table style="width: 100%;padding-top: 30px;">
+	<tr>
+		<td><h1 style="display: inline-block;">Mass Upload History</h1>
+      <button mat-icon-button class="orange-txt" matTooltip="refresh table data" (click)="loadHistory(true)" style=" color: #FB8C00;margin-left: 15px;">
+        <mat-icon>autorenew</mat-icon>
+      </button>
+    </td>
+    <td></td>
+		<td style="width: 50%;text-align: right;">
+			<mat-form-field [style.width.%]="100">
+				<mat-label>Filter</mat-label>
+				<input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+			</mat-form-field>
+		</td>
+	</tr>
+
+</table>
+<table mat-table *ngIf = "dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <ng-container matColumnDef="nodata" >
+    <td mat-footer-row *matFooterCellDef [colSpan]="displayedColumns.length"
+    style="text-align: center;">No History Data Available</td>
+  </ng-container>
+
+  <tr mat-footer-row
+    [hidden]="dataSource.data.length >0"
+    *matFooterRowDef="['nodata']">
+  </tr>
+  <ng-container matColumnDef="templateName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Template </th>
+    <td mat-cell *matCellDef="let element">
+      <div class="spinner-wrapper">
+        <mat-spinner matTooltip="Upload processing" *ngIf="element.status == 2" [diameter]="20"></mat-spinner>
+        <span matTooltip="Error processing" *ngIf="element.status == 5  || (element.status == 3 && element.errorCount>0)"><i class="fas fa-exclamation-triangle error-color" ></i></span>
+        <span *ngIf="element.status == 3 && element.errorCount< 1" matTooltip="Upload successful!" ><i class="far fa-check-circle" style="color: green;" ></i></span>
+        <span *ngIf="element.status == 0" matTooltip="In processing queue"><i class="far fa-hourglass"  style="color: orange;" ></i> </span>
+        <span style="padding-left: 10px;">{{element.submittedFile}} {{element.status}}</span>
+
+    </div>
+    </td>
+  </ng-container>
+
+ <ng-container matColumnDef="submitted">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Submitted Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.submitted | date:"MM/dd/YYYY h:mm a"}}</td>
+  </ng-container>
+
+<ng-container matColumnDef="lastUpdated">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Updated </th>
+    <td mat-cell *matCellDef="let element"> {{element.lastUpdated | date:"MM/dd/YYYY h:mm a"}} </td>
+  </ng-container>
+
+    <ng-container matColumnDef="totalRecords">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # of records </th>
+    <td mat-cell *matCellDef="let element"> {{element.totalRecords}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalAdded">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # added </th>
+    <td mat-cell *matCellDef="let element"> {{element.totalAdded}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalChanged">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # Changed </th>
+    <td mat-cell *matCellDef="let element"> {{element.totalChanged}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalClosed">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # Closed </th>
+    <td mat-cell *matCellDef="let element"> {{element.totalClosed}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="errorCount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # errors </th>
+  <td mat-cell *matCellDef="let element"> {{element.errorCount}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="filename">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> error file </th>
+    <!-- element.status 2=processing, 5=error, 0=inqueue, 3=completed (error count > 0 if errors), -->
+    <td mat-cell *matCellDef="let element" style="text-align: center; font-size: 130%; color: #00adef;">
+      <span (click)="downloadErrorFile(element)" matTooltip="Download error file" *ngIf="element.status == 3 && element.errorCount>0"><i class="fas fa-file-download" ></i> </span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" pageSize="50"  showFirstLastButtons class="mat-elevation-z8"></mat-paginator>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings>
+	<typeAliases>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.handlers.DateTypeHandler" alias="as400DateHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.handlers.YesNoBooleanHandler" alias="yesNoHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.handlers.OneZeroBooleanHandler" alias="oneZeroBooleanHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.custom.handlers.CsWebEnumHandler" alias="cswebEnumHandler"/>
+	    <typeAlias type="com.repsrv.csweb.core.mybatis.type.custom.handlers.JsonTypeHandler" alias="jsonHandler"/>
+	</typeAliases>
+	<typeHandlers>
+		<package name="com.repsrv.csweb.core.mybatis.type.handlers"/>
+	</typeHandlers>
+  	<mappers>
+  	  <mapper resource="mybatis/cbs/MassUploadsMapper.xml"/>
+	</mappers>
+</configuration>
